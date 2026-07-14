@@ -69,36 +69,44 @@
 
   <div class="numbers-section">
     <h3>By the numbers</h3>
-    <div class="numbers-table">
-      <div class="numbers-row">
-        <span class="numbers-label">Commits</span>
-        <span class="numbers-value">354</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">PRs merged</span>
-        <span class="numbers-value">130</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">Waves</span>
-        <span class="numbers-value">13</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">Domains</span>
-        <span class="numbers-value">14</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">Test files</span>
-        <span class="numbers-value">46</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">LOC</span>
-        <span class="numbers-value">52.6K</span>
-      </div>
-      <div class="numbers-row">
-        <span class="numbers-label">Version</span>
-        <span class="numbers-value">v0.1.0-beta.4</span>
-      </div>
-    </div>
+    <table class="numbers-table">
+      <thead>
+        <tr>
+          <th scope="col">Metric</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Commits</td>
+          <td>354</td>
+        </tr>
+        <tr>
+          <td>PRs merged</td>
+          <td>130</td>
+        </tr>
+        <tr>
+          <td>Waves</td>
+          <td>13</td>
+        </tr>
+        <tr>
+          <td>Domains</td>
+          <td>14</td>
+        </tr>
+        <tr>
+          <td>Test files</td>
+          <td>46</td>
+        </tr>
+        <tr>
+          <td>LOC</td>
+          <td>52.6K</td>
+        </tr>
+        <tr>
+          <td>Version</td>
+          <td>v0.1.0-beta.4</td>
+        </tr>
+      </tbody>
+    </table>
     <p class="numbers-note">
       <em>Every number computed from git, reproducible by cloning.</em>
     </p>
@@ -110,25 +118,10 @@
     margin: var(--space-16) 0;
   }
 
-  .section-moral {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-6);
-    line-height: var(--leading-normal);
-  }
+  /* Use shared .section-moral from global.css */
 
-  .section-moral em {
-    font-style: italic;
-    color: var(--color-text-tertiary);
-  }
-
+  /* Adjust h2 scroll margin */
   .aesop-section h2 {
-    font-size: var(--text-3xl);
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: var(--space-8);
-    line-height: var(--leading-tight);
-    font-family: var(--font-sans);
     scroll-margin-top: 80px;
   }
 
@@ -237,7 +230,7 @@
     padding: var(--space-6);
     background-color: var(--color-bg-secondary);
     border-left: 3px solid var(--accent);
-    border-radius: 4px;
+    border-radius: 8px;
   }
 
   .scar-title {
@@ -264,30 +257,44 @@
     font-size: var(--text-sm);
     background-color: var(--color-code-bg);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
     margin-bottom: var(--space-6);
+    width: 100%;
+    border-collapse: collapse;
   }
 
-  .numbers-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
+  .numbers-table thead {
+    background-color: transparent;
+  }
+
+  .numbers-table th {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-align: left;
     padding: var(--space-4) var(--space-6);
     border-bottom: 1px solid var(--color-border);
-    align-items: center;
   }
 
-  .numbers-row:last-child {
+  .numbers-table th:last-child {
+    text-align: right;
+  }
+
+  .numbers-table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .numbers-table tbody tr:last-child {
     border-bottom: none;
   }
 
-  .numbers-label {
+  .numbers-table td {
+    padding: var(--space-4) var(--space-6);
     color: var(--color-text-secondary);
-    font-weight: 500;
   }
 
-  .numbers-value {
+  .numbers-table td:last-child {
     color: var(--accent);
     font-weight: 600;
     text-align: right;
@@ -303,17 +310,5 @@
   .numbers-note em {
     font-style: italic;
     color: var(--color-text-tertiary);
-  }
-
-  /* Responsive: stack numbers table for narrow screens */
-  @media (max-width: 640px) {
-    .numbers-row {
-      grid-template-columns: 1fr;
-      gap: var(--space-2);
-    }
-
-    .numbers-value {
-      text-align: left;
-    }
   }
 </style>
