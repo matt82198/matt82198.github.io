@@ -185,6 +185,7 @@
 
 <script>
   // Count-up animation for stats — respects prefers-reduced-motion
+  // Server-rendered final values are shown by default; animation is progressive enhancement
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!prefersReducedMotion) {
@@ -202,13 +203,14 @@
               const progress = Math.min(elapsed / duration, 1);
               const current = Math.floor(progress * target);
 
-              // Format with thousand separators
-              el.textContent = current.toLocaleString();
+              // Format with thousand separators, preserving final value
+              el.textContent = current.toLocaleString('en-US');
 
               if (progress < 1) {
                 requestAnimationFrame(update);
               } else {
-                el.textContent = target.toLocaleString();
+                // Ensure final value is exactly rendered
+                el.textContent = target.toLocaleString('en-US');
               }
             };
 

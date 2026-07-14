@@ -30,21 +30,29 @@
         <path class="path-line" d="M 200 150 Q 100 100 40 100" />
       </g>
 
-      <!-- Brief lines (converging on return) -->
-      <g class="brief-lines"></g>
+      <!-- Static brief lines (converging on return) — rendered by default -->
+      <g class="brief-lines">
+        <line class="brief-line" x1="340" y1="50" x2="200" y2="150" />
+        <line class="brief-line" x1="360" y1="100" x2="200" y2="150" />
+        <line class="brief-line" x1="370" y1="150" x2="200" y2="150" />
+        <line class="brief-line" x1="360" y1="200" x2="200" y2="150" />
+        <line class="brief-line" x1="340" y1="250" x2="200" y2="150" />
+        <line class="brief-line" x1="80" y1="50" x2="200" y2="150" />
+        <line class="brief-line" x1="40" y1="100" x2="200" y2="150" />
+      </g>
 
       <!-- Orchestrator center node -->
       <circle class="orchestrator-node" cx="200" cy="150" r="8" />
 
-      <!-- Worker dots -->
+      <!-- Worker dots — initially at endpoints (static diagram), animated to center on init -->
       <g class="workers">
-        <circle class="worker-dot" data-index="0" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="1" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="2" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="3" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="4" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="5" cx="200" cy="150" r="5" />
-        <circle class="worker-dot" data-index="6" cx="200" cy="150" r="5" />
+        <circle class="worker-dot" data-index="0" cx="340" cy="50" r="5" />
+        <circle class="worker-dot" data-index="1" cx="360" cy="100" r="5" />
+        <circle class="worker-dot" data-index="2" cx="370" cy="150" r="5" />
+        <circle class="worker-dot" data-index="3" cx="360" cy="200" r="5" />
+        <circle class="worker-dot" data-index="4" cx="340" cy="250" r="5" />
+        <circle class="worker-dot" data-index="5" cx="80" cy="50" r="5" />
+        <circle class="worker-dot" data-index="6" cx="40" cy="100" r="5" />
       </g>
     </svg>
 
@@ -190,17 +198,6 @@
     return { x, y };
   }
 
-  function drawBriefLine(fromX, fromY, toX, toY) {
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('class', 'brief-line');
-    line.setAttribute('x1', fromX);
-    line.setAttribute('y1', fromY);
-    line.setAttribute('x2', toX);
-    line.setAttribute('y2', toY);
-    briefLinesGroup.appendChild(line);
-    return line;
-  }
-
   function updatePhaseCaption() {
     phaseText.textContent = phases[currentPhase];
   }
@@ -227,11 +224,16 @@
         worker.setAttribute('cx', pos.x);
         worker.setAttribute('cy', pos.y);
       });
-      briefLinesGroup.innerHTML = '';
+      // Clear brief lines during dispatch (workers moving out)
+      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
+        if (!line.classList.contains('path-line')) line.remove();
+      });
     } else if (cycleTime < 4000) {
       // Return phase: move back with brief lines
       const t = 1 - (cycleTime - 2000) / 2000;
-      briefLinesGroup.innerHTML = '';
+      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
+        if (!line.classList.contains('path-line')) line.remove();
+      });
 
       workers.forEach((worker, idx) => {
         const pos = getPositionOnPath(t, idx);
@@ -239,8 +241,14 @@
         worker.setAttribute('cy', pos.y);
 
         // Draw brief line from worker back to orchestrator
-        if (t < 0.9) {
-          drawBriefLine(pos.x, pos.y, 200, 150);
+        if (t < 0.9 && t > 0) {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('class', 'brief-line');
+          line.setAttribute('x1', pos.x);
+          line.setAttribute('y1', pos.y);
+          line.setAttribute('x2', 200);
+          line.setAttribute('y2', 150);
+          briefLinesGroup.appendChild(line);
         }
       });
     } else {
@@ -249,7 +257,9 @@
         worker.setAttribute('cx', 200);
         worker.setAttribute('cy', 150);
       });
-      briefLinesGroup.innerHTML = '';
+      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
+        if (!line.classList.contains('path-line')) line.remove();
+      });
     }
 
     // Swarm effect on click
@@ -302,16 +312,9 @@
   // Make SVG focusable for keyboard
   svg.setAttribute('tabindex', '0');
 
-  // Start animation
-  if (prefersReducedMotion) {
-    // Static diagram: show all paths
-    workers.forEach((worker, idx) => {
-      const endpoint = endpoints[idx];
-      worker.setAttribute('cx', endpoint.x);
-      worker.setAttribute('cy', endpoint.y);
-      drawBriefLine(endpoint.x, endpoint.y, 200, 150);
-    });
-  } else {
+  // Start animation only if motion is not reduced
+  // Static diagram is already rendered by default in SVG markup
+  if (!prefersReducedMotion) {
     requestAnimationFrame(animate);
   }
 })();
