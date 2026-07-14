@@ -1,22 +1,44 @@
 ---
-// TwoAIReview section — multi-LLM evaluation and review systems
+// TwoAIReview.astro — peer review from two independent AI models, side by side
+// Anchor: review | Responsive two-column layout | No props
 ---
 
-<section class="review" id="review">
-  <p class="section-moral"><em>Two eyes see what one cannot; wisdom is knowing which to trust.</em></p>
-  <h2>Two-AI Review</h2>
-  <p>Comparative analysis frameworks for LLM systems. Cross-model verification, adversarial prompt design, and multi-stage critique.</p>
+<section class="review-section">
+  <p class="section-moral"><em>One witness is an anecdote; two are a review.</em></p>
+
+  <h2 id="review">Peer review — two models, one repository</h2>
+
+  <div class="review-grid">
+    <!-- Column 1: Claude review -->
+    <div class="review-column claude-review">
+      <blockquote class="review-quote">
+        <p>
+          Aesop is that rare meta-project that earns its premise: an orchestration harness whose own commit history is its benchmark. The engineering instinct worth hiring is visible in the data: measure before believing (two A/B tests killed a fashionable hierarchical architecture the numbers didn't support), state moved off git into an event-sourced store when coordination outgrew it, secret-scanning gating every push. 130 merged PRs written substantially by the fleet itself — with the failures logged as carefully as the wins.
+        </p>
+      </blockquote>
+      <p class="review-attribution">— Claude (Anthropic), reviewing the repository it helps orchestrate.</p>
+    </div>
+
+    <!-- Column 2: Gemini empty seat -->
+    <div class="review-column gemini-pending">
+      <div class="review-seat">
+        <p class="seat-label">Second reviewer: seat open.</p>
+        <p class="seat-copy">Gemini's independent take lands here.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <style>
-  .review {
-    margin-bottom: var(--space-20);
+  .review-section {
+    margin-bottom: var(--space-16);
   }
 
   .section-moral {
     font-size: var(--text-sm);
     color: var(--color-text-tertiary);
     margin-bottom: var(--space-4);
+    font-family: var(--font-sans);
   }
 
   .section-moral em {
@@ -25,12 +47,102 @@
   }
 
   h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
     color: var(--color-text);
+    margin-bottom: var(--space-10);
+    line-height: var(--leading-tight);
+    font-family: var(--font-sans);
+  }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+  }
+
+  @media (min-width: 768px) {
+    .review-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .review-column {
+    padding: var(--space-8);
+    border-radius: 0.25rem;
+  }
+
+  .claude-review {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .review-quote {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
     margin-bottom: var(--space-6);
   }
 
-  p {
+  .review-quote p {
+    margin: 0;
+  }
+
+  .review-attribution {
+    font-size: var(--text-sm);
     color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
+    font-style: italic;
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+    font-family: var(--font-sans);
+  }
+
+  .gemini-pending {
+    background-color: transparent;
+    border: 2px dashed var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+  }
+
+  .review-seat {
+    text-align: center;
+    padding: var(--space-8);
+  }
+
+  .seat-label {
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-4) 0;
+    font-family: var(--font-sans);
+  }
+
+  .seat-copy {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    font-style: italic;
+    font-family: var(--font-sans);
+  }
+
+  /* Focus ring support for accessibility */
+  .review-column:focus-within {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Reduced motion: no transitions needed, no animations on first render */
+  @media (prefers-reduced-motion: reduce) {
+    .review-column {
+      transition: none;
+    }
   }
 </style>

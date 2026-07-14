@@ -1,45 +1,228 @@
 ---
-// Hero section — landing statement
+// Hero section — full-viewport landing statement
 ---
 
 <section class="hero" id="hero">
   <div class="hero-content">
-    <p class="hero-byline"><em>The carpenter builds best when the wood knows where it's meant to go.</em></p>
-    <h1>Matt Culliton</h1>
-    <p class="hero-subtitle">Engineer of self-building systems. Fable-fleet orchestrator. AI agent craft.</p>
+    <p class="section-moral"><em>The best systems are those that build themselves.</em></p>
+
+    <h1 class="hero-title">MATT CULLITON</h1>
+
+    <p class="hero-tagline">I build software fleets that build software.</p>
+
+    <p class="hero-subhead">
+      AI orchestration · full-stack automation · production systems that ship themselves
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number" data-count="130">130</span> PRs merged by a self-building system
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="13">13</span> development waves
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="52600">52,600</span> lines of code
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="354">354</span> commits
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="6">6</span> published essays
+      </div>
+    </div>
+
+    <p class="hero-kicker"><em>This site was assembled by the fleet it describes.</em></p>
+
+    <div class="hero-links">
+      <a href="https://github.com/matt82198" class="hero-link">GitHub</a>
+      <span class="link-divider">·</span>
+      <a href="https://medium.com/@matt82198" class="hero-link">Medium</a>
+      <span class="link-divider">·</span>
+      <a href="https://linkedin.com/in/matt-culliton-a8327676" class="hero-link">LinkedIn</a>
+    </div>
+
+    <p class="hero-moral"><em>Slow and steady wins; parallel and verified wins sooner.</em></p>
   </div>
 </section>
 
 <style>
   .hero {
-    padding: var(--space-24) var(--space-4);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--space-8);
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 
   .hero-content {
     max-width: var(--width-prose);
-    margin: 0 auto;
+    text-align: center;
   }
 
-  .hero-byline {
+  .section-moral {
     font-size: var(--text-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-8);
-  }
-
-  .hero-byline em {
-    font-style: italic;
     color: var(--color-text-tertiary);
+    margin: 0 0 var(--space-8) 0;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-normal);
   }
 
-  h1 {
-    margin-bottom: var(--space-6);
+  .section-moral em {
+    font-style: italic;
+  }
+
+  .hero-title {
+    font-size: var(--text-4xl);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
     color: var(--color-text);
+    margin: var(--space-8) 0 var(--space-6) 0;
+    line-height: var(--leading-tight);
   }
 
-  .hero-subtitle {
-    font-size: var(--text-lg);
+  .hero-tagline {
+    font-size: var(--text-2xl);
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    margin: 0 0 var(--space-4) 0;
+    line-height: var(--leading-normal);
+    font-weight: 400;
+  }
+
+  .hero-subhead {
+    font-size: var(--text-base);
+    font-family: var(--font-sans);
     color: var(--color-text-secondary);
+    margin: 0 0 var(--space-12) 0;
+    line-height: var(--leading-normal);
+  }
+
+  .hero-stats {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    padding: var(--space-8);
+    margin: 0 0 var(--space-12) 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
     line-height: var(--leading-relaxed);
   }
+
+  .stat {
+    color: var(--color-text-secondary);
+  }
+
+  .stat:not(:last-child) {
+    margin-bottom: var(--space-4);
+  }
+
+  .stat-number {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .hero-kicker {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0 0 var(--space-8) 0;
+    line-height: var(--leading-normal);
+    font-family: var(--font-sans);
+  }
+
+  .hero-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-4);
+    margin: 0 0 var(--space-12) 0;
+    flex-wrap: wrap;
+  }
+
+  .hero-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .hero-link:hover {
+    color: var(--accent-light);
+  }
+
+  .hero-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .link-divider {
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .hero-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    font-family: var(--font-sans);
+  }
+
+  .hero-moral em {
+    font-style: italic;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-link {
+      transition: none;
+    }
+  }
 </style>
+
+<script>
+  // Count-up animation for stats — respects prefers-reduced-motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+          const elements = entry.target.querySelectorAll('[data-count]');
+          elements.forEach(el => {
+            const target = parseInt(el.dataset.count, 10);
+            const duration = 2000; // 2 seconds
+            const start = Date.now();
+
+            const update = () => {
+              const elapsed = Date.now() - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const current = Math.floor(progress * target);
+
+              // Format with thousand separators
+              el.textContent = current.toLocaleString();
+
+              if (progress < 1) {
+                requestAnimationFrame(update);
+              } else {
+                el.textContent = target.toLocaleString();
+              }
+            };
+
+            update();
+          });
+
+          entry.target.classList.add('animated');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const statsSection = document.querySelector('.hero-stats');
+    if (statsSection) {
+      observer.observe(statsSection);
+    }
+  }
+</script>

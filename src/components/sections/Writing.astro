@@ -1,15 +1,84 @@
 ---
-// Writing section — essays and documentation
+// Writing section: 6 Medium essays, first two featured, rest in list
 ---
 
-<section class="writing" id="writing">
-  <p class="section-moral"><em>Write what you had to learn; leave the map for the next traveler.</em></p>
-  <h2>Writing</h2>
-  <p>Essays on distributed systems, orchestration patterns, and AI agent design. Doctrine papers on state machines and reliable handoff.</p>
+<section class="writing-section">
+  <p class="section-moral">
+    <em>The crow wrote down what the pitcher taught it.</em>
+  </p>
+
+  <h2 id="writing">Writing</h2>
+
+  <!-- Featured essays: first two with visual prominence -->
+  <div class="featured-essays">
+    <article class="featured-essay">
+      <a href="https://medium.com/@matt82198/the-system-that-builds-itself-field-notes-from-an-ai-orchestrator-4a012df2575d" class="essay-link">
+        <h3>The System That Builds Itself — field notes from an AI orchestrator</h3>
+      </a>
+      <time datetime="2026-07-14" class="essay-date">Jul 14 2026</time>
+      <p class="essay-desc">A self-building system is only as good as its honesty with itself.</p>
+    </article>
+
+    <article class="featured-essay">
+      <a href="https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4" class="essay-link">
+        <h3>The Aesop Hypothesis — AI agents that survive because they're designed to fail</h3>
+      </a>
+      <time datetime="2026-07-12" class="essay-date">Jul 12 2026</time>
+      <p class="essay-desc">Resilience by making failure cheap, visible, survivable.</p>
+    </article>
+  </div>
+
+  <!-- Additional essays: compact list -->
+  <ul class="essay-list">
+    <li>
+      <span class="essay-title">
+        <a href="https://medium.com/@matt82198/claude-code-has-a-memory-problem-i-built-a-missing-layer-44c3f9f6248d" class="list-link">
+          Claude Code Has a Memory Problem. I Built a Missing Layer.
+        </a>
+      </span>
+      <span class="essay-meta">
+        <time datetime="2026-05-19">May 19 2026</time>
+        — A persistent, git-tracked identity layer for stateless sessions.
+      </span>
+    </li>
+    <li>
+      <span class="essay-title">
+        <a href="https://medium.com/@matt82198/architecture-that-can-turn-120-words-into-a-shipped-feature-78dcf9559dde" class="list-link">
+          Architecture That Can Turn 120 Words Into a Shipped Feature
+        </a>
+      </span>
+      <span class="essay-meta">
+        <time datetime="2026-05-01">May 1 2026</time>
+        — 25-minute idea-to-shipped via orchestrated agents.
+      </span>
+    </li>
+    <li>
+      <span class="essay-title">
+        <a href="https://medium.com/@matt82198/2-what-it-feels-like-to-be-hit-by-14-agents-running-on-your-own-github-bill-6e7de539c603" class="list-link">
+          What It Feels Like to Be Hit by 14 Agents Running on Your Own GitHub Bill
+        </a>
+      </span>
+      <span class="essay-meta">
+        <time datetime="2026-04-28">Apr 28 2026</time>
+        — Agent-swarm economics from the target's side.
+      </span>
+    </li>
+    <li>
+      <span class="essay-title">
+        <a href="https://medium.com/@matt82198/the-frame-distribution-problem-in-agentic-llms-14e92fc3da39" class="list-link">
+          The Frame-Distribution Problem in Agentic LLMs
+        </a>
+      </span>
+      <span class="essay-meta">
+        <time datetime="2026-04-28">Apr 28 2026</time>
+        — Harmful intent distributed across a pipeline evades per-component safety checks.
+      </span>
+    </li>
+  </ul>
 </section>
 
 <style>
-  .writing {
+  .writing-section {
     margin-bottom: var(--space-20);
   }
 
@@ -25,12 +94,137 @@
   }
 
   h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
     color: var(--color-text);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-12);
+    margin-top: var(--space-12);
+    font-family: var(--font-sans);
+    line-height: var(--leading-tight);
   }
 
-  p {
+  /* Featured essays grid */
+  .featured-essays {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8);
+    margin-bottom: var(--space-16);
+  }
+
+  .featured-essay {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    border-radius: 0.25rem;
+    transition: background-color var(--duration-base) var(--ease-out),
+                border-color var(--duration-base) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured-essay {
+      transition: none;
+    }
+  }
+
+  .featured-essay:hover {
+    background: var(--color-bg);
+    border-color: var(--accent);
+  }
+
+  .essay-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .essay-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 0.25rem;
+  }
+
+  .featured-essay h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-4) 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .essay-date {
+    font-size: var(--text-sm);
     color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
+    font-family: var(--font-mono);
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  .essay-desc {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  /* Essay list */
+  .essay-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .essay-list li {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .essay-list li:last-child {
+    border-bottom: none;
+  }
+
+  .essay-title {
+    display: block;
+  }
+
+  .list-link {
+    font-size: var(--text-base);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .list-link {
+      transition: none;
+    }
+  }
+
+  .list-link:hover {
+    color: var(--accent-light);
+  }
+
+  .list-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 0.125rem;
+  }
+
+  .essay-meta {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .essay-meta time {
+    font-family: var(--font-mono);
+    color: var(--color-text-tertiary);
   }
 </style>

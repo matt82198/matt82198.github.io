@@ -1,22 +1,115 @@
 ---
-// ClientWork section — client projects
+// ClientWork.astro — Production systems for Tannery Row
+// Three named project cards showcasing real business software:
+// 1. Sample Program Tracker (Spring Boot / Java 17)
+// 2. Operations Toolbox (Streamlit + Python CLI)
+// 3. Invoice Bridge (Squarespace ↔ QuickBooks integration)
 ---
 
-<section class="clientwork" id="clientwork">
-  <p class="section-moral"><em>The finest work is invisible: it solves problems the client forgot they had.</em></p>
-  <h2>Client Work</h2>
-  <p>Full-stack product engineering for startups. Architecture, backend, DevOps, and systems design.</p>
+<section class="client-work">
+  <p class="section-moral">
+    <em>No fable survives contact with a real invoice.</em>
+  </p>
+
+  <h2 id="clientwork">Client work — Tannery Row</h2>
+
+  <p class="section-intro">
+    Production systems for a real leather-goods business. Inventory tracking, order-to-invoice workflows,
+    payment reconciliation — the operational backbone that makes a craft business scale.
+  </p>
+
+  <div class="projects-grid">
+    <!-- Project 1: Sample Program Tracker -->
+    <article class="project-card">
+      <h3>Sample Program Tracker</h3>
+      <p class="project-tech">
+        <code>Spring Boot 4</code>
+        <code>Java 17</code>
+        <code>REST API</code>
+      </p>
+      <p class="project-description">
+        RESTful API tracking leather sample production across four stages with inventory status management.
+        Clean domain-driven architecture, enterprise-grade: typed API responses, global exception handling,
+        request validation, Caffeine caching for high-frequency lookups.
+      </p>
+      <div class="project-stats">
+        <div class="stat">
+          <span class="stat-value">18</span>
+          <span class="stat-label">test files</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">TDD-first</span>
+          <span class="stat-label">approach</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 2: Operations Toolbox -->
+    <article class="project-card">
+      <h3>Operations Toolbox</h3>
+      <p class="project-tech">
+        <code>Streamlit</code>
+        <code>Python CLI</code>
+        <code>OAuth2</code>
+      </p>
+      <p class="project-description">
+        Dashboard + command-line suite spanning six business domains: Squarespace order matching,
+        QuickBooks invoicing, payment reconciliation (Stripe/PayPal), inventory tracking, swatch-book
+        generation. Pandas pipelines, Google Sheets integration. Built for daily non-engineer use.
+      </p>
+      <div class="project-stats">
+        <div class="stat">
+          <span class="stat-value">29</span>
+          <span class="stat-label">Python scripts</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">109</span>
+          <span class="stat-label">commits</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 3: Invoice Bridge -->
+    <article class="project-card">
+      <h3>Invoice Bridge</h3>
+      <p class="project-tech">
+        <code>Java 17</code>
+        <code>Spring Boot</code>
+        <code>Selenium</code>
+      </p>
+      <p class="project-description">
+        Bi-directional sync: Squarespace orders into QuickBooks Online. Four-pass matching algorithm
+        (doc number → amount+customer → amount → last name), Selenium automation for QBO browser sync,
+        gamified SKU-mapping UI with streak scoring, end-of-month reconciliation calendar. POI + OpenCSV
+        for data manipulation.
+      </p>
+      <div class="project-stats">
+        <div class="stat">
+          <span class="stat-value">4-pass</span>
+          <span class="stat-label">matching</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">gamified</span>
+          <span class="stat-label">UX</span>
+        </div>
+      </div>
+    </article>
+  </div>
 </section>
 
 <style>
-  .clientwork {
-    margin-bottom: var(--space-20);
+  .client-work {
+    width: 100%;
+    max-width: var(--width-container);
+    margin: 0 auto var(--space-20);
+    padding: var(--space-12) var(--space-8);
   }
 
   .section-moral {
     font-size: var(--text-sm);
     color: var(--color-text-tertiary);
     margin-bottom: var(--space-4);
+    line-height: var(--leading-normal);
   }
 
   .section-moral em {
@@ -25,12 +118,125 @@
   }
 
   h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
     color: var(--color-text);
+    margin-bottom: var(--space-4);
+    line-height: var(--leading-tight);
+  }
+
+  .section-intro {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    max-width: var(--width-prose);
+    margin-bottom: var(--space-10);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+    margin-top: var(--space-10);
+  }
+
+  .project-card {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--space-6);
+    transition: border-color var(--duration-base) var(--ease-in-out),
+                background-color var(--duration-base) var(--ease-in-out);
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card {
+      transition: none;
+    }
+  }
+
+  .project-card:focus-within {
+    border-color: var(--accent);
+    background-color: var(--color-bg);
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .project-card h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+    line-height: var(--leading-tight);
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .project-tech code {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 2px;
+    border: 1px solid var(--color-border);
+  }
+
+  .project-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
     margin-bottom: var(--space-6);
   }
 
-  p {
-    color: var(--color-text-secondary);
-    line-height: var(--leading-relaxed);
+  .project-stats {
+    display: flex;
+    gap: var(--space-6);
+    font-family: var(--font-mono);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .stat-value {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .client-work {
+      padding: var(--space-8) var(--space-4);
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .project-stats {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
   }
 </style>
