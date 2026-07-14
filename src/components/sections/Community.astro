@@ -1,0 +1,208 @@
+---
+// Community section: field notes shared on Reddit
+// Anchor: community | Three posts about token economics, orchestration, security
+// No props
+---
+
+<section class="community-section">
+  <p class="section-moral">
+    <em>The shepherd posted his flock's numbers; the wolves already knew theirs.</em>
+  </p>
+
+  <h2 id="community">Community — field notes in public</h2>
+
+  <p class="community-intro">
+    Writes on Reddit as <a href="https://reddit.com/user/rehtorical" class="reddit-link">u/rehtorical</a>.
+    <span class="community-theme">token economics · agent orchestration · AI security</span>
+  </p>
+
+  <!-- Featured post -->
+  <div class="featured-post">
+    <div class="featured-badge">FEATURED</div>
+    <article class="reddit-post">
+      <a href="https://www.reddit.com/r/ClaudeAI/comments/1uuib78/" class="post-link">
+        <h3>A single AI agent session hit 534,000 tokens in one turn (2.7x the usual 200K ceiling)</h3>
+      </a>
+      <p class="post-meta">r/ClaudeAI · field data from a 1,320-turn orchestration session</p>
+      <p class="post-desc">Publishing live metrics from the fleet itself — how far can a single agent push the token ceiling before coherence breaks.</p>
+    </article>
+  </div>
+
+  <!-- Additional posts -->
+  <ul class="post-list">
+    <li>
+      <article class="reddit-post">
+        <a href="https://www.reddit.com/r/ClaudeAI/comments/" class="post-link">
+          <h3>MFA rotation can't stop modern attacks</h3>
+        </a>
+        <p class="post-meta">r/ClaudeAI · 19 upvotes</p>
+        <p class="post-desc">Consent phishing hands attackers authorized tokens that survive credential resets. OAuth-chaining vulnerabilities become flawlessly executable by agents. Hardware keys (YubiKey) remain the practical defense.</p>
+      </article>
+    </li>
+    <li>
+      <article class="reddit-post">
+        <a href="https://www.reddit.com/r/vibecoding/" class="post-link">
+          <h3>Simple Claude structure to save tokens</h3>
+        </a>
+        <p class="post-meta">r/vibecoding</p>
+        <p class="post-desc">Practical token-economics structure for Claude sessions. Discipline beats cleverness.</p>
+      </article>
+    </li>
+  </ul>
+</section>
+
+<style>
+  .community-section {
+    margin-bottom: var(--space-20);
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-4);
+    font-family: var(--font-sans);
+  }
+
+  .section-moral em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    margin-top: var(--space-12);
+    font-family: var(--font-sans);
+    line-height: var(--leading-tight);
+  }
+
+  .community-intro {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-12);
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .reddit-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reddit-link {
+      transition: none;
+    }
+  }
+
+  .reddit-link:hover {
+    color: var(--accent-light);
+  }
+
+  .reddit-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 0.125rem;
+  }
+
+  .community-theme {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-2);
+    font-style: italic;
+    font-family: var(--font-sans);
+  }
+
+  /* Featured post section */
+  .featured-post {
+    position: relative;
+    margin-bottom: var(--space-16);
+  }
+
+  .featured-badge {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+  }
+
+  .reddit-post {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    border-radius: 0.25rem;
+    transition: background-color var(--duration-base) var(--ease-out),
+                border-color var(--duration-base) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reddit-post {
+      transition: none;
+    }
+  }
+
+  .reddit-post:hover {
+    background: var(--color-bg);
+    border-color: var(--accent);
+  }
+
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 0.25rem;
+  }
+
+  .reddit-post h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3) 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .post-meta {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .post-desc {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  /* Post list */
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8);
+  }
+
+  .post-list li {
+    display: flex;
+  }
+
+  .post-list .reddit-post {
+    width: 100%;
+  }
+</style>
