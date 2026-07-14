@@ -1,0 +1,319 @@
+---
+// Aesop section: the orchestration harness that ships its own features
+// Component contract: no props, system fonts only, tokens.css custom properties
+---
+
+<section class="aesop-section">
+  <p class="section-moral">
+    <em>The fox measured twice and paid for one architecture.</em>
+  </p>
+
+  <h2 id="aesop">Aesop — the system that builds itself</h2>
+
+  <div class="aesop-pitch">
+    <p>
+      Open-source orchestration harness for Claude Code that ships its own features via parallel agent fleets. Cheap Haiku workers on scoped domains, a lean orchestrator on durable git-committed state: <strong>130 of its own PRs implemented, tested, and merged by its wave cycle.</strong>
+    </p>
+    <p>
+      <a href="https://github.com/matt82198/aesop" class="cta-link">github.com/matt82198/aesop</a>
+    </p>
+  </div>
+
+  <div class="architecture-section">
+    <h3>Architecture highlights</h3>
+    <ul class="architecture-list">
+      <li>
+        <strong>Haiku-first dispatch</strong> — measured ~1/3 the cost, A/B-validated
+      </li>
+      <li>
+        <strong>Event-sourced SQLite</strong> (WAL) state store with git demoted to rendered export
+      </li>
+      <li>
+        <strong>Watchdog daemon</strong> — secret-scan pre-push gate + heartbeat liveness
+      </li>
+      <li>
+        <strong>React 18 + Vite dashboard</strong> — real-time SSE updates, no frame rate lock
+      </li>
+      <li>
+        <strong>Read-only MCP server</strong> for fleet status querying
+      </li>
+      <li>
+        <strong>One-turn wave workflow</strong> — backlog → parallel build → verify → merge train
+      </li>
+    </ul>
+  </div>
+
+  <div class="scars-section">
+    <h3>Scars, documented</h3>
+    <div class="scars-list">
+      <div class="scar-item">
+        <div class="scar-title">Hierarchical dispatch cost trap</div>
+        <p>
+          A/B test showed Sonnet-specialist dispatch cost 4.3× for identical quality. Architecture cancelled, data kept — the measurement became more valuable than the experiment.
+        </p>
+      </div>
+      <div class="scar-item">
+        <div class="scar-title">CI union-drift bug</div>
+        <p>
+          Every PR green against its own base while main still broke. The commit gate saw disjoint test runs. Fixed with branch-protection + drift gates; now a baseline check for any distributed CI.
+        </p>
+      </div>
+      <div class="scar-item">
+        <div class="scar-title">Fail-open lock timeout</div>
+        <p>
+          500ms lock timeout proceeded unlocked, silently dropping writes. Root-caused and moved to an event-sourced store where every mutation is ordered and auditable.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="numbers-section">
+    <h3>By the numbers</h3>
+    <div class="numbers-table">
+      <div class="numbers-row">
+        <span class="numbers-label">Commits</span>
+        <span class="numbers-value">354</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">PRs merged</span>
+        <span class="numbers-value">130</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">Waves</span>
+        <span class="numbers-value">13</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">Domains</span>
+        <span class="numbers-value">14</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">Test files</span>
+        <span class="numbers-value">46</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">LOC</span>
+        <span class="numbers-value">52.6K</span>
+      </div>
+      <div class="numbers-row">
+        <span class="numbers-label">Version</span>
+        <span class="numbers-value">v0.1.0-beta.4</span>
+      </div>
+    </div>
+    <p class="numbers-note">
+      <em>Every number computed from git, reproducible by cloning.</em>
+    </p>
+  </div>
+</section>
+
+<style>
+  .aesop-section {
+    margin: var(--space-16) 0;
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-normal);
+  }
+
+  .section-moral em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+  .aesop-section h2 {
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-8);
+    line-height: var(--leading-tight);
+    font-family: var(--font-sans);
+    scroll-margin-top: 80px;
+  }
+
+  .aesop-section h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-tight);
+    font-family: var(--font-sans);
+  }
+
+  .aesop-pitch {
+    max-width: var(--width-prose);
+    margin-bottom: var(--space-12);
+  }
+
+  .aesop-pitch p {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .aesop-pitch strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .cta-link {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    border-bottom: 1px solid var(--accent);
+    transition: color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out),
+                background-color var(--duration-fast) var(--ease-out);
+    padding: var(--space-1) var(--space-2);
+    margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1);
+    border-radius: 2px;
+  }
+
+  .cta-link:hover {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .cta-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-link {
+      transition: none;
+    }
+  }
+
+  .architecture-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .architecture-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .architecture-list li {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    padding-left: var(--space-6);
+    position: relative;
+  }
+
+  .architecture-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .architecture-list strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .scars-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .scars-list {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .scar-item {
+    padding: var(--space-6);
+    background-color: var(--color-bg-secondary);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+
+  .scar-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-sans);
+  }
+
+  .scar-item p {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .numbers-section {
+    margin-top: var(--space-16);
+  }
+
+  .numbers-table {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-6);
+  }
+
+  .numbers-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    align-items: center;
+  }
+
+  .numbers-row:last-child {
+    border-bottom: none;
+  }
+
+  .numbers-label {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .numbers-value {
+    color: var(--accent);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .numbers-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .numbers-note em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+  /* Responsive: stack numbers table for narrow screens */
+  @media (max-width: 640px) {
+    .numbers-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    .numbers-value {
+      text-align: left;
+    }
+  }
+</style>

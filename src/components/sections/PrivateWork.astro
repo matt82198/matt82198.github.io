@@ -1,0 +1,183 @@
+---
+// PrivateWork.astro — Behind closed doors: 31 private repos organized by domain
+// Field notes aesthetic: compact cards, system fonts, Aesop moral
+---
+
+<section class="privatework" id="privatework">
+  <p class="section-moral"><em>Not every grape the fox reached was sour; some were simply private.</em></p>
+
+  <h2>Behind closed doors</h2>
+
+  <p class="intro-line">31 private repositories; a selection, one line each.</p>
+
+  <div class="category-grid">
+    <!-- AI & Orchestration -->
+    <div class="category">
+      <h3>AI & Orchestration</h3>
+      <ul class="repo-list">
+        <li><strong>claude-conductor</strong> — Agentic IDE experiment</li>
+        <li><strong>conductor</strong> — Multi-agent control plane (13 waves of machinery)</li>
+        <li><strong>cross-machine-context</strong> — Portable orchestration state across machines</li>
+        <li><strong>persistent-agents</strong> — Long-lived agent experiments</li>
+        <li><strong>claude-scripts</strong> — Reusable ops script library</li>
+      </ul>
+    </div>
+
+    <!-- Business Systems -->
+    <div class="category">
+      <h3>Business Systems</h3>
+      <ul class="repo-list">
+        <li><strong>ecm-ai</strong> — Invoice automation bridge</li>
+        <li><strong>TRShopServer</strong> — E-commerce microservices (backend)</li>
+        <li><strong>TRShopClient</strong> — E-commerce microservices (frontend)</li>
+        <li><strong>StreamlitAuthenticationDashboard</strong> — Authenticated ops dashboards</li>
+      </ul>
+    </div>
+
+    <!-- Data & SEO -->
+    <div class="category">
+      <h3>Data & SEO</h3>
+      <ul class="repo-list">
+        <li><strong>google-indexing</strong> — Indexing automation</li>
+        <li><strong>google-indexer</strong> — Indexing automation</li>
+        <li><strong>tanneryrow-seo</strong> — Search optimization tooling</li>
+      </ul>
+    </div>
+
+    <!-- E-commerce Ops -->
+    <div class="category">
+      <h3>E-commerce Ops</h3>
+      <ul class="repo-list">
+        <li><strong>tanneryrow-tools</strong> — Storefront tooling and drops</li>
+        <li><strong>tanneryrow-drops</strong> — Storefront tooling and drops</li>
+        <li><strong>tanneryrow-ss</strong> — Storefront tooling and drops</li>
+        <li><strong>migrate-sortly-TR</strong> — Inventory migration</li>
+        <li><strong>ReceiptParse</strong> — Receipt data extraction</li>
+      </ul>
+    </div>
+
+    <!-- The Archive -->
+    <div class="category">
+      <h3>The Archive</h3>
+      <ul class="repo-list">
+        <li><strong>Glimpse</strong> — iOS app, Objective-C, 2016</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .privatework {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    max-width: var(--width-container);
+    margin: 0 auto var(--space-20);
+    padding: var(--space-8);
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    line-height: var(--leading-normal);
+  }
+
+  .section-moral em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+    color: var(--color-text);
+    font-weight: 600;
+    margin: 0;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .intro-line {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--leading-relaxed);
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(28ch, 1fr));
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .category {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .category h3 {
+    font-size: var(--text-base);
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .repo-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .repo-list li {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    word-wrap: break-word;
+  }
+
+  .repo-list strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  /* Focus rings on interactive elements (if needed) */
+  .category:focus-within {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .category {
+      transition: none;
+    }
+  }
+
+  /* Responsive: stack grid on smaller screens */
+  @media (max-width: 640px) {
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+    }
+
+    .privatework {
+      padding: var(--space-4);
+      gap: var(--space-6);
+    }
+  }
+</style>

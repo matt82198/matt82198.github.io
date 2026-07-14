@@ -1,0 +1,253 @@
+---
+// Timeline section: vertical chronology + contact footer
+// Uses only tokens.css custom properties; system fonts; zero external requests.
+---
+
+<section class="timeline-section">
+  <p class="section-moral"><em>The tortoise kept a changelog.</em></p>
+
+  <h2 id="timeline">Timeline</h2>
+
+  <div class="timeline-container">
+    <ol class="timeline-list">
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2015">2015</time>
+        <p class="timeline-text">Joined GitHub</p>
+      </li>
+
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2016">2016</time>
+        <p class="timeline-text"><strong>Glimpse</strong> — iOS app (Objective-C)</p>
+      </li>
+
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2024/2026">~2024–2026</time>
+        <p class="timeline-text"><strong>Tannery Row automation suite</strong> — operations toolbox, invoice bridge, sample-program tracker</p>
+      </li>
+
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2026-05">May 2026</time>
+        <p class="timeline-text"><em>Claude Code Has a Memory Problem</em> — builds the Conductor memory layer</p>
+      </li>
+
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2026-06/2026-07">Jun–Jul 2026</time>
+        <p class="timeline-text"><strong>Aesop</strong> open-sourced; 13 self-built waves, 130 PRs, v0.1.0-beta.4</p>
+      </li>
+
+      <li class="timeline-entry">
+        <time class="timeline-date" datetime="2026-07">Jul 2026</time>
+        <p class="timeline-text"><em>The System That Builds Itself</em> published; this portfolio assembled by the fleet</p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="contact-block" id="contact">
+    <h3 class="contact-heading">Contact</h3>
+    <ul class="contact-list">
+      <li><span class="contact-label">Email</span> <a href="mailto:matt82198@gmail.com" class="contact-link">matt82198@gmail.com</a></li>
+      <li><span class="contact-label">GitHub</span> <a href="https://github.com/matt82198" class="contact-link">github.com/matt82198</a></li>
+      <li><span class="contact-label">Medium</span> <a href="https://medium.com/@matt82198" class="contact-link">medium.com/@matt82198</a></li>
+      <li><span class="contact-label">LinkedIn</span> <a href="https://linkedin.com/in/matt-culliton-a8327676" class="contact-link">linkedin.com/in/matt-culliton-a8327676</a></li>
+      <li><span class="contact-label">X</span> <a href="https://x.com/mculliton82198" class="contact-link">x.com/mculliton82198</a></li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .timeline-section {
+    max-width: var(--width-prose);
+    margin: 0 auto;
+    padding: var(--space-12) 0;
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .section-moral em {
+    font-style: italic;
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-10);
+    font-family: var(--font-sans);
+    line-height: var(--leading-tight);
+  }
+
+  .timeline-container {
+    margin-bottom: var(--space-16);
+  }
+
+  .timeline-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+
+  /* Vertical line connecting timeline entries */
+  .timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 2.5rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-border);
+  }
+
+  .timeline-entry {
+    position: relative;
+    padding-left: 6rem;
+    padding-bottom: var(--space-10);
+    margin-bottom: var(--space-8);
+  }
+
+  /* Timeline dot */
+  .timeline-entry::before {
+    content: '';
+    position: absolute;
+    left: 1.65rem;
+    top: 0.35rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: var(--accent);
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 0 0 3px var(--color-border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-entry::before {
+      animation: none;
+    }
+  }
+
+  .timeline-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: var(--space-2);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .timeline-text {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .timeline-text strong {
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .timeline-text em {
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+
+  /* Contact block */
+  .contact-block {
+    margin-top: var(--space-20);
+    padding-top: var(--space-12);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .contact-heading {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-sans);
+    line-height: var(--leading-tight);
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .contact-list li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    font-weight: 600;
+    min-width: 5rem;
+    text-align: right;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .contact-link {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--accent);
+    text-decoration: none;
+    line-height: var(--leading-normal);
+    position: relative;
+  }
+
+  .contact-link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+
+  .contact-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-link {
+      transition: none;
+    }
+  }
+
+  /* Responsive: stack labels on small screens */
+  @media (max-width: 640px) {
+    .contact-list li {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .contact-label {
+      text-align: left;
+      min-width: unset;
+    }
+
+    .timeline-entry {
+      padding-left: 4rem;
+    }
+
+    .timeline-list::before {
+      left: 1.5rem;
+    }
+
+    .timeline-entry::before {
+      left: 0.75rem;
+    }
+  }
+</style>

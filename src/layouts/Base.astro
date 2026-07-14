@@ -1,0 +1,219 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Matt Culliton — engineer of self-building systems", description = "Portfolio of Matt Culliton. Field notes from an AI fleet." } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://matt82198.github.io" />
+
+    <!-- No-flash theme script (inline to prevent flash) -->
+    <script is:inline>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="header-content">
+        <div class="wordmark">MATT CULLITON</div>
+        <nav class="site-nav">
+          <a href="#aesop">Work</a>
+          <a href="#clientwork">Client</a>
+          <a href="#writing">Writing</a>
+          <a href="#fleet">Fleet</a>
+          <a href="#review">Review</a>
+          <a href="#community">Community</a>
+          <a href="#timeline">Timeline</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span class="theme-icon">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>Assembled by the fleet it describes · <a href="https://github.com/matt82198/matt82198.github.io">source on GitHub</a></p>
+    </footer>
+
+    <script>
+      const themeToggle = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      const icon = themeToggle?.querySelector('.theme-icon');
+
+      function updateIcon(theme: string) {
+        if (icon) {
+          icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+      }
+
+      function getCurrentTheme() {
+        return html.getAttribute('data-theme') || 'light';
+      }
+
+      function setTheme(theme: string) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateIcon(theme);
+      }
+
+      // Initialize icon
+      updateIcon(getCurrentTheme());
+
+      // Toggle theme on button click
+      themeToggle?.addEventListener('click', () => {
+        const currentTheme = getCurrentTheme();
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          setTheme(newTheme);
+        }
+      });
+    </script>
+
+    <style>
+      .site-header {
+        position: sticky;
+        top: 0;
+        background-color: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+        z-index: 50;
+      }
+
+      .header-content {
+        max-width: var(--width-container);
+        margin: 0 auto;
+        padding: var(--space-4) var(--space-4);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-6);
+      }
+
+      .wordmark {
+        font-family: var(--font-mono);
+        font-size: var(--text-lg);
+        font-weight: 700;
+        letter-spacing: var(--tracking-wide);
+        color: var(--color-text);
+        white-space: nowrap;
+      }
+
+      .site-nav {
+        display: flex;
+        gap: var(--space-6);
+        flex: 1;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .site-nav a {
+        font-size: var(--text-sm);
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        transition: color var(--duration-fast) var(--ease-in-out);
+        padding: var(--space-2) var(--space-3);
+        border-radius: 2px;
+      }
+
+      .site-nav a:hover {
+        color: var(--accent);
+      }
+
+      .site-nav a:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: var(--focus-ring-offset);
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        font-size: var(--text-lg);
+        cursor: pointer;
+        padding: var(--space-2);
+        border-radius: 4px;
+        transition: all var(--duration-fast) var(--ease-in-out);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--color-bg-secondary);
+      }
+
+      .theme-toggle:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: var(--focus-ring-offset);
+      }
+
+      .theme-icon {
+        display: inline-block;
+      }
+
+      .site-footer {
+        background-color: var(--color-bg-secondary);
+        border-top: 1px solid var(--color-border);
+        margin-top: var(--space-24);
+        padding: var(--space-12) var(--space-4);
+        text-align: center;
+        font-size: var(--text-sm);
+        color: var(--color-text-secondary);
+      }
+
+      main {
+        max-width: var(--width-container);
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-4);
+      }
+
+      @media (max-width: 640px) {
+        .header-content {
+          flex-direction: column;
+          gap: var(--space-4);
+        }
+
+        .site-nav {
+          justify-content: flex-start;
+          gap: var(--space-4);
+        }
+
+        .wordmark {
+          font-size: var(--text-base);
+        }
+      }
+    </style>
+  </body>
+</html>
