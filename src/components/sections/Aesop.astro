@@ -1,6 +1,7 @@
 ---
 // Aesop section: the orchestration harness that ships its own features
 // Component contract: no props, system fonts only, tokens.css custom properties
+import stats from '../../data/aesop-stats.json';
 ---
 
 <section class="aesop-section">
@@ -12,7 +13,7 @@
 
   <div class="aesop-pitch">
     <p>
-      Open-source orchestration harness for Claude Code that ships its own features via parallel agent fleets. Cheap Haiku workers on scoped domains, a lean orchestrator on durable git-committed state: <strong>130 of its own PRs implemented, tested, and merged by its wave cycle.</strong>
+      Open-source orchestration harness for Claude Code that ships its own features via parallel agent fleets. Cheap Haiku workers on scoped domains, a lean orchestrator on durable git-committed state: <strong>{stats.merged_prs} of its own PRs implemented, tested, and merged by its wave cycle.</strong>
     </p>
     <p>
       <a href="https://github.com/matt82198/aesop" class="cta-link">github.com/matt82198/aesop</a>
@@ -79,31 +80,31 @@
       <tbody>
         <tr>
           <td>Commits</td>
-          <td>354</td>
+          <td>{stats.commits}</td>
         </tr>
         <tr>
           <td>PRs merged</td>
-          <td>130</td>
+          <td>{stats.merged_prs}</td>
         </tr>
         <tr>
           <td>Waves</td>
-          <td>13</td>
+          <td>{stats.waves}</td>
         </tr>
         <tr>
           <td>Domains</td>
-          <td>14</td>
+          <td>{stats.domains}</td>
         </tr>
         <tr>
           <td>Test files</td>
-          <td>46</td>
+          <td>{stats.test_files}</td>
         </tr>
         <tr>
           <td>LOC</td>
-          <td>52.6K</td>
+          <td>{(stats.loc / 1000).toFixed(1)}K</td>
         </tr>
         <tr>
           <td>Version</td>
-          <td>v0.1.0-beta.4</td>
+          <td>{stats.version}</td>
         </tr>
       </tbody>
     </table>
