@@ -6,10 +6,24 @@
 <section class="review-section">
   <p class="section-moral"><em>One witness is an anecdote; two are a review.</em></p>
 
-  <h2 id="review">Peer review — two models, one repository</h2>
+  <h2 id="review">Peer review — critical feedback from two independent models</h2>
+
+  <p class="section-intro-critique">
+    Two AI reviewers examined Aesop's architecture and approach. Their consensus: solid engineering foundation, but one critical caveat stands out — how will the system handle non-deterministic behavior as it scales? That question warrants close attention. Beyond that, both noted real strengths in the design decisions and operational rigor.
+  </p>
 
   <div class="review-grid">
-    <!-- Column 1: Claude review -->
+    <!-- Column 1: Gemini review (criticisms prominent) -->
+    <div class="review-column gemini-review">
+      <blockquote class="review-quote">
+        <p>
+          Aesop is a compelling exercise in recursive engineering. By utilizing Claude Code to build and refine its own orchestration harness, the project demonstrates a sophisticated grasp of agentic workflows. I am particularly impressed by the decision to move away from a hierarchical dispatch model in favor of a lean, event-sourced SQLite state store; this reduces complexity while maintaining durability. The integration of pre-push security gates and real-time observability via the dashboard provides necessary guardrails for autonomous operations. <strong>While the "Haiku-first" cost strategy is technically sound, I would watch how the system handles emergent non-deterministic behavior as the codebase scales.</strong> Overall, it is a pragmatic, well-documented framework for anyone serious about production-grade agentic orchestration.
+        </p>
+      </blockquote>
+      <p class="review-attribution">— Gemini (Google), reviewing the aesop repository · gemini-flash-lite-latest</p>
+    </div>
+
+    <!-- Column 2: Claude review -->
     <div class="review-column claude-review">
       <blockquote class="review-quote">
         <p>
@@ -17,16 +31,6 @@
         </p>
       </blockquote>
       <p class="review-attribution">— Claude (Anthropic), reviewing the repository it helps orchestrate.</p>
-    </div>
-
-    <!-- Column 2: Gemini review -->
-    <div class="review-column gemini-review">
-      <blockquote class="review-quote">
-        <p>
-          Aesop is a compelling exercise in recursive engineering. By utilizing Claude Code to build and refine its own orchestration harness, the project demonstrates a sophisticated grasp of agentic workflows. I am particularly impressed by the decision to move away from a hierarchical dispatch model in favor of a lean, event-sourced SQLite state store; this reduces complexity while maintaining durability. The integration of pre-push security gates and real-time observability via the dashboard provides necessary guardrails for autonomous operations. While the "Haiku-first" cost strategy is technically sound, I would watch how the system handles emergent non-deterministic behavior as the codebase scales. Overall, it is a pragmatic, well-documented framework for anyone serious about production-grade agentic orchestration.
-        </p>
-      </blockquote>
-      <p class="review-attribution">— Gemini (Google), reviewing the aesop repository · gemini-flash-lite-latest</p>
     </div>
   </div>
 </section>
@@ -39,7 +43,16 @@
   /* Override shared section h2 to match TwoAIReview's smaller size */
   .review-section h2 {
     font-size: var(--text-2xl);
+    margin-bottom: var(--space-6);
+  }
+
+  .section-intro-critique {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    max-width: var(--width-prose);
     margin-bottom: var(--space-10);
+    font-style: italic;
   }
 
   .review-grid {
