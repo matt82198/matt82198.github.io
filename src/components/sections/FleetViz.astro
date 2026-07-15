@@ -14,8 +14,10 @@
         <style>
           .orchestrator-node { fill: var(--accent); }
           .worker-dot { fill: var(--color-text-secondary); }
-          .brief-line { stroke: var(--accent-light); stroke-width: 1.5; fill: none; opacity: 0.6; }
-          .path-line { stroke: var(--color-border); stroke-width: 1; fill: none; opacity: 0.3; }
+          /* Brief lines: use accent with full opacity for visibility in both light and dark modes */
+          .brief-line { stroke: var(--accent); stroke-width: 1.5; fill: none; opacity: 0.8; }
+          /* Path guides: use text-secondary with increased opacity for visibility */
+          .path-line { stroke: var(--color-text-secondary); stroke-width: 1; fill: none; opacity: 0.25; }
         </style>
       </defs>
 
@@ -69,23 +71,10 @@
     margin-bottom: var(--space-16);
   }
 
-  .section-moral {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-4);
-  }
-
-  .section-moral em {
-    font-style: italic;
-    color: var(--color-text-tertiary);
-  }
-
-  h2 {
+  /* Override shared section h2 to match FleetViz's smaller size */
+  .fleet-viz-section h2 {
     font-size: var(--text-2xl);
-    font-weight: 600;
-    color: var(--color-text);
     margin-bottom: var(--space-8);
-    line-height: var(--leading-tight);
   }
 
   .viz-container {
@@ -102,7 +91,7 @@
     aspect-ratio: 400 / 300;
     background-color: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
   }
 

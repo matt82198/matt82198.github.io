@@ -11,6 +11,7 @@
   --color-text-tertiary: #8a8784;
   --color-border: #e8e5df;
   --color-border-subtle: #f0edea;
+  --color-border-strong: #d4cfc5;
 
   /* Accent: warm amber */
   --accent: #b8860b;
@@ -31,6 +32,7 @@
   --color-text-tertiary: #6a6965;
   --color-border: #2a2824;
   --color-border-subtle: #1f1e1b;
+  --color-border-strong: #3a3530;
 
   /* Accent: warm amber */
   --accent: #daa520;

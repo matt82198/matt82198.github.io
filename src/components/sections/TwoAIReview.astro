@@ -34,25 +34,10 @@
     margin-bottom: var(--space-16);
   }
 
-  .section-moral {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--space-4);
-    font-family: var(--font-sans);
-  }
-
-  .section-moral em {
-    font-style: italic;
-    color: var(--color-text-tertiary);
-  }
-
-  h2 {
+  /* Override shared section h2 to match TwoAIReview's smaller size */
+  .review-section h2 {
     font-size: var(--text-2xl);
-    font-weight: 600;
-    color: var(--color-text);
     margin-bottom: var(--space-10);
-    line-height: var(--leading-tight);
-    font-family: var(--font-sans);
   }
 
   .review-grid {
@@ -70,7 +55,7 @@
 
   .review-column {
     padding: var(--space-8);
-    border-radius: 0.25rem;
+    border-radius: 8px;
   }
 
   .claude-review {

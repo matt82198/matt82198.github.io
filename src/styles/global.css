@@ -232,6 +232,92 @@ hr {
   top: 0;
 }
 
+/* ===== Shared Section & Component Styles ===== */
+
+/* Base section styling — consistent rhythm across all major sections */
+section {
+  width: 100%;
+  max-width: var(--width-container);
+  margin: 0 auto var(--space-20);
+  padding: var(--space-12) var(--space-8);
+}
+
+/* Canonical section "moral" line — fable opening italic */
+.section-moral {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-6);
+  line-height: var(--leading-normal);
+}
+
+.section-moral em {
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+/* Canonical h2 — major section headings */
+section h2 {
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-8);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Canonical card styling — used across ClientWork, PrivateWork, Community */
+.card {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-6);
+  transition: border-color var(--duration-base) var(--ease-in-out),
+              background-color var(--duration-base) var(--ease-in-out);
+}
+
+.card:hover {
+  border-color: var(--accent);
+  background-color: var(--color-bg);
+}
+
+/* Canonical link affordance — inline content links */
+.content-link {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  transition: color var(--duration-fast) var(--ease-in-out),
+              border-color var(--duration-fast) var(--ease-in-out);
+}
+
+.content-link:hover {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent-light);
+}
+
+.content-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
+
+/* Canonical nav link styling — header/nav links without underline */
+.nav-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-in-out);
+}
+
+.nav-link:hover {
+  color: var(--accent);
+}
+
+.nav-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
+
 /* Reduced motion: disable transitions and animations */
 @media (prefers-reduced-motion: reduce) {
   *,
