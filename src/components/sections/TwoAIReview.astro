@@ -19,12 +19,14 @@
       <p class="review-attribution">— Claude (Anthropic), reviewing the repository it helps orchestrate.</p>
     </div>
 
-    <!-- Column 2: Gemini empty seat -->
-    <div class="review-column gemini-pending">
-      <div class="review-seat">
-        <p class="seat-label">Second reviewer: seat open.</p>
-        <p class="seat-copy">Gemini's independent take lands here.</p>
-      </div>
+    <!-- Column 2: Gemini review -->
+    <div class="review-column gemini-review">
+      <blockquote class="review-quote">
+        <p>
+          Aesop is a compelling exercise in recursive engineering. By utilizing Claude Code to build and refine its own orchestration harness, the project demonstrates a sophisticated grasp of agentic workflows. I am particularly impressed by the decision to move away from a hierarchical dispatch model in favor of a lean, event-sourced SQLite state store; this reduces complexity while maintaining durability. The integration of pre-push security gates and real-time observability via the dashboard provides necessary guardrails for autonomous operations. While the "Haiku-first" cost strategy is technically sound, I would watch how the system handles emergent non-deterministic behavior as the codebase scales. Overall, it is a pragmatic, well-documented framework for anyone serious about production-grade agentic orchestration.
+        </p>
+      </blockquote>
+      <p class="review-attribution">— Gemini (Google), reviewing the aesop repository · gemini-flash-lite-latest</p>
     </div>
   </div>
 </section>
@@ -58,7 +60,8 @@
     border-radius: 8px;
   }
 
-  .claude-review {
+  .claude-review,
+  .gemini-review {
     background-color: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
   }
@@ -85,36 +88,6 @@
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
     padding-top: var(--space-4);
-    font-family: var(--font-sans);
-  }
-
-  .gemini-pending {
-    background-color: transparent;
-    border: 2px dashed var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-  }
-
-  .review-seat {
-    text-align: center;
-    padding: var(--space-8);
-  }
-
-  .seat-label {
-    font-size: var(--text-base);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    margin: 0 0 var(--space-4) 0;
-    font-family: var(--font-sans);
-  }
-
-  .seat-copy {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin: 0;
-    font-style: italic;
     font-family: var(--font-sans);
   }
 
