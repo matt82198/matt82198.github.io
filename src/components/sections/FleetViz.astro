@@ -1,6 +1,10 @@
 ---
 // FleetViz.astro — Animation of the dispatch model: orchestrator + workers
 // Self-contained inline SVG + vanilla JS, no external dependencies
+// Wave count is baked from src/data/aesop-stats.json at build time (same
+// single source as the Aesop section); the runtime fetch only refreshes it.
+import stats from '../../data/aesop-stats.json';
+const WAVES = stats.waves;
 ---
 
 <section class="fleet-viz-section">
@@ -33,15 +37,17 @@
       <!-- Worker dots — dynamically created based on live contributor count -->
       <g class="workers" id="workers-group"></g>
 
-      <!-- Info label: wave count (static or from stats.json) -->
-      <text id="wave-label" x="200" y="30" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--accent)" opacity="0.6"></text>
+      <!-- Info label: wave count. Anchored top-left OUTSIDE the r=130 worker
+           orbit (orbit tops out at y=20 across x=70..330) so the animation
+           never covers it. -->
+      <text id="wave-label" x="12" y="18" text-anchor="start" font-family="var(--font-mono)" font-size="12" fill="var(--accent)" opacity="0.6">wave {WAVES}</text>
     </svg>
 
     <!-- Mono caption cycling through phases -->
     <p class="phase-caption"><code id="phase-text">dispatch</code></p>
 
     <!-- Legend -->
-    <p class="fleet-legend">Live orchestration: <span id="live-worker-count">7</span> Haiku workers, wave <span id="live-wave-count">15</span></p>
+    <p class="fleet-legend">Live orchestration: <span id="live-worker-count">7</span> Haiku workers, wave <span id="live-wave-count">{WAVES}</span></p>
   </div>
 </section>
 
@@ -126,9 +132,10 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Live state
+  // Live state — wave floor comes from the build-time-baked legend, so this
+  // script never regresses the display below what the build knew.
   let numWorkers = 7; // default
-  let waveCount = 15; // default
+  let waveCount = parseInt(waveCountEl?.textContent, 10) || 19;
   let workers = [];
   let endpoints = [];
   let controlPoints = [];
@@ -312,27 +319,18 @@
       const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
       if (statsRes.ok) {
         const statsData = await statsRes.json();
-        // Navigate the nested structure: stats.json has { git: { distinct_coauthors, wave_count } }
-        if (statsData.git) {
-          // Use co-author count for worker count (7), capped at 12 for layout
-          numWorkers = Math.min(statsData.git.distinct_coauthors || 7, 12);
-          waveCount = statsData.git.wave_count || 16;
-        } else {
-          // Fallback if structure is different
-          numWorkers = 7;
-          waveCount = 16;
-        }
-        workerCountEl.textContent = numWorkers;
-        waveCountEl.textContent = waveCount;
-        waveLabel.textContent = `wave ${waveCount}`;
-      } else {
-        // Fallback if stats.json doesn't exist yet
-        numWorkers = 7;
-        waveCount = 16;
+        // stats.json is FLAT: { commits, merged_prs, waves, ... } (the old
+        // { git: { wave_count } } shape never existed on main — that mismatch
+        // is what pinned the graphic at the stale fallback). Accept both,
+        // and never regress below the build-time value.
+        const flat = statsData.git || statsData;
+        numWorkers = Math.min(flat.distinct_coauthors || 7, 12);
+        waveCount = Math.max(flat.waves || flat.wave_count || 0, waveCount);
         workerCountEl.textContent = numWorkers;
         waveCountEl.textContent = waveCount;
         waveLabel.textContent = `wave ${waveCount}`;
       }
+      // On fetch failure the build-time values simply remain — no overwrite.
 
       // Adjust cycle duration based on activity: recent push = faster cycle
       const repoRes = await fetch(`https://api.github.com/repos/${REPO}`);

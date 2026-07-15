@@ -100,7 +100,9 @@
     color: var(--color-text);
     font-family: var(--font-sans);
     margin: 0;
-    padding: 0;
+    /* padding: 0 was flattening the global blockquote spacing, leaving the
+       text flush against the 4px accent border */
+    padding: 0 0 0 var(--space-5);
     margin-bottom: var(--space-6);
   }
 
