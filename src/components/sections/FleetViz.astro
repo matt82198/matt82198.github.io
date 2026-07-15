@@ -308,25 +308,30 @@
     try {
       const REPO = 'matt82198/aesop';
 
-      // Fetch contributors
-      const contribRes = await fetch(`https://api.github.com/repos/${REPO}/contributors?per_page=100`);
-      if (contribRes.ok) {
-        const contribData = await contribRes.json();
-        if (Array.isArray(contribData) && contribData.length > 0) {
-          numWorkers = Math.min(contribData.length, 12); // Cap at 12 for layout
-          workerCountEl.textContent = numWorkers;
-        }
-      }
-
-      // Fetch wave count from stats.json
+      // Fetch stats.json for co-author count (workers) and wave count
       const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
       if (statsRes.ok) {
         const statsData = await statsRes.json();
-        if (statsData.waves) {
-          waveCount = statsData.waves;
-          waveCountEl.textContent = waveCount;
-          waveLabel.textContent = `wave ${waveCount}`;
+        // Navigate the nested structure: stats.json has { git: { distinct_coauthors, wave_count } }
+        if (statsData.git) {
+          // Use co-author count for worker count (7), capped at 12 for layout
+          numWorkers = Math.min(statsData.git.distinct_coauthors || 7, 12);
+          waveCount = statsData.git.wave_count || 16;
+        } else {
+          // Fallback if structure is different
+          numWorkers = 7;
+          waveCount = 16;
         }
+        workerCountEl.textContent = numWorkers;
+        waveCountEl.textContent = waveCount;
+        waveLabel.textContent = `wave ${waveCount}`;
+      } else {
+        // Fallback if stats.json doesn't exist yet
+        numWorkers = 7;
+        waveCount = 16;
+        workerCountEl.textContent = numWorkers;
+        waveCountEl.textContent = waveCount;
+        waveLabel.textContent = `wave ${waveCount}`;
       }
 
       // Adjust cycle duration based on activity: recent push = faster cycle
@@ -341,7 +346,7 @@
         }
       }
     } catch (err) {
-      // Silent fail, use defaults
+      // Silent fail, use defaults (7 workers, 16 waves)
     }
   }
 

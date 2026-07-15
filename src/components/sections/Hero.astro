@@ -19,16 +19,16 @@
         <span class="live-badge" id="live-badge" title="Stats syncing from GitHub API and stats.json">● live</span>
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="141">141</span> PRs merged by a self-building system
+        <span class="stat-number" data-count="142">142</span> PRs merged by a self-building system
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="15">15</span> development waves
+        <span class="stat-number" data-count="16">16</span> development waves
       </div>
       <div class="stat">
         <span class="stat-number" data-count="52600">52,600</span> lines of code
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="377">377</span> commits
+        <span class="stat-number" data-count="388">388</span> commits
       </div>
       <div class="stat">
         <span class="stat-number" data-count="7">7</span> co-authors on the fleet
@@ -227,18 +227,11 @@
 
 <script is:inline>
 (function() {
-  // Live stats from GitHub API + stats.json
+  // Live stats from GitHub API (PRs) + stats.json (commits, waves, co-authors, LOC)
   // Graceful degradation: baked fallbacks on any failure
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const REPO = 'matt82198/aesop';
-  const statsMapping = {
-    'data-pr': { api: 'merged-pr', label: 'mergedPRs' },
-    'data-waves': { api: 'stats.json', label: 'waves' },
-    'data-loc': { api: 'stats.json', label: 'loc' },
-    'data-commits': { api: 'contributors', label: 'commits' },
-    'data-coauthors': { api: 'contributors', label: 'contributors' },
-  };
 
   let liveData = {};
   const statusEl = document.getElementById('sync-status');
@@ -246,24 +239,14 @@
 
   async function fetchLiveStats() {
     try {
-      // Fetch merged PRs
+      // Fetch merged PRs from GitHub search API (accurate)
       const prRes = await fetch(`https://api.github.com/search/issues?q=repo:${REPO}+type:pr+is:merged&per_page=1`);
       if (prRes.ok) {
         const prData = await prRes.json();
-        liveData.mergedPRs = prData.total_count || 141;
+        liveData.mergedPRs = prData.total_count || 142;
       }
 
-      // Fetch contributors (total count + sum contributions for commits)
-      const contribRes = await fetch(`https://api.github.com/repos/${REPO}/contributors?per_page=100&anon=false`);
-      if (contribRes.ok) {
-        const contribData = await contribRes.json();
-        if (Array.isArray(contribData)) {
-          liveData.contributors = contribData.length;
-          liveData.commits = contribData.reduce((sum, c) => sum + (c.contributions || 0), 0);
-        }
-      }
-
-      // Fetch repo info for stars + pushed_at
+      // Fetch repo info for last push time
       const repoRes = await fetch(`https://api.github.com/repos/${REPO}`);
       if (repoRes.ok) {
         const repoData = await repoRes.json();
@@ -273,15 +256,28 @@
         }
       }
 
-      // Try to fetch stats.json for waves + LOC
+      // Fetch stats.json for git-derived stats (commits, waves, co-authors, LOC)
       const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
       if (statsRes.ok) {
         const statsFile = await statsRes.json();
-        liveData.waves = statsFile.waves || 15;
-        liveData.loc = statsFile.loc || 52600;
+        // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors, loc } }
+        if (statsFile.git) {
+          liveData.commits = statsFile.git.total_commits || 388;
+          liveData.waves = statsFile.git.wave_count || 16;
+          liveData.coauthors = statsFile.git.distinct_coauthors || 7;
+          liveData.loc = statsFile.git.loc || 52600;
+        } else {
+          // Fallback if nested structure is different
+          liveData.commits = 388;
+          liveData.waves = 16;
+          liveData.coauthors = 7;
+          liveData.loc = 52600;
+        }
       } else {
-        // Fallback if stats.json doesn't exist
-        liveData.waves = 15;
+        // Fallback if stats.json doesn't exist yet
+        liveData.commits = 388;
+        liveData.waves = 16;
+        liveData.coauthors = 7;
         liveData.loc = 52600;
       }
 
@@ -310,11 +306,11 @@
   function updateStats() {
     // Map live data to DOM elements
     const updates = [
-      { attr: 'data-count', key: 'mergedPRs', selector: '[data-count="141"]' },
-      { attr: 'data-count', key: 'waves', selector: '[data-count="15"]' },
+      { attr: 'data-count', key: 'mergedPRs', selector: '[data-count="142"]' },
+      { attr: 'data-count', key: 'waves', selector: '[data-count="16"]' },
       { attr: 'data-count', key: 'loc', selector: '[data-count="52600"]' },
-      { attr: 'data-count', key: 'commits', selector: '[data-count="377"]' },
-      { attr: 'data-count', key: 'contributors', selector: '[data-count="7"]' },
+      { attr: 'data-count', key: 'commits', selector: '[data-count="388"]' },
+      { attr: 'data-count', key: 'coauthors', selector: '[data-count="7"]' },
     ];
 
     updates.forEach(({ key, selector }) => {
