@@ -15,22 +15,26 @@
     </p>
 
     <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-number" data-count="130">130</span> PRs merged by a self-building system
+      <div class="stats-header">
+        <span class="live-badge" id="live-badge" title="Stats syncing from GitHub API and stats.json">● live</span>
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="13">13</span> development waves
+        <span class="stat-number" data-count="142">142</span> PRs merged by a self-building system
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="16">16</span> development waves
       </div>
       <div class="stat">
         <span class="stat-number" data-count="52600">52,600</span> lines of code
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="354">354</span> commits
+        <span class="stat-number" data-count="388">388</span> commits
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="6">6</span> published essays
+        <span class="stat-number" data-count="7">7</span> co-authors on the fleet
       </div>
     </div>
+    <p class="sync-status" id="sync-status"></p>
 
     <p class="hero-kicker"><em>This site was assembled by the fleet it describes.</em></p>
 
@@ -111,6 +115,35 @@
     line-height: var(--leading-relaxed);
   }
 
+  .stats-header {
+    margin-bottom: var(--space-4);
+  }
+
+  .live-badge {
+    font-size: var(--text-xs);
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-badge {
+      animation: none;
+      opacity: 0.8;
+    }
+  }
+
   .stat {
     color: var(--color-text-secondary);
   }
@@ -122,6 +155,15 @@
   .stat-number {
     color: var(--accent);
     font-weight: 700;
+  }
+
+  .sync-status {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    text-align: center;
+    margin: 0;
+    min-height: 1.2em;
   }
 
   .hero-kicker {
@@ -183,40 +225,151 @@
   }
 </style>
 
-<script>
-  // Count-up animation for stats — respects prefers-reduced-motion
-  // Server-rendered final values are shown by default; animation is progressive enhancement
+<script is:inline>
+(function() {
+  // Live stats from GitHub API (PRs) + stats.json (commits, waves, co-authors, LOC)
+  // Graceful degradation: baked fallbacks on any failure
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!prefersReducedMotion) {
+  const REPO = 'matt82198/aesop';
+
+  let liveData = {};
+  const statusEl = document.getElementById('sync-status');
+  const badgeEl = document.getElementById('live-badge');
+
+  async function fetchLiveStats() {
+    try {
+      // Fetch merged PRs from GitHub search API (accurate)
+      const prRes = await fetch(`https://api.github.com/search/issues?q=repo:${REPO}+type:pr+is:merged&per_page=1`);
+      if (prRes.ok) {
+        const prData = await prRes.json();
+        liveData.mergedPRs = prData.total_count || 142;
+      }
+
+      // Fetch repo info for last push time
+      const repoRes = await fetch(`https://api.github.com/repos/${REPO}`);
+      if (repoRes.ok) {
+        const repoData = await repoRes.json();
+        liveData.stars = repoData.stargazers_count || 0;
+        if (repoData.pushed_at) {
+          liveData.lastPush = new Date(repoData.pushed_at);
+        }
+      }
+
+      // Fetch stats.json for git-derived stats (commits, waves, co-authors, LOC)
+      const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
+      if (statsRes.ok) {
+        const statsFile = await statsRes.json();
+        // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors, loc } }
+        if (statsFile.git) {
+          liveData.commits = statsFile.git.total_commits || 388;
+          liveData.waves = statsFile.git.wave_count || 16;
+          liveData.coauthors = statsFile.git.distinct_coauthors || 7;
+          liveData.loc = statsFile.git.loc || 52600;
+        } else {
+          // Fallback if nested structure is different
+          liveData.commits = 388;
+          liveData.waves = 16;
+          liveData.coauthors = 7;
+          liveData.loc = 52600;
+        }
+      } else {
+        // Fallback if stats.json doesn't exist yet
+        liveData.commits = 388;
+        liveData.waves = 16;
+        liveData.coauthors = 7;
+        liveData.loc = 52600;
+      }
+
+      return true;
+    } catch (err) {
+      // Silently fail — keep baked values
+      return false;
+    }
+  }
+
+  function formatRelativeTime(date) {
+    if (!date) return '';
+    const now = new Date();
+    const diff = now - date;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return 'just now';
+  }
+
+  function updateStats() {
+    // Map live data to DOM elements
+    const updates = [
+      { attr: 'data-count', key: 'mergedPRs', selector: '[data-count="142"]' },
+      { attr: 'data-count', key: 'waves', selector: '[data-count="16"]' },
+      { attr: 'data-count', key: 'loc', selector: '[data-count="52600"]' },
+      { attr: 'data-count', key: 'commits', selector: '[data-count="388"]' },
+      { attr: 'data-count', key: 'coauthors', selector: '[data-count="7"]' },
+    ];
+
+    updates.forEach(({ key, selector }) => {
+      const el = document.querySelector(selector);
+      if (el && liveData[key]) {
+        const oldValue = parseInt(el.dataset.count, 10);
+        const newValue = liveData[key];
+        el.dataset.count = newValue;
+        animateCount(el, oldValue, newValue);
+      }
+    });
+
+    // Update sync status with relative time
+    if (liveData.lastPush) {
+      const relTime = formatRelativeTime(liveData.lastPush);
+      if (statusEl) {
+        statusEl.textContent = `synced from GitHub · updated ${relTime}`;
+      }
+    }
+  }
+
+  function animateCount(el, from, to) {
+    if (prefersReducedMotion || from === to) {
+      // Instant update on reduced motion or no change
+      el.textContent = to.toLocaleString('en-US');
+      return;
+    }
+
+    const duration = 1500;
+    const start = Date.now();
+
+    const update = () => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const current = Math.floor(from + (to - from) * progress);
+      el.textContent = current.toLocaleString('en-US');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = to.toLocaleString('en-US');
+      }
+    };
+
+    update();
+  }
+
+  function setupStatAnimation() {
+    // Animate baked stats on page load (count-up from 0)
+    if (prefersReducedMotion) return;
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
           const elements = entry.target.querySelectorAll('[data-count]');
           elements.forEach(el => {
             const target = parseInt(el.dataset.count, 10);
-            const duration = 2000; // 2 seconds
-            const start = Date.now();
-
-            const update = () => {
-              const elapsed = Date.now() - start;
-              const progress = Math.min(elapsed / duration, 1);
-              const current = Math.floor(progress * target);
-
-              // Format with thousand separators, preserving final value
-              el.textContent = current.toLocaleString('en-US');
-
-              if (progress < 1) {
-                requestAnimationFrame(update);
-              } else {
-                // Ensure final value is exactly rendered
-                el.textContent = target.toLocaleString('en-US');
-              }
-            };
-
-            update();
+            animateCount(el, 0, target);
           });
-
           entry.target.classList.add('animated');
         }
       });
@@ -227,4 +380,13 @@
       observer.observe(statsSection);
     }
   }
+
+  // On page load: setup animation + fetch live stats
+  setupStatAnimation();
+  fetchLiveStats().then(success => {
+    if (success) {
+      updateStats();
+    }
+  });
+})();
 </script>

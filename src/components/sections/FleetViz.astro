@@ -9,7 +9,7 @@
   <h2 id="fleet">The fleet, at work</h2>
 
   <div class="viz-container">
-    <svg class="fleet-diagram" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orchestrator dispatching 7 Haiku workers in a fan-out pattern">
+    <svg class="fleet-diagram" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Live Haiku worker dispatch orchestration">
       <defs>
         <style>
           .orchestrator-node { fill: var(--accent); }
@@ -21,48 +21,27 @@
         </style>
       </defs>
 
-      <!-- Static path guides (background) -->
-      <g class="paths">
-        <path class="path-line" d="M 200 150 Q 280 80 340 50" />
-        <path class="path-line" d="M 200 150 Q 300 100 360 100" />
-        <path class="path-line" d="M 200 150 Q 300 150 370 150" />
-        <path class="path-line" d="M 200 150 Q 300 200 360 200" />
-        <path class="path-line" d="M 200 150 Q 280 220 340 250" />
-        <path class="path-line" d="M 200 150 Q 220 80 80 50" />
-        <path class="path-line" d="M 200 150 Q 100 100 40 100" />
-      </g>
+      <!-- Static path guides (background) — dynamically created based on live worker count -->
+      <g class="paths" id="paths-group"></g>
 
-      <!-- Static brief lines (converging on return) — rendered by default -->
-      <g class="brief-lines">
-        <line class="brief-line" x1="340" y1="50" x2="200" y2="150" />
-        <line class="brief-line" x1="360" y1="100" x2="200" y2="150" />
-        <line class="brief-line" x1="370" y1="150" x2="200" y2="150" />
-        <line class="brief-line" x1="360" y1="200" x2="200" y2="150" />
-        <line class="brief-line" x1="340" y1="250" x2="200" y2="150" />
-        <line class="brief-line" x1="80" y1="50" x2="200" y2="150" />
-        <line class="brief-line" x1="40" y1="100" x2="200" y2="150" />
-      </g>
+      <!-- Static brief lines (converging on return) — dynamically created -->
+      <g class="brief-lines" id="brief-lines-group"></g>
 
       <!-- Orchestrator center node -->
       <circle class="orchestrator-node" cx="200" cy="150" r="8" />
 
-      <!-- Worker dots — initially at endpoints (static diagram), animated to center on init -->
-      <g class="workers">
-        <circle class="worker-dot" data-index="0" cx="340" cy="50" r="5" />
-        <circle class="worker-dot" data-index="1" cx="360" cy="100" r="5" />
-        <circle class="worker-dot" data-index="2" cx="370" cy="150" r="5" />
-        <circle class="worker-dot" data-index="3" cx="360" cy="200" r="5" />
-        <circle class="worker-dot" data-index="4" cx="340" cy="250" r="5" />
-        <circle class="worker-dot" data-index="5" cx="80" cy="50" r="5" />
-        <circle class="worker-dot" data-index="6" cx="40" cy="100" r="5" />
-      </g>
+      <!-- Worker dots — dynamically created based on live contributor count -->
+      <g class="workers" id="workers-group"></g>
+
+      <!-- Info label: wave count (static or from stats.json) -->
+      <text id="wave-label" x="200" y="30" text-anchor="middle" font-family="var(--font-mono)" font-size="12" fill="var(--accent)" opacity="0.6"></text>
     </svg>
 
     <!-- Mono caption cycling through phases -->
     <p class="phase-caption"><code id="phase-text">dispatch</code></p>
 
     <!-- Legend -->
-    <p class="fleet-legend">Haiku workers, one orchestrator, no idle hands — the dispatch model this site was built with.</p>
+    <p class="fleet-legend">Live orchestration: <span id="live-worker-count">7</span> Haiku workers, wave <span id="live-wave-count">15</span></p>
   </div>
 </section>
 
@@ -137,51 +116,101 @@
 <script is:inline>
 (function() {
   const svg = document.querySelector('.fleet-diagram');
-  const workersGroup = svg.querySelector('.workers');
-  const briefLinesGroup = svg.querySelector('.brief-lines');
   const phaseText = document.getElementById('phase-text');
+  const workersGroupEl = document.getElementById('workers-group');
+  const briefLinesGroupEl = document.getElementById('brief-lines-group');
+  const pathsGroupEl = document.getElementById('paths-group');
+  const workerCountEl = document.getElementById('live-worker-count');
+  const waveCountEl = document.getElementById('live-wave-count');
+  const waveLabel = document.getElementById('wave-label');
 
-  const workers = Array.from(workersGroup.querySelectorAll('.worker-dot'));
-  const numWorkers = workers.length;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Paths: from center (200, 150) to endpoints
-  const endpoints = [
-    { x: 340, y: 50 },   // top-right
-    { x: 360, y: 100 },  // right-upper
-    { x: 370, y: 150 },  // right
-    { x: 360, y: 200 },  // right-lower
-    { x: 340, y: 250 },  // bottom-right
-    { x: 80, y: 50 },    // top-left
-    { x: 40, y: 100 },   // left
-  ];
-
-  const controlPoints = [
-    { x: 280, y: 80 },
-    { x: 300, y: 100 },
-    { x: 300, y: 150 },
-    { x: 300, y: 200 },
-    { x: 280, y: 220 },
-    { x: 220, y: 80 },
-    { x: 100, y: 100 },
-  ];
+  // Live state
+  let numWorkers = 7; // default
+  let waveCount = 15; // default
+  let workers = [];
+  let endpoints = [];
+  let controlPoints = [];
 
   const phases = ['dispatch', 'build', 'verify', 'merge'];
   let currentPhase = 0;
   let animationStartTime = 0;
   let isSwarming = false;
   let swarmTime = 0;
-  const swarmDuration = 800; // ms
+  const swarmDuration = 800;
+  let cycleDuration = 6000; // Will adjust based on activity
 
-  // Check if reduced motion is preferred
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Generate endpoints and control points based on worker count
+  function generateLayout() {
+    endpoints = [];
+    controlPoints = [];
+
+    if (numWorkers === 0) numWorkers = 1;
+
+    const angleStep = (Math.PI * 2) / numWorkers;
+    const radius = 130;
+
+    for (let i = 0; i < numWorkers; i++) {
+      const angle = angleStep * i - Math.PI / 2;
+      endpoints.push({
+        x: 200 + Math.cos(angle) * radius,
+        y: 150 + Math.sin(angle) * radius
+      });
+      controlPoints.push({
+        x: 200 + Math.cos(angle) * 70,
+        y: 150 + Math.sin(angle) * 70
+      });
+    }
+  }
+
+  // Create SVG elements for paths, brief lines, and workers
+  function renderLayout() {
+    // Clear existing
+    pathsGroupEl.innerHTML = '';
+    briefLinesGroupEl.innerHTML = '';
+    workersGroupEl.innerHTML = '';
+
+    // Create path guides
+    endpoints.forEach((endpoint, i) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('class', 'path-line');
+      path.setAttribute('d', `M 200 150 Q ${controlPoints[i].x} ${controlPoints[i].y} ${endpoint.x} ${endpoint.y}`);
+      pathsGroupEl.appendChild(path);
+    });
+
+    // Create worker dots
+    workers = [];
+    endpoints.forEach((endpoint, i) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('class', 'worker-dot');
+      circle.setAttribute('data-index', i);
+      circle.setAttribute('cx', endpoint.x);
+      circle.setAttribute('cy', endpoint.y);
+      circle.setAttribute('r', '5');
+      workersGroupEl.appendChild(circle);
+      workers.push(circle);
+    });
+
+    // Create initial brief lines
+    endpoints.forEach((endpoint) => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('class', 'brief-line');
+      line.setAttribute('x1', endpoint.x);
+      line.setAttribute('y1', endpoint.y);
+      line.setAttribute('x2', 200);
+      line.setAttribute('y2', 150);
+      briefLinesGroupEl.appendChild(line);
+    });
+  }
 
   function quadraticBezier(t, p0, p1, p2) {
     return (1 - t) * (1 - t) * p0 + 2 * (1 - t) * t * p1 + t * t * p2;
   }
 
-  function getPositionOnPath(t, startIndex) {
-    const endpoint = endpoints[startIndex];
-    const controlPoint = controlPoints[startIndex];
+  function getPositionOnPath(t, idx) {
+    const endpoint = endpoints[idx];
+    const controlPoint = controlPoints[idx];
     const x = quadraticBezier(t, 200, controlPoint.x, endpoint.x);
     const y = quadraticBezier(t, 150, controlPoint.y, endpoint.y);
     return { x, y };
@@ -195,33 +224,32 @@
     if (!animationStartTime) animationStartTime = timestamp;
     const elapsed = timestamp - animationStartTime;
 
-    // Phase cycling every 3 seconds
+    // Phase cycling
     const phaseIndex = Math.floor((elapsed / 3000) % phases.length);
     if (phaseIndex !== currentPhase) {
       currentPhase = phaseIndex;
       updatePhaseCaption();
     }
 
-    // Total cycle: 6 seconds (2s dispatch, 2s work/return, 2s pause)
-    const cycleTime = (elapsed % 6000);
+    const cycleTime = (elapsed % cycleDuration);
 
-    if (cycleTime < 2000) {
+    if (cycleTime < cycleDuration * 0.33) {
       // Dispatch phase: move out
-      const t = cycleTime / 2000;
+      const t = cycleTime / (cycleDuration * 0.33);
       workers.forEach((worker, idx) => {
         const pos = getPositionOnPath(t, idx);
         worker.setAttribute('cx', pos.x);
         worker.setAttribute('cy', pos.y);
       });
-      // Clear brief lines during dispatch (workers moving out)
-      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
-        if (!line.classList.contains('path-line')) line.remove();
+      // Clear dynamic brief lines during dispatch
+      Array.from(briefLinesGroupEl.querySelectorAll('line')).forEach(line => {
+        if (line.getAttribute('data-dynamic')) line.remove();
       });
-    } else if (cycleTime < 4000) {
-      // Return phase: move back with brief lines
-      const t = 1 - (cycleTime - 2000) / 2000;
-      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
-        if (!line.classList.contains('path-line')) line.remove();
+    } else if (cycleTime < cycleDuration * 0.67) {
+      // Return phase: move back
+      const t = 1 - ((cycleTime - cycleDuration * 0.33) / (cycleDuration * 0.33));
+      Array.from(briefLinesGroupEl.querySelectorAll('line')).forEach(line => {
+        if (line.getAttribute('data-dynamic')) line.remove();
       });
 
       workers.forEach((worker, idx) => {
@@ -230,14 +258,15 @@
         worker.setAttribute('cy', pos.y);
 
         // Draw brief line from worker back to orchestrator
-        if (t < 0.9 && t > 0) {
+        if (t < 0.9 && t > 0.1) {
           const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
           line.setAttribute('class', 'brief-line');
+          line.setAttribute('data-dynamic', 'true');
           line.setAttribute('x1', pos.x);
           line.setAttribute('y1', pos.y);
           line.setAttribute('x2', 200);
           line.setAttribute('y2', 150);
-          briefLinesGroup.appendChild(line);
+          briefLinesGroupEl.appendChild(line);
         }
       });
     } else {
@@ -246,14 +275,14 @@
         worker.setAttribute('cx', 200);
         worker.setAttribute('cy', 150);
       });
-      Array.from(briefLinesGroup.querySelectorAll('line')).forEach(line => {
-        if (!line.classList.contains('path-line')) line.remove();
+      Array.from(briefLinesGroupEl.querySelectorAll('line')).forEach(line => {
+        if (line.getAttribute('data-dynamic')) line.remove();
       });
     }
 
     // Swarm effect on click
     if (isSwarming) {
-      swarmTime += 16; // Approximate frame time
+      swarmTime += 16;
       if (swarmTime < swarmDuration) {
         const swarmT = Math.sin((swarmTime / swarmDuration) * Math.PI);
         workers.forEach((worker, idx) => {
@@ -275,14 +304,65 @@
     }
   }
 
-  // Click orchestrator to trigger swarm
+  async function fetchLiveData() {
+    try {
+      const REPO = 'matt82198/aesop';
+
+      // Fetch stats.json for co-author count (workers) and wave count
+      const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
+      if (statsRes.ok) {
+        const statsData = await statsRes.json();
+        // Navigate the nested structure: stats.json has { git: { distinct_coauthors, wave_count } }
+        if (statsData.git) {
+          // Use co-author count for worker count (7), capped at 12 for layout
+          numWorkers = Math.min(statsData.git.distinct_coauthors || 7, 12);
+          waveCount = statsData.git.wave_count || 16;
+        } else {
+          // Fallback if structure is different
+          numWorkers = 7;
+          waveCount = 16;
+        }
+        workerCountEl.textContent = numWorkers;
+        waveCountEl.textContent = waveCount;
+        waveLabel.textContent = `wave ${waveCount}`;
+      } else {
+        // Fallback if stats.json doesn't exist yet
+        numWorkers = 7;
+        waveCount = 16;
+        workerCountEl.textContent = numWorkers;
+        waveCountEl.textContent = waveCount;
+        waveLabel.textContent = `wave ${waveCount}`;
+      }
+
+      // Adjust cycle duration based on activity: recent push = faster cycle
+      const repoRes = await fetch(`https://api.github.com/repos/${REPO}`);
+      if (repoRes.ok) {
+        const repoData = await repoRes.json();
+        if (repoData.pushed_at) {
+          const lastPush = new Date(repoData.pushed_at);
+          const minutesAgo = (Date.now() - lastPush) / (1000 * 60);
+          // Recent activity = faster cycle (4s), old activity = slower (7s)
+          cycleDuration = minutesAgo < 60 ? 4000 : 7000;
+        }
+      }
+    } catch (err) {
+      // Silent fail, use defaults (7 workers, 16 waves)
+    }
+  }
+
+  // Initialize
+  generateLayout();
+  renderLayout();
+  fetchLiveData().then(() => {
+    generateLayout();
+    renderLayout();
+  });
+
+  // Interaction
   svg.addEventListener('click', (e) => {
-    const orchestrator = svg.querySelector('.orchestrator-node');
     const rect = svg.getBoundingClientRect();
     const clickX = (e.clientX - rect.left) / rect.width * 400;
     const clickY = (e.clientY - rect.top) / rect.height * 300;
-
-    // Check if click is near orchestrator
     const dist = Math.sqrt((clickX - 200) ** 2 + (clickY - 150) ** 2);
     if (dist < 20) {
       isSwarming = true;
@@ -290,7 +370,6 @@
     }
   });
 
-  // Focus ring on keyboard
   svg.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       isSwarming = true;
@@ -298,11 +377,8 @@
     }
   });
 
-  // Make SVG focusable for keyboard
   svg.setAttribute('tabindex', '0');
 
-  // Start animation only if motion is not reduced
-  // Static diagram is already rendered by default in SVG markup
   if (!prefersReducedMotion) {
     requestAnimationFrame(animate);
   }
