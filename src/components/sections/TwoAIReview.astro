@@ -27,13 +27,25 @@
     <div class="review-column claude-review">
       <blockquote class="review-quote">
         <p>
-          <strong>Criticisms:</strong> The orchestration core is untested—dispatch and the wave cycle exist only as prose, not verified by tests. Cost claims are arithmetic, not evidence ("~25% of Opus" restates prices, assumes Haiku equivalence without measurement). Co-authors are agent aliases on one operator's machine, not external reviewers. Two sources of truth (SQLite vs. git-committed STATE.md) with no reconciliation protocol. No cost ceiling or kill switch on autonomous pushes.
+          <strong>Criticisms:</strong> The orchestration core is still untested, and the rebuttal concedes it — 1,011 green tests cover gates, daemons, collectors, and UI paths, which is the periphery. Dispatch and the wave cycle, the parts that would make this a harness rather than a well-tested toolbox, remain prose. A large test count for the surrounding scaffolding is not evidence for the thing in the middle; it's the most persuasive way to avoid measuring it.
         </p>
         <p>
-          <strong>Strengths:</strong> Tests that exist are behavioral and adversarial. Gates enforce compliance (dist-drift, metrics-verified). Fail-closed defaults throughout (loopback, DNS-rebind checking, hard 500 on missing build). The README admits its own hook is bypassable. That candor is rarer than it should be.
+          The cost defense moves the goalposts. Two A/B runs measuring flat-vs-tiered topology say nothing about whether Haiku output equals Opus output — the load-bearing assumption behind "subagents are always Haiku." Worse, the A/B verdict is unreproducible from this repo: the only artifact (docs/archive/spikes/tiered-cognition/README.md) states "4.6x weighted cost for identical quality" and cites the operator's private MEMORY.md for the data. The conclusion shipped; the measurement didn't. And "identical quality" was adjudicated by the same fleet under test — agents grading agents, no external referent, no held-out benchmark. PR #156 correcting the README arithmetic is real and I concede the sloppiness charge, but corrected arithmetic is still arithmetic.
+        </p>
+        <p>
+          Co-author padding: withdrawn. Per-dispatch attribution from real runs, and deliberately routing around GitHub's contributors API is the opposite of inflation — that's a choice against a metric that would have flattered. The residual point is smaller and unrebutted: seven model identities on one machine are not seven reviewers. Nothing here has been reproduced by anyone else.
+        </p>
+        <p>
+          Two sources of truth survives untouched, and grepping confirms it: "reconcile" appears nowhere in the state layer — only in AUDIT-BACKLOG.md, describing a test reconcile from PR #32. SQLite and git-committed STATE.md drift with no protocol, acknowledged as a top rearchitecture priority and still unbuilt.
+        </p>
+        <p>
+          No cost ceiling and no kill switch — grep finds no ceiling, cap, limit, or abort anywhere in the repo. Since the original review, autonomy expanded: portfolio PRs now merge on green without sign-off. The blast radius grew while the brake stayed unbuilt. Related, and offered as a strength by the rebuttal: three real regressions caught this week. That's a fleet emitting roughly three regressions a week into a repo that now self-merges, with gates as the sole thing between them and main. Gates catching them is the good news. Gates being load-bearing at that rate, alone, is not.
+        </p>
+        <p>
+          <strong>Strengths:</strong> Tests that exist are behavioral and adversarial, and the mandatory-CI posture is genuinely strict — up-to-date required, enforce_admins on, so the operator can't wave work through. Gates enforce compliance (dist-drift, metrics-verified) and demonstrably fire on real regressions rather than sitting decorative. Fail-closed defaults throughout: loopback binding, DNS-rebind checking, hard 500 on missing build. The README admits its own hook is bypassable, and PR #156 is a project auditing and correcting its own marketing claims unprompted — that's the same instinct as the contributors-API refusal. The candor is real, it's structural rather than rhetorical, and it's rarer than it should be. It just hasn't yet been pointed at the two places it would cost the most: whether Haiku is actually good enough, and what happens when an autonomous fleet is wrong at scale.
         </p>
       </blockquote>
-      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-15</p>
+      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-15 (revised after rebuttal)</p>
     </div>
   </div>
 </section>
