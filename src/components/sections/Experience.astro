@@ -1,0 +1,372 @@
+---
+// Experience.astro — Professional work history (newest-first)
+// Four employers: FSCPay, AT&T (with three progressive roles), Tannery Row, Glimpse
+---
+
+<section class="experience">
+  <p class="section-moral">
+    <em>The ant that shipped in winter had been building since spring.</em>
+  </p>
+
+  <h2 id="experience">Experience</h2>
+
+  <div class="employers-grid">
+    <!-- FSCPay: Technical Cofounder + Lead Software Engineer -->
+    <article class="employer-card">
+      <div class="employer-header">
+        <h3>FSCPay</h3>
+        <span class="employer-duration">Oct 2025 – Present</span>
+      </div>
+      <p class="employer-location">Chicago, IL</p>
+
+      <div class="roles-list">
+        <div class="role">
+          <div class="role-header">
+            <h4>Technical Cofounder</h4>
+            <span class="role-duration">Self-employed, Oct 2025 – Present</span>
+          </div>
+        </div>
+        <div class="role">
+          <div class="role-header">
+            <h4>Lead Software Engineer</h4>
+            <span class="role-duration">Freelance, Aug 2025 – Present · Remote</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="role-bullets">
+        <li>Designed and developed payment solutions for FSCPay, a fintech startup.</li>
+        <li>Led backend development utilizing LLM intelligence APIs to enhance payment processing.</li>
+        <li>Collaborated with cross-functional teams to ensure seamless integration of payment systems.</li>
+      </ul>
+
+      <div class="employer-tags">
+        <span class="tag">Java</span>
+      </div>
+    </article>
+
+    <!-- AT&T: Corporate Systems (three progressive roles) -->
+    <article class="employer-card">
+      <div class="employer-header">
+        <h3>AT&T</h3>
+        <span class="employer-duration">Nov 2021 – Jun 2025 · 3 yrs 8 mos</span>
+      </div>
+      <p class="employer-location">Chicago, IL · Corporate Systems</p>
+
+      <div class="roles-list">
+        <!-- Role 1: Senior Software Engineering -->
+        <div class="role">
+          <div class="role-header">
+            <h4>Senior Software Engineering – Corporate Systems</h4>
+            <span class="role-duration">Jul 2023 – Jun 2025 · 2 yrs</span>
+          </div>
+          <p class="role-context">Hybrid</p>
+          <ul class="role-bullets">
+            <li>Developed data delivery platforms using Angular and Java Spring Boot, enhancing leadership analytics capabilities.</li>
+            <li>Served as Scrum Master for the People Analytics team, significantly improving team velocity.</li>
+            <li>Unified seven reporting systems into a single Vertica database, prioritizing integration needs with stakeholders.</li>
+            <li>Mentored junior engineers through code reviews, fostering technical and architectural growth.</li>
+          </ul>
+        </div>
+
+        <!-- Role 2: Technology Development Program Engineer II -->
+        <div class="role">
+          <div class="role-header">
+            <h4>Technology Development Program Engineer II – Corporate Systems</h4>
+            <span class="role-duration">Oct 2022 – Jul 2023 · 10 mos</span>
+          </div>
+          <ul class="role-bullets">
+            <li>Designed and built full-stack applications (Angular + Java Spring Boot); established team standards for exception handling and logging.</li>
+            <li>Built backend RBAC security and identity-access-management components foundational to the microservice ecosystem.</li>
+            <li>Implemented Azure cloud infrastructure with Terraform alongside DevOps.</li>
+          </ul>
+        </div>
+
+        <!-- Role 3: Technology Development Program Engineer I -->
+        <div class="role">
+          <div class="role-header">
+            <h4>Technology Development Program Engineer I – Corporate Systems</h4>
+            <span class="role-duration">Nov 2021 – Oct 2022 · 1 yr</span>
+          </div>
+          <ul class="role-bullets">
+            <li>Developed full-stack people-analytics features with Java/Spring Boot and Angular/TypeScript.</li>
+            <li>Established a security event-logging pattern ensuring corporate compliance.</li>
+            <li>Resolved critical production bugs same-day.</li>
+            <li>Created a reusable OpenPDF abstraction layer for consistent document generation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="employer-tags">
+        <span class="tag">Java</span>
+        <span class="tag">Angular</span>
+        <span class="tag">Spring Boot</span>
+        <span class="tag">Azure</span>
+        <span class="tag">Terraform</span>
+        <span class="tag">Vertica</span>
+      </div>
+    </article>
+
+    <!-- The Tannery Row: Lead System Architect -->
+    <article class="employer-card">
+      <div class="employer-header">
+        <h3>The Tannery Row</h3>
+        <span class="employer-duration">Dec 2020 – Present · 5 yrs 8 mos</span>
+      </div>
+      <p class="employer-location">Chicago, IL · On-site</p>
+
+      <div class="roles-list">
+        <div class="role">
+          <div class="role-header">
+            <h4>Lead System Architect · Accounting & Business Operations Engineer</h4>
+            <span class="role-duration">Full-time</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="role-description">
+        Owns the systems architecture, accounting integrations, and operations engineering for a leather-goods manufacturer.
+        The production systems detailed in the <a href="#clientwork" class="content-link">Projects section</a> are built in this role.
+      </p>
+    </article>
+
+    <!-- Glimpse: Cofounder & Mobile App Developer -->
+    <article class="employer-card">
+      <div class="employer-header">
+        <h3>Glimpse</h3>
+        <span class="employer-duration">Sep 2015 – Dec 2017 · 2 yrs 4 mos</span>
+      </div>
+      <p class="employer-location">Mount Prospect, IL</p>
+
+      <div class="roles-list">
+        <div class="role">
+          <div class="role-header">
+            <h4>Cofounder & Mobile App Developer</h4>
+            <span class="role-duration">Self-employed</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="role-bullets">
+        <li>Co-founded Glimpse, a social platform connecting students with school events and communities.</li>
+        <li>Built a native iOS app in Swift and Objective-C supporting all iOS devices.</li>
+        <li>Shipped it pre-installed on District 214 partner schools' iPads.</li>
+        <li>Operated lean, balancing business objectives with code quality.</li>
+      </ul>
+
+      <div class="employer-tags">
+        <span class="tag">Swift</span>
+        <span class="tag">Objective-C</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .experience {
+    width: 100%;
+    max-width: var(--width-container);
+    margin: 0 auto var(--space-20);
+    padding: var(--space-12) var(--space-8);
+  }
+
+  /* Override shared section h2 */
+  .experience h2 {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-8);
+  }
+
+  .employers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-top: var(--space-10);
+  }
+
+  /* Employer card styling */
+  .employer-card {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-6);
+    transition: border-color var(--duration-base) var(--ease-in-out),
+                background-color var(--duration-base) var(--ease-in-out);
+  }
+
+  .employer-card:hover {
+    border-color: var(--accent);
+    background-color: var(--color-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .employer-card {
+      transition: none;
+    }
+  }
+
+  /* Employer header: company name + total duration */
+  .employer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-2);
+  }
+
+  .employer-header h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .employer-duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  /* Employer location */
+  .employer-location {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0 0 var(--space-4) 0;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Roles list container */
+  .roles-list {
+    margin: var(--space-4) 0 var(--space-6) 0;
+  }
+
+  /* Individual role */
+  .role {
+    margin-bottom: var(--space-5);
+  }
+
+  .role:last-child {
+    margin-bottom: var(--space-4);
+  }
+
+  /* Role header: title + duration */
+  .role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-2);
+  }
+
+  .role-header h4 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .role-duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+  }
+
+  /* Role context (e.g., "Hybrid", "Remote") */
+  .role-context {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  /* Role description (used for Tannery Row pointer) */
+  .role-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    margin: var(--space-4) 0 0 0;
+  }
+
+  /* Role bullets */
+  .role-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-4) 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .role-bullets li {
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    position: relative;
+  }
+
+  .role-bullets li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* Employer tags */
+  .employer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 2px;
+    border: 1px solid var(--color-border);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .experience {
+      padding: var(--space-8) var(--space-4);
+    }
+
+    .employer-card {
+      padding: var(--space-5) var(--space-4);
+    }
+
+    .employer-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .employer-duration {
+      white-space: normal;
+    }
+
+    .role-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .role-duration {
+      white-space: normal;
+    }
+
+    .employer-tags {
+      gap: var(--space-2);
+    }
+  }
+</style>
