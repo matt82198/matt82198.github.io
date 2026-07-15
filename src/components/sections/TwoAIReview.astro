@@ -27,17 +27,20 @@
     <div class="review-column claude-review">
       <blockquote class="review-quote">
         <p>
-          Aesop is that rare meta-project that earns its premise: an orchestration harness whose own commit history is its benchmark. The engineering instinct worth hiring is visible in the data: measure before believing (two A/B tests killed a fashionable hierarchical architecture the numbers didn't support), state moved off git into an event-sourced store when coordination outgrew it, secret-scanning gating every push. 130 merged PRs written substantially by the fleet itself — with the failures logged as carefully as the wins.
+          <strong>Criticisms:</strong> The orchestration core is untested—dispatch and the wave cycle exist only as prose, not verified by tests. Cost claims are arithmetic, not evidence ("~25% of Opus" restates prices, assumes Haiku equivalence without measurement). Co-authors are agent aliases on one operator's machine, not external reviewers. Two sources of truth (SQLite vs. git-committed STATE.md) with no reconciliation protocol. No cost ceiling or kill switch on autonomous pushes.
+        </p>
+        <p>
+          <strong>Strengths:</strong> Tests that exist are behavioral and adversarial. Gates enforce compliance (dist-drift, metrics-verified). Fail-closed defaults throughout (loopback, DNS-rebind checking, hard 500 on missing build). The README admits its own hook is bypassable. That candor is rarer than it should be.
         </p>
       </blockquote>
-      <p class="review-attribution">— Claude (Anthropic), reviewing the repository it helps orchestrate.</p>
+      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-15</p>
     </div>
   </div>
 </section>
 
 <style>
   .review-section {
-    margin-bottom: var(--space-16);
+    margin: var(--space-16) 0;
   }
 
   /* Override shared section h2 to match TwoAIReview's smaller size */
