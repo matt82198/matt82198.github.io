@@ -25,7 +25,7 @@
         <span class="stat-number" data-count="16">16</span> development waves
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="52600">52,600</span> lines of code
+        <span class="stat-number" data-count="39243">39,243</span> lines of code
       </div>
       <div class="stat">
         <span class="stat-number" data-count="388">388</span> commits
@@ -260,25 +260,25 @@
       const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
       if (statsRes.ok) {
         const statsFile = await statsRes.json();
-        // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors, loc } }
+        // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors }, loc: ... }
         if (statsFile.git) {
           liveData.commits = statsFile.git.total_commits || 388;
           liveData.waves = statsFile.git.wave_count || 16;
           liveData.coauthors = statsFile.git.distinct_coauthors || 7;
-          liveData.loc = statsFile.git.loc || 52600;
+          liveData.loc = statsFile.loc || 39243;
         } else {
           // Fallback if nested structure is different
           liveData.commits = 388;
           liveData.waves = 16;
           liveData.coauthors = 7;
-          liveData.loc = 52600;
+          liveData.loc = 39243;
         }
       } else {
         // Fallback if stats.json doesn't exist yet
         liveData.commits = 388;
         liveData.waves = 16;
         liveData.coauthors = 7;
-        liveData.loc = 52600;
+        liveData.loc = 39243;
       }
 
       return true;
@@ -308,7 +308,7 @@
     const updates = [
       { attr: 'data-count', key: 'mergedPRs', selector: '[data-count="142"]' },
       { attr: 'data-count', key: 'waves', selector: '[data-count="16"]' },
-      { attr: 'data-count', key: 'loc', selector: '[data-count="52600"]' },
+      { attr: 'data-count', key: 'loc', selector: '[data-count="39243"]' },
       { attr: 'data-count', key: 'commits', selector: '[data-count="388"]' },
       { attr: 'data-count', key: 'coauthors', selector: '[data-count="7"]' },
     ];
