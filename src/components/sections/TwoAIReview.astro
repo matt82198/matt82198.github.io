@@ -9,18 +9,19 @@
   <h2 id="review">Peer review — critical feedback from two independent models</h2>
 
   <p class="section-intro-critique">
-    Two AI reviewers examined Aesop's architecture and approach. Their consensus: solid engineering foundation, but one critical caveat stands out — how will the system handle non-deterministic behavior as it scales? That question warrants close attention. Beyond that, both noted real strengths in the design decisions and operational rigor.
+    Two independent models reviewed Aesop at its 0.1.0 release. They converge — from opposite directions — on the same verdict: the engineering discipline is real (a verified audit, a measured Haiku-vs-Opus benchmark, a proven kill-switch), but true self-sufficiency still wants three things the project already names in its own limits: an in-repo model-dispatch layer, spend-tied budgeting, and third-party reproduction. When your critic and your defender land on the same open gaps, that's the honest signal to trust.
   </p>
 
   <div class="review-grid">
-    <!-- Column 1: Gemini review (criticisms prominent) -->
+    <!-- Column 1: Gemini review -->
     <div class="review-column gemini-review">
+      <p class="review-lead">Asked for a fresh read on the <code>0.1.0</code> release, Gemini's verdict was blunt about what's left before "autonomous" is fully earned:</p>
       <blockquote class="review-quote">
         <p>
-          Aesop is a compelling exercise in recursive engineering. By utilizing Claude Code to build and refine its own orchestration harness, the project demonstrates a sophisticated grasp of agentic workflows. I am particularly impressed by the decision to move away from a hierarchical dispatch model in favor of a lean, event-sourced SQLite state store; this reduces complexity while maintaining durability. The integration of pre-push security gates and real-time observability via the dashboard provides necessary guardrails for autonomous operations. <strong>While the "Haiku-first" cost strategy is technically sound, I would watch how the system handles emergent non-deterministic behavior as the codebase scales.</strong> Overall, it is a pragmatic, well-documented framework for anyone serious about production-grade agentic orchestration.
+          It needs an open model-dispatch layer, real-time budgeting, and raw production testing before it can be trusted to autonomously ship its own features.
         </p>
       </blockquote>
-      <p class="review-attribution">— Gemini (Google), reviewing the aesop repository · gemini-flash-lite-latest</p>
+      <p class="review-attribution">— Gemini (Google), independent review · 2026-07-17 (0.1.0 release)</p>
     </div>
 
     <!-- Column 2: Claude review -->
@@ -89,6 +90,15 @@
   .gemini-review {
     background-color: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
+  }
+
+  .review-lead {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-sans);
   }
 
   .review-quote {
