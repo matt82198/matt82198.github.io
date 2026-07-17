@@ -112,6 +112,7 @@ def main() -> None:
         "commits": git.total_commits,
         "merged_prs": git.merged_prs,
         "waves": git.wave_count,
+        "coauthors": git.distinct_coauthors,
         "domains": count_domains(aesop_repo),
         "test_files": count_test_files(aesop_repo),
         "loc": git.lines_of_code,
