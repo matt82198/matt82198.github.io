@@ -31,7 +31,7 @@
         <span class="stat-number" data-count="430">430</span> commits
       </div>
       <div class="stat">
-        <span class="stat-number" data-count="7">7</span> co-authors on the fleet
+        <span class="stat-number" data-count="9">9</span> co-authors on the fleet
       </div>
     </div>
     <p class="sync-status" id="sync-status"></p>
@@ -264,20 +264,20 @@
         if (statsFile.git) {
           liveData.commits = statsFile.git.total_commits || 430;
           liveData.waves = statsFile.git.wave_count || 19;
-          liveData.coauthors = statsFile.git.distinct_coauthors || 7;
+          liveData.coauthors = statsFile.git.distinct_coauthors || 9;
           liveData.loc = statsFile.loc || 39243;
         } else {
           // Fallback if nested structure is different
           liveData.commits = 430;
           liveData.waves = 19;
-          liveData.coauthors = 7;
+          liveData.coauthors = 9;
           liveData.loc = 39243;
         }
       } else {
         // Fallback if stats.json doesn't exist yet
         liveData.commits = 430;
         liveData.waves = 19;
-        liveData.coauthors = 7;
+        liveData.coauthors = 9;
         liveData.loc = 39243;
       }
 
@@ -310,7 +310,7 @@
       { attr: 'data-count', key: 'waves', selector: '[data-count="19"]' },
       { attr: 'data-count', key: 'loc', selector: '[data-count="39243"]' },
       { attr: 'data-count', key: 'commits', selector: '[data-count="430"]' },
-      { attr: 'data-count', key: 'coauthors', selector: '[data-count="7"]' },
+      { attr: 'data-count', key: 'coauthors', selector: '[data-count="9"]' },
     ];
 
     updates.forEach(({ key, selector }) => {
