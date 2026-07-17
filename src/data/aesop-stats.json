@@ -1,9 +1,9 @@
 {
-  "commits": 430,
-  "merged_prs": 148,
-  "waves": 19,
-  "domains": 14,
-  "test_files": 46,
-  "loc": 39243,
-  "version": "v0.1.0-beta.4"
+  "commits": 543,
+  "merged_prs": 164,
+  "waves": 29,
+  "domains": 12,
+  "test_files": 75,
+  "loc": 69209,
+  "version": "v0.1.0-beta.6"
 }
