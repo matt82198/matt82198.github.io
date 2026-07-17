@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sync:stats": "python scripts/sync-aesop-stats.py"
   },
   "dependencies": {
     "astro": "^5"
