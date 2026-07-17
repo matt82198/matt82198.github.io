@@ -9,6 +9,6 @@
     "sync:stats": "python scripts/sync-aesop-stats.py"
   },
   "dependencies": {
-    "astro": "^5"
+    "astro": "^6"
   }
 }
