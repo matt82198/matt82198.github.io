@@ -112,6 +112,17 @@ import stats from '../../data/aesop-stats.json';
       <em>Every number computed from git, reproducible by cloning.</em>
     </p>
   </div>
+
+  <div class="fleet-terminal-wrap">
+    <div class="fleet-terminal" role="img" aria-label="Stylized terminal replaying how the aesop harness dispatches parallel agent teams with prompts and reports their results.">
+      <div class="ft-bar">
+        <span class="ft-dot ft-red"></span><span class="ft-dot ft-amber"></span><span class="ft-dot ft-green"></span>
+        <span class="ft-title">aesop@fleet — dispatch</span>
+      </div>
+      <pre class="ft-body" id="fleetTermBody" aria-hidden="true"></pre>
+    </div>
+    <p class="ft-caption">Illustrative — a stylized replay of how the harness fans work out to parallel teams. Not a live feed.</p>
+  </div>
 </section>
 
 <style>
@@ -312,4 +323,119 @@ import stats from '../../data/aesop-stats.json';
     font-style: italic;
     color: var(--color-text-tertiary);
   }
+
+  /* Fleet terminal — stylized live-dispatch replay */
+  .fleet-terminal-wrap {
+    margin-top: var(--space-10);
+    max-width: 100%;
+  }
+  .fleet-terminal {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0b0f14;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+  .ft-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .ft-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+    flex: none;
+  }
+  .ft-red { background: #ff5f56; }
+  .ft-amber { background: #ffbd2e; }
+  .ft-green { background: #27c93f; }
+  .ft-title {
+    margin-left: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: #8b949e;
+    letter-spacing: 0.02em;
+  }
+  .ft-body {
+    margin: 0;
+    padding: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.7;
+    color: #cbd5e1;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 8.5em;
+    overflow: hidden;
+  }
+  .ft-cmd { color: #7dd3fc; }
+  .ft-prompt { color: #9aa4b2; }
+  .ft-ok { color: #4ade80; }
+  .ft-cursor {
+    color: #4ade80;
+    animation: ft-blink 1.05s steps(1) infinite;
+  }
+  @keyframes ft-blink { 50% { opacity: 0; } }
+  .ft-caption {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    margin: var(--space-3) 0 0;
+    padding: 0 var(--space-1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ft-cursor { animation: none; }
+  }
 </style>
+
+<script>
+  (() => {
+    const el = document.getElementById('fleetTermBody');
+    if (!el) return;
+    const blocks = [
+      { cmd: 'dispatch --team critique --model sonnet',
+        prompt: '"build a harder, discriminating, cost-aware judgment benchmark…"',
+        result: '✓ 28 tasks · Haiku 28/28 = Opus 28/28 · ~1/3 the cost' },
+      { cmd: 'dispatch --team audit --lenses sec,correctness,test,ui --haiku+verify',
+        prompt: '"read-only delta audit of the last 7 waves; refute before you report"',
+        result: '✓ 3 confirmed · P1 credential leak → redacted' },
+      { cmd: 'dispatch --team github --merge-train',
+        prompt: '"PR → watch CI → merge on green → prune worktrees"',
+        result: '✓ 48 stale branches pruned · merged @ 555d3a4' },
+      { cmd: 'halt --status   # kill-switch wired into dispatch',
+        prompt: '"abort the wave before any worker spawns if engaged"',
+        result: '✓ brake PROVEN — 0 workers spawned when halted' },
+      { cmd: 'dispatch --team ui --model sonnet --playwright',
+        prompt: '"Live Wave PR Board — branches, CI, blockers at a glance"',
+        result: '✓ browser-proven · keyboard-navigable · XSS-safe' },
+    ];
+    const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const renderStatic = (b) =>
+      `<span class="ft-cmd">aesop@fleet:~$ ${esc(b.cmd)}</span>\n` +
+      `<span class="ft-prompt">  ▸ ${esc(b.prompt)}</span>\n` +
+      `<span class="ft-ok">  ${esc(b.result)}</span>`;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { el.innerHTML = blocks.map(renderStatic).join('\n\n'); return; }
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      let i = 0;
+      while (true) {
+        const b = blocks[i % blocks.length]; i++;
+        const cmd = `aesop@fleet:~$ ${b.cmd}`;
+        el.innerHTML = '<span class="ft-cmd"></span><span class="ft-cursor">▋</span>';
+        const cmdSpan = el.querySelector('.ft-cmd');
+        for (let c = 0; c <= cmd.length; c++) { cmdSpan.textContent = cmd.slice(0, c); await sleep(26); }
+        await sleep(280);
+        el.innerHTML = `<span class="ft-cmd">${esc(cmd)}</span>\n<span class="ft-prompt">  ▸ ${esc(b.prompt)}</span><span class="ft-cursor">▋</span>`;
+        await sleep(520);
+        el.innerHTML = `<span class="ft-cmd">${esc(cmd)}</span>\n<span class="ft-prompt">  ▸ ${esc(b.prompt)}</span>\n<span class="ft-ok">  ${esc(b.result)}</span><span class="ft-cursor">▋</span>`;
+        await sleep(2600);
+      }
+    })();
+  })();
+</script>
