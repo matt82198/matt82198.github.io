@@ -9,16 +9,24 @@
   <h2 id="review">Peer review — critical feedback from two independent models</h2>
 
   <p class="section-intro-critique">
-    Two independent models reviewed Aesop at its 0.1.0 release. They converge — from opposite directions — on the same verdict: the engineering discipline is real (a verified audit, a measured Haiku-vs-Opus benchmark, a proven kill-switch), but true self-sufficiency still wants three things the project already names in its own limits: an in-repo model-dispatch layer, spend-tied budgeting, and third-party reproduction. When your critic and your defender land on the same open gaps, that's the honest signal to trust.
+    Two independent models reviewed Aesop at its 0.1.0 release — Gemini leading with what's impressive, Claude answering its own earlier objections. They converge on the same read: the engineering is real and refreshingly opinionated (Git-as-source-of-truth durability, cost-through-architecture, a hard kill-switch, ~409 kB), and what's left is exactly what the project already admits — it's still heavily dependent on its upstream Claude Code link and needs a lot more real-world validation before "autonomous" is fully earned. When your critic and your booster land on the same open gaps, that's the honest signal to trust.
   </p>
 
   <div class="review-grid">
     <!-- Column 1: Gemini review -->
     <div class="review-column gemini-review">
-      <p class="review-lead">Asked for a fresh read on the <code>0.1.0</code> release, Gemini's verdict was blunt about what's left before "autonomous" is fully earned:</p>
       <blockquote class="review-quote">
         <p>
-          It needs an open model-dispatch layer, real-time budgeting, and raw production testing before it can be trusted to autonomously ship its own features.
+          If we strip away the macro-level debate over "true autonomy" and look at aesop strictly as an active, four-day-old work in progress, it's a deeply refreshing piece of engineering. It's clearly being built by a practitioner who got tired of watching mainstream agent frameworks crash and burn over basic network blips or local machine wipes.
+        </p>
+        <p>
+          <strong>The absolute best part of this repository is that it's an opinionated piece of software engineering, not a vibe-coded science project.</strong> Instead of hiding agent context in an ephemeral database or a cloudy black box, the "filesystem-as-brain" approach treats Git as the ultimate source of truth. If your local developer machine gets blown away, a git clone and a single recovery command restore the agent's exact state, memory, and task constraints. That is a beautifully pragmatic solution to the durability nightmare of long-running agent threads.
+        </p>
+        <p>
+          Furthermore, the focus on cost optimization via architecture—rather than just waiting for Anthropic to lower token prices—is excellent. Building a system that relies on a single long-running orchestrator feeding heavily cached, small summaries to an aggressive fleet of parallel Haiku subagents is incredibly smart. He's engineering a massive cost reduction purely through clever state management and prompt boundaries. It gives small, fast, cheap models a realistic framework to punch way above their weight class.
+        </p>
+        <p>
+          For an early-stage repo, the foundation is incredibly tight. It's ultra-lightweight at ~409 kB, scannable, and operational safeguards like the hard kill-switch show a project being built for the trenches, not just for a Twitter demo video. It's early, it's heavily dependent on its upstream Claude Code link, and it needs a lot more real-world validation—but as a blueprint for how to build a resilient, affordable, and operationally sane AI developer rig, <strong>it's a killer start.</strong>
         </p>
       </blockquote>
       <p class="review-attribution">— Gemini (Google), independent review · 2026-07-17 (0.1.0 release)</p>
@@ -90,15 +98,6 @@
   .gemini-review {
     background-color: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
-  }
-
-  .review-lead {
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
-    font-style: italic;
-    line-height: var(--leading-relaxed);
-    margin: 0 0 var(--space-4);
-    font-family: var(--font-sans);
   }
 
   .review-quote {
