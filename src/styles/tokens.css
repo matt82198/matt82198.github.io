@@ -13,8 +13,12 @@
   --color-border-subtle: #f0edea;
   --color-border-strong: #d4cfc5;
 
-  /* Accent: warm amber */
-  --accent: #b8860b;
+  /* Accent: warm amber. #b8860b (darkgoldenrod) only reached 3.2:1 / 3.0:1
+     against --color-bg / --color-bg-secondary — below the 4.5:1 WCAG AA
+     floor for the normal-size text that uses `color: var(--accent)`
+     throughout the site. #8a6508 keeps the same hue/saturation ratio
+     (just darker) and clears AA against both backgrounds (5.2:1 / 4.9:1). */
+  --accent: #8a6508;
   --accent-light: #daa520;
   --accent-lighter: #f0e68c;
 
@@ -34,7 +38,9 @@
   --color-border-subtle: #1f1e1b;
   --color-border-strong: #3a3530;
 
-  /* Accent: warm amber */
+  /* Accent: warm amber. Verified WCAG AA: #daa520 vs --color-bg (#0f0e0c) is
+     8.6:1 and vs --color-bg-secondary (#1a1917) is 7.9:1 — both already
+     clear the 4.5:1 (and even the 7:1 AAA) floor, so no change needed here. */
   --accent: #daa520;
   --accent-light: #f0e68c;
   --accent-lighter: #b8860b;
