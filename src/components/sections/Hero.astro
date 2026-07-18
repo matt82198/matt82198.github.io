@@ -227,7 +227,7 @@ import stats from '../../data/aesop-stats.json';
   }
 </style>
 
-<script is:inline>
+<script define:vars={{ bakedStats: stats }} is:inline>
 (function() {
   // Live stats from GitHub API (PRs) + stats.json (commits, waves, co-authors, LOC)
   // Graceful degradation: baked fallbacks on any failure
@@ -245,7 +245,7 @@ import stats from '../../data/aesop-stats.json';
       const prRes = await fetch(`https://api.github.com/search/issues?q=repo:${REPO}+type:pr+is:merged&per_page=1`);
       if (prRes.ok) {
         const prData = await prRes.json();
-        liveData.mergedPRs = prData.total_count || 177;
+        liveData.mergedPRs = prData.total_count || bakedStats.merged_prs;
       }
 
       // Fetch repo info for last push time
@@ -264,23 +264,23 @@ import stats from '../../data/aesop-stats.json';
         const statsFile = await statsRes.json();
         // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors }, loc: ... }
         if (statsFile.git) {
-          liveData.commits = statsFile.git.total_commits || 573;
-          liveData.waves = statsFile.git.wave_count || 30;
-          liveData.coauthors = statsFile.git.distinct_coauthors || 9;
-          liveData.loc = statsFile.loc || 70648;
+          liveData.commits = statsFile.git.total_commits || bakedStats.commits;
+          liveData.waves = statsFile.git.wave_count || bakedStats.waves;
+          liveData.coauthors = statsFile.git.distinct_coauthors || bakedStats.coauthors;
+          liveData.loc = statsFile.loc || bakedStats.loc;
         } else {
           // Fallback if nested structure is different
-          liveData.commits = 573;
-          liveData.waves = 30;
-          liveData.coauthors = 9;
-          liveData.loc = 70648;
+          liveData.commits = bakedStats.commits;
+          liveData.waves = bakedStats.waves;
+          liveData.coauthors = bakedStats.coauthors;
+          liveData.loc = bakedStats.loc;
         }
       } else {
         // Fallback if stats.json doesn't exist yet
-        liveData.commits = 573;
-        liveData.waves = 30;
-        liveData.coauthors = 9;
-        liveData.loc = 70648;
+        liveData.commits = bakedStats.commits;
+        liveData.waves = bakedStats.waves;
+        liveData.coauthors = bakedStats.coauthors;
+        liveData.loc = bakedStats.loc;
       }
 
       return true;
@@ -308,11 +308,11 @@ import stats from '../../data/aesop-stats.json';
   function updateStats() {
     // Map live data to DOM elements
     const updates = [
-      { attr: 'data-count', key: 'mergedPRs', selector: '[data-count="177"]' },
-      { attr: 'data-count', key: 'waves', selector: '[data-count="30"]' },
-      { attr: 'data-count', key: 'loc', selector: '[data-count="70648"]' },
-      { attr: 'data-count', key: 'commits', selector: '[data-count="573"]' },
-      { attr: 'data-count', key: 'coauthors', selector: '[data-count="9"]' },
+      { attr: 'data-count', key: 'mergedPRs', selector: `[data-count="${bakedStats.merged_prs}"]` },
+      { attr: 'data-count', key: 'waves', selector: `[data-count="${bakedStats.waves}"]` },
+      { attr: 'data-count', key: 'loc', selector: `[data-count="${bakedStats.loc}"]` },
+      { attr: 'data-count', key: 'commits', selector: `[data-count="${bakedStats.commits}"]` },
+      { attr: 'data-count', key: 'coauthors', selector: `[data-count="${bakedStats.coauthors}"]` },
     ];
 
     updates.forEach(({ key, selector }) => {
