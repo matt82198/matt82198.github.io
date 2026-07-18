@@ -52,7 +52,7 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
           <a href="#timeline">Timeline</a>
         </nav>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
+          <span class="theme-icon" aria-hidden="true">🌙</span>
         </button>
       </div>
     </header>
@@ -120,7 +120,14 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
         padding: var(--space-4) var(--space-4);
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        /* flex-start (not center): .site-nav wraps to 2 rows at several
+           in-between viewport widths (roughly 641-1050px, e.g. common
+           tablet/small-laptop sizes like 1024px) before the column
+           breakpoint below kicks in. With align-items: center the
+           wordmark and theme-toggle were vertically centered against the
+           full 2-row nav height, making them appear to sink to the
+           midpoint between rows instead of lining up with the first row. */
+        align-items: flex-start;
         gap: var(--space-6);
       }
 
@@ -204,6 +211,7 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
       @media (max-width: 640px) {
         .header-content {
           flex-direction: column;
+          align-items: center;
           gap: var(--space-4);
         }
 

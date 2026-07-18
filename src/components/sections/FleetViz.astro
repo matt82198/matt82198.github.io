@@ -13,7 +13,7 @@ const WAVES = stats.waves;
   <h2 id="fleet">The fleet, at work</h2>
 
   <div class="viz-container">
-    <svg class="fleet-diagram" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Live Haiku worker dispatch orchestration">
+    <svg class="fleet-diagram" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Live Haiku worker dispatch orchestration" aria-describedby="fleet-viz-desc">
       <defs>
         <style>
           .orchestrator-node { fill: var(--accent); }
@@ -40,11 +40,22 @@ const WAVES = stats.waves;
       <!-- Info label: wave count. Anchored top-left OUTSIDE the r=130 worker
            orbit (orbit tops out at y=20 across x=70..330) so the animation
            never covers it. -->
-      <text id="wave-label" x="12" y="18" text-anchor="start" font-family="var(--font-mono)" font-size="12" fill="var(--accent)" opacity="0.6">wave {WAVES}</text>
+      <text id="wave-label" x="12" y="18" text-anchor="start" font-family="var(--font-mono)" font-size="12" fill="var(--accent)">wave {WAVES}</text>
     </svg>
 
-    <!-- Mono caption cycling through phases -->
-    <p class="phase-caption"><code id="phase-text">dispatch</code></p>
+    <!-- Hidden summary for screen readers: the animation is purely decorative
+         motion, but its meaning (phase cycle + fan-out) isn't conveyed by the
+         SVG's accessible name alone. -->
+    <p id="fleet-viz-desc" class="sr-only">
+      Animated diagram: a central orchestrator repeatedly dispatches Haiku worker
+      agents outward through four phases — dispatch, build, verify, merge — then
+      the workers return with results before the cycle restarts. Live worker and
+      wave counts are listed below the diagram.
+    </p>
+
+    <!-- Mono caption cycling through phases. role="status" makes phase changes
+         a polite live region so screen reader users hear each transition. -->
+    <p class="phase-caption" role="status"><span class="sr-only">Current phase: </span><code id="phase-text">dispatch</code></p>
 
     <!-- Legend -->
     <p class="fleet-legend">Live orchestration: <span id="live-worker-count">9</span> Haiku workers, wave <span id="live-wave-count">{WAVES}</span></p>
@@ -105,6 +116,19 @@ const WAVES = stats.waves;
     max-width: 60ch;
     margin: 0;
     line-height: var(--leading-normal);
+  }
+
+  /* Visually hidden but available to screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   /* Reduce motion: show static diagram */
