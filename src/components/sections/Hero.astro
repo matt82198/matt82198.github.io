@@ -58,6 +58,7 @@ import stats from '../../data/aesop-stats.json';
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: var(--space-8);
     background-color: var(--color-bg);
     color: var(--color-text);
@@ -157,6 +158,8 @@ import stats from '../../data/aesop-stats.json';
   .stat-number {
     color: var(--accent);
     font-weight: 700;
+    min-width: 3ch;
+    font-variant-numeric: tabular-nums;
   }
 
   .sync-status {
