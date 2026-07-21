@@ -28,6 +28,7 @@ Equivalent npm alias: `npm run sync:stats`.
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -80,6 +81,34 @@ def git_ls_files(aesop_repo: Path, *patterns) -> list[str]:
     return [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
 
 
+def compute_iteration_cycles(aesop_repo: Path) -> int:
+    """Compute max wave/iteration number from git log.
+
+    Scans all commit messages for wave-N or wave_N patterns and returns the
+    maximum N found, representing the highest iteration cycle reached.
+    Falls back to 0 if no waves found.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "log", "--format=%B"],
+            cwd=str(aesop_repo),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        output = result.stdout or ""
+
+        waves = set()
+        for match in re.finditer(r"wave[_-]?(\d+)", output, re.IGNORECASE):
+            waves.add(int(match.group(1)))
+
+        return max(waves) if waves else 0
+    except Exception:
+        return 0
+
+
 def count_domains(aesop_repo: Path) -> int:
     """Domains = subdirectories carrying a CLAUDE.md (root CLAUDE.md excluded)."""
     claude_files = git_ls_files(aesop_repo, "*CLAUDE.md", "CLAUDE.md")
@@ -112,6 +141,10 @@ def main() -> None:
         return
     git = load_git_stats(aesop_repo)
 
+    # Compute new semantic metrics
+    iteration_cycles = compute_iteration_cycles(aesop_repo)
+    shipped_increments = git.merged_prs
+
     stats = {
         "commits": git.total_commits,
         "merged_prs": git.merged_prs,
@@ -121,6 +154,9 @@ def main() -> None:
         "test_files": count_test_files(aesop_repo),
         "loc": git.lines_of_code,
         "version": read_version(aesop_repo),
+        # New semantic keys for portfolio rendering
+        "iteration_cycles": iteration_cycles,
+        "shipped_increments": shipped_increments,
     }
 
     # Show a before -> after diff so the refresh is auditable.
