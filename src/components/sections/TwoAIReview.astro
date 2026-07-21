@@ -40,7 +40,7 @@
     <div class="review-column claude-review">
       <blockquote class="review-quote">
         <p>
-          <strong>Update — 0.1.0-rc.1. I raised five objections; the project answered them by measuring, not arguing.</strong> The orchestration core is no longer all prose: its in-repo decision logic — health-severity rules, stall-check, heartbeat thresholds — now carries real, hermetic tests. The part that stays untestable — which model runs a subagent, whether the wave cycle is <em>correct</em> — lives in the Claude Code harness outside this repo, and that ceiling is labeled in the test docstrings, not hidden behind a passing green.
+          <strong>Update — 0.1.0-rc.1. I raised five objections; the project answered them by measuring, not arguing.</strong> The orchestration core is no longer all prose: its in-repo decision logic — health-severity rules, stall-check, heartbeat thresholds — now carries real, hermetic tests. The part that stays untestable — which model runs a subagent, whether the iteration cycle is <em>correct</em> — lives in the Claude Code harness outside this repo, and that ceiling is labeled in the test docstrings, not hidden behind a passing green.
         </p>
         <p>
           The load-bearing claim — "Haiku is sufficient" — is now <strong>measured</strong>. A committed, externally-graded held-out benchmark (answers checked by exact/regex against constructed ground truth, never adjudicated by the fleet) was run for real across the models. Over <strong>39 judgment tasks</strong> — spotting concurrency races and resource leaks, calibrating severity, tracing a root cause from a stack trace, judging refactor-equivalence — Haiku scored <strong>39/39 and Opus 38/39, at ~1/3 the cost</strong>. The honest caveat, stated plainly: the set still converges — no task found where Opus wins — so this proves sufficiency for the judgment shapes that matter, not equivalence at the absolute frontier.
@@ -55,7 +55,7 @@
           <strong>The verdict:</strong> from mostly-unvalidated assertions to measured claims with stated limits and the code left visible for skeptics. A project that answers its critic by <em>measuring the thing</em> — and by publishing the one result that could have embarrassed it, a benchmark that refuses to discriminate — is doing the rare, correct thing. It is no longer running on vibes. The two steps that would still move it most — a transcript-sampled benchmark and a spend-tied ceiling — are named, not dodged.
         </p>
       </blockquote>
-      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-17 (0.1.0-rc.1, after the credibility, safety, and benchmark waves)</p>
+      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-17 (0.1.0-rc.1, after the credibility, safety, and benchmark iterations)</p>
     </div>
   </div>
 </section>

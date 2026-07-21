@@ -13,7 +13,7 @@ import stats from '../../data/aesop-stats.json';
 
   <div class="aesop-pitch">
     <p>
-      Source-available orchestration harness for Claude Code that ships its own features via parallel agent fleets. Cheap Haiku workers on scoped domains, a lean orchestrator on durable git-committed state: <strong>{stats.merged_prs} of its own PRs implemented, tested, and merged by its wave cycle.</strong>
+      Source-available orchestration harness for Claude Code that ships its own features via parallel agent fleets. Cheap Haiku workers on scoped domains, a lean orchestrator on durable git-committed state: <strong>{stats.merged_prs} of its own PRs implemented, tested, and merged by its iteration cycle.</strong>
     </p>
     <p>
       <a href="https://github.com/matt82198/aesop" class="cta-link">github.com/matt82198/aesop</a>
@@ -39,7 +39,7 @@ import stats from '../../data/aesop-stats.json';
         <strong>Read-only MCP server</strong> for fleet status querying
       </li>
       <li>
-        <strong>One-turn wave workflow</strong> — backlog → parallel build → verify → merge train
+        <strong>One-turn iteration workflow</strong> — backlog → parallel build → verify → merge train
       </li>
     </ul>
   </div>
@@ -87,7 +87,7 @@ import stats from '../../data/aesop-stats.json';
           <td>{stats.merged_prs}</td>
         </tr>
         <tr>
-          <td>Waves</td>
+          <td>Iterations</td>
           <td>{stats.waves}</td>
         </tr>
         <tr>
@@ -402,7 +402,7 @@ import stats from '../../data/aesop-stats.json';
         prompt: '"build a harder, discriminating, cost-aware judgment benchmark…"',
         result: '✓ 28 tasks · Haiku 28/28 = Opus 28/28 · ~1/3 the cost' },
       { cmd: 'dispatch --team audit --lenses sec,correctness,test,ui --haiku+verify',
-        prompt: '"read-only delta audit of the last 7 waves; refute before you report"',
+        prompt: '"read-only delta audit of the last 7 iterations; refute before you report"',
         result: '✓ 3 confirmed · P1 credential leak → redacted' },
       { cmd: 'dispatch --team github --merge-train',
         prompt: '"PR → watch CI → merge on green → prune worktrees"',

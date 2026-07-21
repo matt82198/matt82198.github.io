@@ -1,10 +1,10 @@
 {
-  "commits": 635,
-  "merged_prs": 190,
+  "commits": 653,
+  "merged_prs": 195,
   "waves": 30,
   "coauthors": 9,
-  "domains": 12,
-  "test_files": 99,
-  "loc": 94376,
+  "domains": 13,
+  "test_files": 103,
+  "loc": 99358,
   "version": "v0.1.1"
 }

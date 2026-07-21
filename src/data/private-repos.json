@@ -9,7 +9,7 @@
         },
         {
           "name": "conductor",
-          "description": "Multi-agent control plane (13 waves of machinery)"
+          "description": "Multi-agent control plane (13 iterations of machinery)"
         },
         {
           "name": "cross-machine-context",
