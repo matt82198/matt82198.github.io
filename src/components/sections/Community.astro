@@ -1,7 +1,7 @@
 ---
 // Community section: field notes shared on Reddit
-// Anchor: community | Three posts about token economics, orchestration, security
-// No props
+// Data-driven: posts sourced from src/data/community-posts.json at build time
+import communityData from '../../data/community-posts.json';
 ---
 
 <section class="community-section">
@@ -20,34 +20,29 @@
   <div class="featured-post">
     <div class="featured-badge">FEATURED</div>
     <article class="reddit-post">
-      <a href="https://www.reddit.com/r/ClaudeAI/comments/1uuib78/" class="post-link">
-        <h3>A single AI agent session hit 534,000 tokens in one turn (2.7x the usual 200K ceiling)</h3>
+      <a href={communityData.featured.url} class="post-link">
+        <h3>{communityData.featured.title}</h3>
       </a>
-      <p class="post-meta">r/ClaudeAI · field data from a 1,320-turn orchestration session</p>
-      <p class="post-desc">Publishing live metrics from the fleet itself — how far can a single agent push the token ceiling before coherence breaks.</p>
+      <p class="post-meta">{communityData.featured.subreddit} · {communityData.featured.meta}</p>
+      <p class="post-desc">{communityData.featured.description}</p>
     </article>
   </div>
 
   <!-- Additional posts -->
   <ul class="post-list">
-    <li>
-      <article class="reddit-post">
-        <a href="https://www.reddit.com/r/ClaudeAI/comments/" class="post-link">
-          <h3>MFA rotation can't stop modern attacks</h3>
-        </a>
-        <p class="post-meta">r/ClaudeAI · 19 upvotes</p>
-        <p class="post-desc">Consent phishing hands attackers authorized tokens that survive credential resets. OAuth-chaining vulnerabilities become flawlessly executable by agents. Hardware keys (YubiKey) remain the practical defense.</p>
-      </article>
-    </li>
-    <li>
-      <article class="reddit-post">
-        <a href="https://www.reddit.com/r/vibecoding/" class="post-link">
-          <h3>Simple Claude structure to save tokens</h3>
-        </a>
-        <p class="post-meta">r/vibecoding</p>
-        <p class="post-desc">Practical token-economics structure for Claude sessions. Discipline beats cleverness.</p>
-      </article>
-    </li>
+    {communityData.additional.map((post) => (
+      <li>
+        <article class="reddit-post">
+          <a href={post.url} class="post-link">
+            <h3>{post.title}</h3>
+          </a>
+          <p class="post-meta">
+            {post.subreddit} {post.upvotes ? `· ${post.upvotes} upvotes` : ''}
+          </p>
+          <p class="post-desc">{post.description}</p>
+        </article>
+      </li>
+    ))}
   </ul>
 </section>
 

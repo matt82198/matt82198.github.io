@@ -1,0 +1,101 @@
+{
+  "categories": [
+    {
+      "name": "AI & Orchestration",
+      "repos": [
+        {
+          "name": "claude-conductor",
+          "description": "Agentic IDE experiment"
+        },
+        {
+          "name": "conductor",
+          "description": "Multi-agent control plane (13 waves of machinery)"
+        },
+        {
+          "name": "cross-machine-context",
+          "description": "Portable orchestration state across machines"
+        },
+        {
+          "name": "persistent-agents",
+          "description": "Long-lived agent experiments"
+        },
+        {
+          "name": "claude-scripts",
+          "description": "Reusable ops script library"
+        }
+      ]
+    },
+    {
+      "name": "Business Systems",
+      "repos": [
+        {
+          "name": "ecm-ai",
+          "description": "Invoice automation bridge"
+        },
+        {
+          "name": "TRShopServer",
+          "description": "E-commerce microservices (backend)"
+        },
+        {
+          "name": "TRShopClient",
+          "description": "E-commerce microservices (frontend)"
+        },
+        {
+          "name": "StreamlitAuthenticationDashboard",
+          "description": "Authenticated ops dashboards"
+        }
+      ]
+    },
+    {
+      "name": "Data & SEO",
+      "repos": [
+        {
+          "name": "google-indexing",
+          "description": "Indexing automation"
+        },
+        {
+          "name": "google-indexer",
+          "description": "Indexing automation"
+        },
+        {
+          "name": "tanneryrow-seo",
+          "description": "Search optimization tooling"
+        }
+      ]
+    },
+    {
+      "name": "E-commerce Ops",
+      "repos": [
+        {
+          "name": "tanneryrow-tools",
+          "description": "Storefront tooling and drops"
+        },
+        {
+          "name": "tanneryrow-drops",
+          "description": "Storefront tooling and drops"
+        },
+        {
+          "name": "tanneryrow-ss",
+          "description": "Storefront tooling and drops"
+        },
+        {
+          "name": "migrate-sortly-TR",
+          "description": "Inventory migration"
+        },
+        {
+          "name": "ReceiptParse",
+          "description": "Receipt data extraction"
+        }
+      ]
+    },
+    {
+      "name": "The Archive",
+      "repos": [
+        {
+          "name": "Glimpse",
+          "description": "iOS app, Objective-C, 2016"
+        }
+      ]
+    }
+  ]
+}

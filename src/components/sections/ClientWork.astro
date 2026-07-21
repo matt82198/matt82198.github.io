@@ -1,9 +1,7 @@
 ---
 // ClientWork.astro — Production systems for Tannery Row
-// Three named project cards showcasing real business software:
-// 1. Sample Program Tracker (Spring Boot / Java 17)
-// 2. Operations Toolbox (Streamlit + Python CLI)
-// 3. Invoice Bridge (Squarespace ↔ QuickBooks integration)
+// Data-driven: projects sourced from src/data/projects.json at build time
+import projectsData from '../../data/projects.json';
 ---
 
 <section class="client-work">
@@ -19,81 +17,27 @@
   </p>
 
   <div class="projects-grid">
-    <!-- Project 1: Sample Program Tracker -->
-    <article class="project-card">
-      <h3>Sample Program Tracker</h3>
-      <p class="project-tech">
-        <code>Spring Boot 4</code>
-        <code>Java 17</code>
-        <code>REST API</code>
-      </p>
-      <p class="project-description">
-        RESTful API tracking leather sample production across four stages with inventory status management.
-        Clean domain-driven architecture, enterprise-grade: typed API responses, global exception handling,
-        request validation, Caffeine caching for high-frequency lookups.
-      </p>
-      <div class="project-stats">
-        <div class="stat">
-          <span class="stat-value">18</span>
-          <span class="stat-label">test files</span>
+    {projectsData.map((project) => (
+      <article class="project-card">
+        <h3>{project.title}</h3>
+        <p class="project-tech">
+          {project.tech.map((t) => (
+            <code>{t}</code>
+          ))}
+        </p>
+        <p class="project-description">
+          {project.description}
+        </p>
+        <div class="project-stats">
+          {project.stats.map((stat) => (
+            <div class="stat">
+              <span class="stat-value">{stat.value}</span>
+              <span class="stat-label">{stat.label}</span>
+            </div>
+          ))}
         </div>
-        <div class="stat">
-          <span class="stat-value">TDD-first</span>
-          <span class="stat-label">approach</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Project 2: Operations Toolbox -->
-    <article class="project-card">
-      <h3>Operations Toolbox</h3>
-      <p class="project-tech">
-        <code>Streamlit</code>
-        <code>Python CLI</code>
-        <code>OAuth2</code>
-      </p>
-      <p class="project-description">
-        Dashboard + command-line suite spanning six business domains: Squarespace order matching,
-        QuickBooks invoicing, payment reconciliation (Stripe/PayPal), inventory tracking, swatch-book
-        generation. Pandas pipelines, Google Sheets integration. Built for daily non-engineer use.
-      </p>
-      <div class="project-stats">
-        <div class="stat">
-          <span class="stat-value">29</span>
-          <span class="stat-label">Python scripts</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">109</span>
-          <span class="stat-label">commits</span>
-        </div>
-      </div>
-    </article>
-
-    <!-- Project 3: Invoice Bridge -->
-    <article class="project-card">
-      <h3>Invoice Bridge</h3>
-      <p class="project-tech">
-        <code>Java 17</code>
-        <code>Spring Boot</code>
-        <code>Selenium</code>
-      </p>
-      <p class="project-description">
-        Bi-directional sync: Squarespace orders into QuickBooks Online. Four-pass matching algorithm
-        (doc number → amount+customer → amount → last name), Selenium automation for QBO browser sync,
-        gamified SKU-mapping UI with streak scoring, end-of-month reconciliation calendar. POI + OpenCSV
-        for data manipulation.
-      </p>
-      <div class="project-stats">
-        <div class="stat">
-          <span class="stat-value">4-pass</span>
-          <span class="stat-label">matching</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">gamified</span>
-          <span class="stat-label">UX</span>
-        </div>
-      </div>
-    </article>
+      </article>
+    ))}
   </div>
 </section>
 
