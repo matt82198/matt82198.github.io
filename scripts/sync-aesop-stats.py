@@ -106,6 +106,13 @@ def read_version(aesop_repo: Path) -> str:
 
 def main() -> None:
     aesop_repo = resolve_aesop_repo()
+    if aesop_repo is None:
+        print(
+            "sync-aesop-stats: aesop repo not present (e.g. CI) - skipping refresh, "
+            "using the committed src/data/aesop-stats.json.",
+            file=sys.stderr,
+        )
+        return
     git = load_git_stats(aesop_repo)
 
     stats = {
