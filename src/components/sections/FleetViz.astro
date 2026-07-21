@@ -40,7 +40,7 @@ const WAVES = stats.waves;
       <!-- Info label: wave count. Anchored top-left OUTSIDE the r=130 worker
            orbit (orbit tops out at y=20 across x=70..330) so the animation
            never covers it. -->
-      <text id="wave-label" x="12" y="18" text-anchor="start" font-family="var(--font-mono)" font-size="12" fill="var(--accent)">wave {WAVES}</text>
+      <text id="wave-label" x="12" y="18" text-anchor="start" font-family="var(--font-mono)" font-size="12" fill="var(--accent)">Iteration {WAVES}</text>
     </svg>
 
     <!-- Hidden summary for screen readers: the animation is purely decorative
@@ -58,7 +58,7 @@ const WAVES = stats.waves;
     <p class="phase-caption" role="status"><span class="sr-only">Current phase: </span><code id="phase-text">dispatch</code></p>
 
     <!-- Legend -->
-    <p class="fleet-legend">Live orchestration: <span id="live-worker-count">9</span> Haiku workers, wave <span id="live-wave-count">{WAVES}</span></p>
+    <p class="fleet-legend">Live orchestration: <span id="live-worker-count">9</span> Haiku workers, Iteration <span id="live-wave-count">{WAVES}</span></p>
   </div>
 </section>
 
@@ -352,7 +352,7 @@ const WAVES = stats.waves;
         waveCount = Math.max(flat.waves || flat.wave_count || 0, waveCount);
         workerCountEl.textContent = numWorkers;
         waveCountEl.textContent = waveCount;
-        waveLabel.textContent = `wave ${waveCount}`;
+        waveLabel.textContent = `Iteration ${waveCount}`;
       }
       // On fetch failure the build-time values simply remain — no overwrite.
 

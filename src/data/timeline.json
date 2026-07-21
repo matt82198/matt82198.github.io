@@ -34,24 +34,24 @@
     "date": "2026-07-11",
     "label": "Jul 11 2026",
     "title": "Aesop goes public",
-    "description": "v0.1.0-beta.1; wave 18 audit-fixes complete"
+    "description": "v0.1.0-beta.1; Iteration 18 audit-fixes complete"
   },
   {
     "date": "2026-07-12",
     "label": "Jul 12 2026",
-    "title": "Wave 19",
+    "title": "Iteration 19",
     "description": "npm publish diagnostics, UI freshness, host-header guard, backup-fleet hardening (7 features)"
   },
   {
     "date": "2026-07-13",
     "label": "Jul 13 2026",
     "title": "v0.1.0-beta.4",
-    "description": "released; 128 merged PRs, 19 self-built waves"
+    "description": "released; 128 merged PRs, 19 self-built iterations"
   },
   {
     "date": "2026-07-14",
     "label": "Jul 14–15 2026",
-    "title": "Wave 20",
+    "title": "Iteration 20",
     "description": "claims hygiene, stats currency, portfolio refresh + this site"
   },
   {
