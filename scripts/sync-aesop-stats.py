@@ -52,12 +52,9 @@ def resolve_aesop_repo() -> Path:
         if (cand / "tools" / "self_stats.py").is_file():
             return cand.resolve()
 
-    tried = "\n  ".join(str(c) for c in candidates)
-    sys.exit(
-        "ERROR: could not find the aesop repo (needs tools/self_stats.py).\n"
-        "Pass the path as an argument or set AESOP_REPO.\n"
-        f"Tried:\n  {tried}"
-    )
+    # Not found (e.g. the Pages CI runner, which has no aesop checkout): return None so
+    # main() skips the refresh and keeps the committed src/data/aesop-stats.json.
+    return None
 
 
 def load_git_stats(aesop_repo: Path):
