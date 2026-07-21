@@ -24,7 +24,7 @@ import stats from '../../data/aesop-stats.json';
         <span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by a self-building system
       </div>
       <div class="stat">
-        <span class="stat-number" data-count={stats.waves}>{stats.waves}</span> iterations
+        <span class="stat-number" data-count={stats.iteration_cycles}>{stats.iteration_cycles}</span> iteration cycles
       </div>
       <div class="stat">
         <span class="stat-number" data-count={stats.loc}>{(stats.loc / 1000).toFixed(1)}K</span> lines of code
@@ -312,7 +312,7 @@ import stats from '../../data/aesop-stats.json';
     // Map live data to DOM elements
     const updates = [
       { attr: 'data-count', key: 'mergedPRs', selector: `[data-count="${bakedStats.merged_prs}"]` },
-      { attr: 'data-count', key: 'waves', selector: `[data-count="${bakedStats.waves}"]` },
+      { attr: 'data-count', key: 'iterationCycles', selector: `[data-count="${bakedStats.iteration_cycles}"]` },
       { attr: 'data-count', key: 'loc', selector: `[data-count="${bakedStats.loc}"]` },
       { attr: 'data-count', key: 'commits', selector: `[data-count="${bakedStats.commits}"]` },
       { attr: 'data-count', key: 'coauthors', selector: `[data-count="${bakedStats.coauthors}"]` },
