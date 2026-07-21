@@ -1,0 +1,24 @@
+{
+  "featured": {
+    "title": "A single AI agent session hit 534,000 tokens in one turn (2.7x the usual 200K ceiling)",
+    "url": "https://www.reddit.com/r/ClaudeAI/comments/1uuib78/",
+    "subreddit": "r/ClaudeAI",
+    "meta": "field data from a 1,320-turn orchestration session",
+    "description": "Publishing live metrics from the fleet itself — how far can a single agent push the token ceiling before coherence breaks."
+  },
+  "additional": [
+    {
+      "title": "MFA rotation can't stop modern attacks",
+      "url": "https://www.reddit.com/r/ClaudeAI/comments/",
+      "subreddit": "r/ClaudeAI",
+      "upvotes": 19,
+      "description": "Consent phishing hands attackers authorized tokens that survive credential resets. OAuth-chaining vulnerabilities become flawlessly executable by agents. Hardware keys (YubiKey) remain the practical defense."
+    },
+    {
+      "title": "Simple Claude structure to save tokens",
+      "url": "https://www.reddit.com/r/vibecoding/",
+      "subreddit": "r/vibecoding",
+      "description": "Practical token-economics structure for Claude sessions. Discipline beats cleverness."
+    }
+  ]
+}

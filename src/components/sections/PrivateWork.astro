@@ -1,6 +1,7 @@
 ---
-// PrivateWork.astro — Behind closed doors: 31 private repos organized by domain
-// Field notes aesthetic: compact cards, system fonts, Aesop moral
+// PrivateWork.astro — Behind closed doors: private repos organized by domain
+// Data-driven: categories and repos sourced from src/data/private-repos.json at build time
+import privateReposData from '../../data/private-repos.json';
 ---
 
 <section class="privatework" id="privatework">
@@ -11,58 +12,16 @@
   <p class="intro-line">31 private repositories; a selection, one line each.</p>
 
   <div class="category-grid">
-    <!-- AI & Orchestration -->
-    <div class="category">
-      <h3>AI & Orchestration</h3>
-      <ul class="repo-list">
-        <li><strong>claude-conductor</strong> — Agentic IDE experiment</li>
-        <li><strong>conductor</strong> — Multi-agent control plane (13 waves of machinery)</li>
-        <li><strong>cross-machine-context</strong> — Portable orchestration state across machines</li>
-        <li><strong>persistent-agents</strong> — Long-lived agent experiments</li>
-        <li><strong>claude-scripts</strong> — Reusable ops script library</li>
-      </ul>
-    </div>
-
-    <!-- Business Systems -->
-    <div class="category">
-      <h3>Business Systems</h3>
-      <ul class="repo-list">
-        <li><strong>ecm-ai</strong> — Invoice automation bridge</li>
-        <li><strong>TRShopServer</strong> — E-commerce microservices (backend)</li>
-        <li><strong>TRShopClient</strong> — E-commerce microservices (frontend)</li>
-        <li><strong>StreamlitAuthenticationDashboard</strong> — Authenticated ops dashboards</li>
-      </ul>
-    </div>
-
-    <!-- Data & SEO -->
-    <div class="category">
-      <h3>Data & SEO</h3>
-      <ul class="repo-list">
-        <li><strong>google-indexing</strong> — Indexing automation</li>
-        <li><strong>google-indexer</strong> — Indexing automation</li>
-        <li><strong>tanneryrow-seo</strong> — Search optimization tooling</li>
-      </ul>
-    </div>
-
-    <!-- E-commerce Ops -->
-    <div class="category">
-      <h3>E-commerce Ops</h3>
-      <ul class="repo-list">
-        <li><strong>tanneryrow-tools</strong> — Storefront tooling and drops</li>
-        <li><strong>tanneryrow-drops</strong> — Storefront tooling and drops</li>
-        <li><strong>tanneryrow-ss</strong> — Storefront tooling and drops</li>
-        <li><strong>migrate-sortly-TR</strong> — Inventory migration</li>
-        <li><strong>ReceiptParse</strong> — Receipt data extraction</li>
-      </ul>
-    </div>
-
-    <!-- The Archive -->
-    <div class="category">
-      <h3>The Archive</h3>
-      <ul class="repo-list">
-        <li><strong>Glimpse</strong> — iOS app, Objective-C, 2016</li>
-      </ul>
-    </div>
+    {privateReposData.categories.map((category) => (
+      <div class="category">
+        <h3>{category.name}</h3>
+        <ul class="repo-list">
+          {category.repos.map((repo) => (
+            <li><strong>{repo.name}</strong> — {repo.description}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </div>
 </section>
 

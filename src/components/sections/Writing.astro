@@ -1,5 +1,14 @@
 ---
-// Writing section: 6 Medium essays, first two featured, rest in list
+// Writing section: Medium essays, data-driven
+// Featured essays and additional articles sourced from src/data/writing.json at build time
+import writingData from '../../data/writing.json';
+
+// Helper to format dates from ISO to readable format
+function formatDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
 ---
 
 <section class="writing-section">
@@ -11,69 +20,32 @@
 
   <!-- Featured essays: first two with visual prominence -->
   <div class="featured-essays">
-    <article class="featured-essay">
-      <a href="https://medium.com/@matt82198/the-system-that-builds-itself-field-notes-from-an-ai-orchestrator-4a012df2575d" class="essay-link">
-        <h3>The System That Builds Itself — field notes from an AI orchestrator</h3>
-      </a>
-      <time datetime="2026-07-14" class="essay-date">Jul 14 2026</time>
-      <p class="essay-desc">A self-building system is only as good as its honesty with itself.</p>
-    </article>
-
-    <article class="featured-essay">
-      <a href="https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4" class="essay-link">
-        <h3>The Aesop Hypothesis — AI agents that survive because they're designed to fail</h3>
-      </a>
-      <time datetime="2026-07-12" class="essay-date">Jul 12 2026</time>
-      <p class="essay-desc">Resilience by making failure cheap, visible, survivable.</p>
-    </article>
+    {writingData.featured.map((essay) => (
+      <article class="featured-essay">
+        <a href={essay.url} class="essay-link">
+          <h3>{essay.title}</h3>
+        </a>
+        <time datetime={essay.date} class="essay-date">{formatDate(essay.date)}</time>
+        <p class="essay-desc">{essay.description}</p>
+      </article>
+    ))}
   </div>
 
   <!-- Additional essays: compact list -->
   <ul class="essay-list">
-    <li>
-      <span class="essay-title">
-        <a href="https://medium.com/@matt82198/claude-code-has-a-memory-problem-i-built-a-missing-layer-44c3f9f6248d" class="list-link">
-          Claude Code Has a Memory Problem. I Built a Missing Layer.
-        </a>
-      </span>
-      <span class="essay-meta">
-        <time datetime="2026-05-19">May 19 2026</time>
-        — A persistent, git-tracked identity layer for stateless sessions.
-      </span>
-    </li>
-    <li>
-      <span class="essay-title">
-        <a href="https://medium.com/@matt82198/architecture-that-can-turn-120-words-into-a-shipped-feature-78dcf9559dde" class="list-link">
-          Architecture That Can Turn 120 Words Into a Shipped Feature
-        </a>
-      </span>
-      <span class="essay-meta">
-        <time datetime="2026-05-01">May 1 2026</time>
-        — 25-minute idea-to-shipped via orchestrated agents.
-      </span>
-    </li>
-    <li>
-      <span class="essay-title">
-        <a href="https://medium.com/@matt82198/2-what-it-feels-like-to-be-hit-by-14-agents-running-on-your-own-github-bill-6e7de539c603" class="list-link">
-          What It Feels Like to Be Hit by 14 Agents Running on Your Own GitHub Bill
-        </a>
-      </span>
-      <span class="essay-meta">
-        <time datetime="2026-04-28">Apr 28 2026</time>
-        — Agent-swarm economics from the target's side.
-      </span>
-    </li>
-    <li>
-      <span class="essay-title">
-        <a href="https://medium.com/@matt82198/the-frame-distribution-problem-in-agentic-llms-14e92fc3da39" class="list-link">
-          The Frame-Distribution Problem in Agentic LLMs
-        </a>
-      </span>
-      <span class="essay-meta">
-        <time datetime="2026-04-28">Apr 28 2026</time>
-        — Harmful intent distributed across a pipeline evades per-component safety checks.
-      </span>
-    </li>
+    {writingData.additional.map((essay) => (
+      <li>
+        <span class="essay-title">
+          <a href={essay.url} class="list-link">
+            {essay.title}
+          </a>
+        </span>
+        <span class="essay-meta">
+          <time datetime={essay.date}>{formatDate(essay.date)}</time>
+          — {essay.description}
+        </span>
+      </li>
+    ))}
   </ul>
 </section>
 

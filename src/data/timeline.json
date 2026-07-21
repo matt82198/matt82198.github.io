@@ -1,0 +1,70 @@
+[
+  {
+    "date": "2015",
+    "label": "2015–2017",
+    "title": "Glimpse",
+    "description": "cofounder, native iOS app (Objective-C / Swift)"
+  },
+  {
+    "date": "2020",
+    "label": "2020",
+    "title": "The Tannery Row",
+    "description": "Lead System Architect & Operations Engineer (ongoing)"
+  },
+  {
+    "date": "2021",
+    "label": "2021–2025",
+    "title": "AT&T Corporate Systems",
+    "description": "TDP I → TDP II → Senior Software Engineering; full-stack data platforms"
+  },
+  {
+    "date": "2025",
+    "label": "2025",
+    "title": "FSCPay",
+    "description": "technical cofounder, fintech + LLM payment processing"
+  },
+  {
+    "date": "2026-05",
+    "label": "May 2026",
+    "title": "Claude Code Has a Memory Problem",
+    "description": "builds the Conductor memory layer",
+    "isFeature": true
+  },
+  {
+    "date": "2026-07-11",
+    "label": "Jul 11 2026",
+    "title": "Aesop goes public",
+    "description": "v0.1.0-beta.1; wave 18 audit-fixes complete"
+  },
+  {
+    "date": "2026-07-12",
+    "label": "Jul 12 2026",
+    "title": "Wave 19",
+    "description": "npm publish diagnostics, UI freshness, host-header guard, backup-fleet hardening (7 features)"
+  },
+  {
+    "date": "2026-07-13",
+    "label": "Jul 13 2026",
+    "title": "v0.1.0-beta.4",
+    "description": "released; 128 merged PRs, 19 self-built waves"
+  },
+  {
+    "date": "2026-07-14",
+    "label": "Jul 14–15 2026",
+    "title": "Wave 20",
+    "description": "claims hygiene, stats currency, portfolio refresh + this site"
+  },
+  {
+    "date": "2026-07",
+    "label": "Jul 2026",
+    "title": "The System That Builds Itself",
+    "description": "published; this portfolio assembled by the fleet",
+    "isFeature": true
+  },
+  {
+    "date": "2026-07-17",
+    "label": "Jul 17 2026",
+    "title": "@matt82198/aesop 0.1.0",
+    "description": "promoted to npm @latest — stable release"
+  }
+]

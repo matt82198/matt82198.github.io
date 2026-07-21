@@ -1,0 +1,59 @@
+[
+  {
+    "title": "Sample Program Tracker",
+    "tech": [
+      "Spring Boot 4",
+      "Java 17",
+      "REST API"
+    ],
+    "description": "RESTful API tracking leather sample production across four stages with inventory status management. Clean domain-driven architecture, enterprise-grade: typed API responses, global exception handling, request validation, Caffeine caching for high-frequency lookups.",
+    "stats": [
+      {
+        "value": "18",
+        "label": "test files"
+      },
+      {
+        "value": "TDD-first",
+        "label": "approach"
+      }
+    ]
+  },
+  {
+    "title": "Operations Toolbox",
+    "tech": [
+      "Streamlit",
+      "Python CLI",
+      "OAuth2"
+    ],
+    "description": "Dashboard + command-line suite spanning six business domains: Squarespace order matching, QuickBooks invoicing, payment reconciliation (Stripe/PayPal), inventory tracking, swatch-book generation. Pandas pipelines, Google Sheets integration. Built for daily non-engineer use.",
+    "stats": [
+      {
+        "value": "29",
+        "label": "Python scripts"
+      },
+      {
+        "value": "109",
+        "label": "commits"
+      }
+    ]
+  },
+  {
+    "title": "Invoice Bridge",
+    "tech": [
+      "Java 17",
+      "Spring Boot",
+      "Selenium"
+    ],
+    "description": "Bi-directional sync: Squarespace orders into QuickBooks Online. Four-pass matching algorithm (doc number → amount+customer → amount → last name), Selenium automation for QBO browser sync, gamified SKU-mapping UI with streak scoring, end-of-month reconciliation calendar. POI + OpenCSV for data manipulation.",
+    "stats": [
+      {
+        "value": "4-pass",
+        "label": "matching"
+      },
+      {
+        "value": "gamified",
+        "label": "UX"
+      }
+    ]
+  }
+]

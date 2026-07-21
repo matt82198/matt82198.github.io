@@ -1,0 +1,42 @@
+{
+  "featured": [
+    {
+      "title": "The System That Builds Itself — field notes from an AI orchestrator",
+      "url": "https://medium.com/@matt82198/the-system-that-builds-itself-field-notes-from-an-ai-orchestrator-4a012df2575d",
+      "date": "2026-07-14",
+      "description": "A self-building system is only as good as its honesty with itself."
+    },
+    {
+      "title": "The Aesop Hypothesis — AI agents that survive because they're designed to fail",
+      "url": "https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4",
+      "date": "2026-07-12",
+      "description": "Resilience by making failure cheap, visible, survivable."
+    }
+  ],
+  "additional": [
+    {
+      "title": "Claude Code Has a Memory Problem. I Built a Missing Layer.",
+      "url": "https://medium.com/@matt82198/claude-code-has-a-memory-problem-i-built-a-missing-layer-44c3f9f6248d",
+      "date": "2026-05-19",
+      "description": "A persistent, git-tracked identity layer for stateless sessions."
+    },
+    {
+      "title": "Architecture That Can Turn 120 Words Into a Shipped Feature",
+      "url": "https://medium.com/@matt82198/architecture-that-can-turn-120-words-into-a-shipped-feature-78dcf9559dde",
+      "date": "2026-05-01",
+      "description": "25-minute idea-to-shipped via orchestrated agents."
+    },
+    {
+      "title": "What It Feels Like to Be Hit by 14 Agents Running on Your Own GitHub Bill",
+      "url": "https://medium.com/@matt82198/2-what-it-feels-like-to-be-hit-by-14-agents-running-on-your-own-github-bill-6e7de539c603",
+      "date": "2026-04-28",
+      "description": "Agent-swarm economics from the target's side."
+    },
+    {
+      "title": "The Frame-Distribution Problem in Agentic LLMs",
+      "url": "https://medium.com/@matt82198/the-frame-distribution-problem-in-agentic-llms-14e92fc3da39",
+      "date": "2026-04-28",
+      "description": "Harmful intent distributed across a pipeline evades per-component safety checks."
+    }
+  ]
+}

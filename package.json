@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "python scripts/sync-aesop-stats.py",
     "build": "astro build",
     "preview": "astro preview",
     "sync:stats": "python scripts/sync-aesop-stats.py"

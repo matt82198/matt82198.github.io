@@ -1,6 +1,7 @@
 ---
 // Timeline section: vertical chronology + contact footer
-// Uses only tokens.css custom properties; system fonts; zero external requests.
+// Data-driven: milestones sourced from src/data/timeline.json at build time
+import timelineData from '../../data/timeline.json';
 ---
 
 <section class="timeline-section">
@@ -10,60 +11,15 @@
 
   <div class="timeline-container">
     <ol class="timeline-list">
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2015">2015–2017</time>
-        <p class="timeline-text"><strong>Glimpse</strong> — cofounder, native iOS app (Objective-C / Swift)</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2020">2020</time>
-        <p class="timeline-text"><strong>The Tannery Row</strong> — Lead System Architect & Operations Engineer (ongoing)</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2021/2025">2021–2025</time>
-        <p class="timeline-text"><strong>AT&T Corporate Systems</strong> — TDP I → TDP II → Senior Software Engineering; full-stack data platforms</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2025">2025</time>
-        <p class="timeline-text"><strong>FSCPay</strong> — technical cofounder, fintech + LLM payment processing</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-05">May 2026</time>
-        <p class="timeline-text"><em>Claude Code Has a Memory Problem</em> — builds the Conductor memory layer</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07-11">Jul 11 2026</time>
-        <p class="timeline-text"><strong>Aesop goes public</strong> — v0.1.0-beta.1; wave 18 audit-fixes complete</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07-12">Jul 12 2026</time>
-        <p class="timeline-text"><strong>Wave 19</strong> — npm publish diagnostics, UI freshness, host-header guard, backup-fleet hardening (7 features)</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07-13">Jul 13 2026</time>
-        <p class="timeline-text"><strong>v0.1.0-beta.4</strong> released; 128 merged PRs, 19 self-built waves</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07-14/15">Jul 14–15 2026</time>
-        <p class="timeline-text"><strong>Wave 20</strong> — claims hygiene, stats currency, portfolio refresh + this site</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07">Jul 2026</time>
-        <p class="timeline-text"><em>The System That Builds Itself</em> published; this portfolio assembled by the fleet</p>
-      </li>
-
-      <li class="timeline-entry">
-        <time class="timeline-date" datetime="2026-07-17">Jul 17 2026</time>
-        <p class="timeline-text"><strong>@matt82198/aesop 0.1.0</strong> promoted to npm @latest — stable release</p>
-      </li>
+      {timelineData.map((entry) => (
+        <li class="timeline-entry">
+          <time class="timeline-date" datetime={entry.date}>{entry.label}</time>
+          <p class="timeline-text">
+            {entry.isFeature ? <em>{entry.title}</em> : <strong>{entry.title}</strong>}
+            {' '} — {entry.description}
+          </p>
+        </li>
+      ))}
     </ol>
   </div>
 
