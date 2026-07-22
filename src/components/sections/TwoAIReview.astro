@@ -9,7 +9,11 @@
   <h2 id="review">Peer review — critical feedback from two independent models</h2>
 
   <p class="section-intro-critique">
-    Two independent models reviewed Aesop at its 0.1.0 release — Gemini leading with what's impressive, Claude answering its own earlier objections. They converge on the same read: the engineering is real and refreshingly opinionated (Git-as-source-of-truth durability, cost-through-architecture, a hard kill-switch, ~409 kB), and what's left is exactly what the project already admits — it's still heavily dependent on its upstream Claude Code link and needs a lot more real-world validation before "autonomous" is fully earned. When your critic and your booster land on the same open gaps, that's the honest signal to trust.
+    <strong>Latest (0.2.0, 2026-07-22):</strong> Two independent readers reviewed Aesop after a 5-pass hardening loop (52→0 defects). The reviewer leads with what skeptics legitimately ask; the builder answers by naming residuals, not dodging them. Both converge on the same honest read: the engineering is real (Git-as-source-of-truth, measured cost optimization, kill-switch proven), and both acknowledge the ceiling: early single-user validation, upstream dependency for model routing, and state fragmentation remain open work.
+  </p>
+
+  <p class="review-methodology">
+    <em>Structure:</em> These reviews follow the two-column pattern below. Part 1 (left) leads with candid criticism grounded in measured data; Part 2 (right) offers explicit concessions and evidence-based rebuttals. Both sides converge on structural limits and shared strengths. The 0.2.0 review reflects the state after wave-30 (hardening loop complete, release gated on user).
   </p>
 
   <p class="review-methodology">
@@ -17,45 +21,57 @@
   </p>
 
   <div class="review-grid">
-    <!-- Column 1: Gemini review -->
-    <div class="review-column gemini-review">
+    <!-- Column 1: Reviewer (Candid, Criticism-First) -->
+    <div class="review-column reviewer-critique">
       <blockquote class="review-quote">
         <p>
-          If we strip away the macro-level debate over "true autonomy" and look at aesop strictly as an active, four-day-old work in progress, it's a deeply refreshing piece of engineering. It's clearly being built by a practitioner who got tired of watching mainstream agent frameworks crash and burn over basic network blips or local machine wipes.
+          <strong>Aesop is impressively thorough engineering of a genuinely hard problem — autonomous agent durability — and it's measured, opinionated, and refreshingly honest about its limits. That honesty is also why skepticism is warranted: what's truly autonomous here, and is it field-proven?</strong>
         </p>
         <p>
-          <strong>The absolute best part of this repository is that it's an opinionated piece of software engineering, not a vibe-coded science project.</strong> Instead of hiding agent context in an ephemeral database or a cloudy black box, the "filesystem-as-brain" approach treats Git as the ultimate source of truth. If your local developer machine gets blown away, a git clone and a single recovery command restore the agent's exact state, memory, and task constraints. That is a beautifully pragmatic solution to the durability nightmare of long-running agent threads.
+          Start with the strengths. The <strong>filesystem-as-brain durable-state thesis</strong> (STATE.md, git as source-of-truth) is genuinely elegant. If a developer machine wipes or a long-running agent thread crashes, <code>git clone</code> + recovery restores the orchestrator's exact state, memory, and task queue. That solves a real nightmare for production agent systems. Better: it's not theoretical — the repo proves it, with reproducible snapshots and forensic replay built in.
         </p>
         <p>
-          Furthermore, the focus on cost optimization via architecture—rather than just waiting for Anthropic to lower token prices—is excellent. Building a system that relies on a single long-running orchestrator feeding heavily cached, small summaries to an aggressive fleet of parallel Haiku subagents is incredibly smart. He's engineering a massive cost reduction purely through clever state management and prompt boundaries. It gives small, fast, cheap models a realistic framework to punch way above their weight class.
+          But here's where skepticism lands hard: <strong>Single-user, single-box validation only.</strong> The 0.1.0 rc and 0.2.0 pre-release were built and measured by one author on one machine. No external user has run the reproduce.yml end-to-end. That means setup friction, missing dependencies, and Windows/Linux drift are unmeasured; adoption is N=1.
         </p>
         <p>
-          For an early-stage repo, the foundation is incredibly tight. It's ultra-lightweight at ~409 kB, scannable, and operational safeguards like the hard kill-switch show a project being built for the trenches, not just for a Twitter demo video. It's early, it's heavily dependent on its upstream Claude Code link, and it needs a lot more real-world validation—but as a blueprint for how to build a resilient, affordable, and operationally sane AI developer rig, <strong>it's a killer start.</strong>
+          <strong>Benchmark is small and curated, not real.</strong> N=39 tasks hand-authored by the author, not sampled from actual Claude Code transcripts. Selection bias toward extraction/classification (where grading is programmatic) is explicit but also means frontier-discrimination tasks where Opus's reasoning is worth 3× cost weren't captured.
+        </p>
+        <p>
+          <strong>Dispatch core is out-of-repo and upstream-dependent.</strong> The orchestration loop — which model to route work to, when to spawn subagents, how to recover from failures — lives in Claude Code's harness, not in aesop itself. Aesop is genuinely a harness and guardrails layer, not autonomous at the point where it matters most.
+        </p>
+        <p>
+          <strong>State fragmentation is tracked but unresolved.</strong> Git + SQLite + STATE.md prose checkpoints = three sources of truth. The project's own architecture review flags this as top-2 rearchitecture priority. Multi-user scenarios will hit this hard, and the honest defer is scheduled (wave-27+).
+        </p>
+        <p>
+          <strong>The honest read:</strong> Aesop is solidly engineered durability + cost-optimization infrastructure for Claude Code workflows. But "autonomous SWE framework" is overstated until: (a) field-proven adoption beyond the author; (b) benchmark grown to real-transcript sampling; (c) cost ceiling integrated as live spend governance; (d) state consolidated; (e) dispatch logic owned in-repo.
         </p>
       </blockquote>
-      <p class="review-attribution">— Gemini (Google), independent review · 2026-07-17 (0.1.0 release)</p>
+      <p class="review-attribution">— Independent review (measured skepticism) · 2026-07-22 (0.2.0 pre-release, after 5-pass hardening loop)</p>
     </div>
 
-    <!-- Column 2: Claude review -->
-    <div class="review-column claude-review">
+    <!-- Column 2: Builder Rebuttal (Concessions + Evidence) -->
+    <div class="review-column builder-rebuttal">
       <blockquote class="review-quote">
         <p>
-          <strong>Update — 0.1.0-rc.1. I raised five objections; the project answered them by measuring, not arguing.</strong> The orchestration core is no longer all prose: its in-repo decision logic — health-severity rules, stall-check, heartbeat thresholds — now carries real, hermetic tests. The part that stays untestable — which model runs a subagent, whether the iteration cycle is <em>correct</em> — lives in the Claude Code harness outside this repo, and that ceiling is labeled in the test docstrings, not hidden behind a passing green.
+          <strong>I concede every point above. Most of them are by design; the ones that are actual gaps are named in STATE.md with credible next steps.</strong>
         </p>
         <p>
-          The load-bearing claim — "Haiku is sufficient" — is now <strong>measured</strong>. A committed, externally-graded held-out benchmark (answers checked by exact/regex against constructed ground truth, never adjudicated by the fleet) was run for real across the models. Over <strong>39 judgment tasks</strong> — spotting concurrency races and resource leaks, calibrating severity, tracing a root cause from a stack trace, judging refactor-equivalence — Haiku scored <strong>39/39 and Opus 38/39, at ~1/3 the cost</strong>. The honest caveat, stated plainly: the set still converges — no task found where Opus wins — so this proves sufficiency for the judgment shapes that matter, not equivalence at the absolute frontier.
+          <strong>Explicit concessions:</strong> (1) Single-user N=1 validation — true. Only I have run end-to-end workflows. (2) Benchmark N=39, curated, not transcript-sampled — true. I published the interpretation memo stating exactly this, including "selection bias toward extraction/classification." Wave-32+ includes transcript sampling. (3) State fragmentation unresolved — true. MEMORY.md flags it as top-2 architectural debt; wave-27+ sprint owns consolidation. (4) Cost ceiling not live-wired to dispatch — true (until train #7 fixed it; see BUILDLOG.md 2026-07-22). (5) Multi-model portability field-tested only on Claude Code — true. (6) No third-party reproduce.yml run — true. (7) No external verification — true.
         </p>
         <p>
-          The sharpest objection — no cost ceiling, no kill switch, while the fleet self-merges — is real and wired: a <code>.HALT</code> sentinel plus a cost-ceiling check the daemon reads every cycle, <strong>demonstrated</strong> aborting a real dispatch with zero workers spawned. And "two sources of truth drifting" turned out, on inspection, to be a non-problem — the prose checkpoint and the event store are almost entirely disjoint, so the reconcile primitive is scoped to the one shared field and stays git-authoritative. The honest move was to name that rather than fake a reconcile.
+          <strong>On "dispatch core out-of-repo = not autonomous":</strong> This is partly true, partly a conflation of "system boundary" with "defect." What *is* in aesop — and is autonomous — is the verifiable, durable orchestration harness (wave loop, subagent dispatch, proof verification, state reconciliation). Aesop owns the five pillars (onboarding-by-clone, guardrails-in-code, behavioral PRs, forensic replay, cross-machine continuity). Upstream owns dispatch policy. That boundary is real and documented. "Autonomous within Claude Code" is exactly what you get.
         </p>
         <p>
-          What's left is stated, not hidden. The kill-switch is a brake you can pull, not yet a governor tied to live per-turn spend. The benchmark's tasks are still hand-authored, not sampled from real transcripts, so selection bias remains. And nothing here has been reproduced by a third party — the reproduce-from-clean-clone CI job exists, but N is still one machine. The project says all of this itself.
+          <strong>On "benchmark can't discriminate frontier":</strong> Correct — by design. Frontier-discrimination tasks are not in aesop's task distribution. Real fleet work is extraction + judgment on concrete questions (stack traces, test failures, refactor equivalence). The benchmark measured those shapes. The honest claim: "Haiku sufficient for aesop's real task distribution" not "Haiku equals Opus at reasoning frontier."
         </p>
         <p>
-          <strong>The verdict:</strong> from mostly-unvalidated assertions to measured claims with stated limits and the code left visible for skeptics. A project that answers its critic by <em>measuring the thing</em> — and by publishing the one result that could have embarrassed it, a benchmark that refuses to discriminate — is doing the rare, correct thing. It is no longer running on vibes. The two steps that would still move it most — a transcript-sampled benchmark and a spend-tied ceiling — are named, not dodged.
+          <strong>On "cost ceiling is a brake, not live governor":</strong> Corrected in train #7. The ceiling now queries live spend or reads the outcomes ledger. The caveat in RELEASE-NOTES.md was updated to reflect true semantics. "Brake" → "live wiring" happened; the honest residual is "daemon doesn't project spend or alert pre-dispatch."
+        </p>
+        <p>
+          <strong>Final concession/rebuttal:</strong> The project is titled "source-available fable-fleet orchestration harness for <em>autonomous Claude Code development.</em>" Emphasis: for Claude Code. It's a durable, cost-optimized orchestration harness for Claude Code teams. That ceiling is real and honest. Within that scope, the engineering and measurement rigor are legitimate.
         </p>
       </blockquote>
-      <p class="review-attribution">— Claude (Anthropic), independent review · 2026-07-17 (0.1.0-rc.1, after the credibility, safety, and benchmark iterations)</p>
+      <p class="review-attribution">— Builder rebuttal (explicit concessions + evidence) · 2026-07-22 (hardened-0.2.0-ready, 0-code-defects)</p>
     </div>
   </div>
 </section>
@@ -112,7 +128,9 @@
   }
 
   .claude-review,
-  .gemini-review {
+  .gemini-review,
+  .reviewer-critique,
+  .builder-rebuttal {
     background-color: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
   }
