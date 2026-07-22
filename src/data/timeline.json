@@ -85,5 +85,18 @@
     "label": "Jul 22 2026",
     "title": "Aesop v0.2.0 Ready",
     "description": "wave engine + multi-model drivers + hardened gates; user-gated release pending"
+  },
+  {
+    "date": "2026-07-21-22",
+    "label": "Jul 21–22 2026",
+    "title": "Waves 21–30: Multi-model AgentDriver",
+    "description": "Hierarchical orchestration, WriteAPI + optimistic concurrency control, cost analytics, adversarial refinement loops, Windows CI green + required",
+    "isFeature": true
+  },
+  {
+    "date": "2026-07-22",
+    "label": "Jul 22 2026",
+    "title": "v0.2.0 → v0.3.1 on npm",
+    "description": "non-Claude core proof (Codex wave), 4-round adversarial hardening clean, Windows CI required"
   }
 ]
