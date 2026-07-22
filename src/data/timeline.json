@@ -66,5 +66,24 @@
     "label": "Jul 17 2026",
     "title": "@matt82198/aesop 0.1.0",
     "description": "promoted to npm @latest — stable release"
+  },
+  {
+    "date": "2026-07-21",
+    "label": "Jul 21–22 2026",
+    "title": "Backlog Clearance + 0.2.0 Prep",
+    "description": "All audit backlog closed; 75 PRs merged in one session; 0.2.0 release-ready"
+  },
+  {
+    "date": "2026-07-22",
+    "label": "Jul 22 2026",
+    "title": "5-Pass Hardening Loop Complete",
+    "description": "Adversarial convergence: 52→23→17→5→0 defects; zero code defects shipped",
+    "isFeature": true
+  },
+  {
+    "date": "2026-07-22",
+    "label": "Jul 22 2026",
+    "title": "Aesop v0.2.0 Ready",
+    "description": "wave engine + multi-model drivers + hardened gates; user-gated release pending"
   }
 ]
