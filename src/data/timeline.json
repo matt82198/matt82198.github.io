@@ -98,5 +98,17 @@
     "label": "Jul 22 2026",
     "title": "v0.2.0 → v0.3.1 on npm",
     "description": "non-Claude core proof (Codex wave), 4-round adversarial hardening clean, Windows CI required"
+  },
+  {
+    "date": "2026-07-25",
+    "label": "Jul 25 2026",
+    "title": "Aesop 0.4.0 — the two-seat micro-kernel",
+    "description": "swap the worker AND orchestrator model per seat from one config block (Claude, Codex, any OpenAI-compatible endpoint); shipped to npm"
+  },
+  {
+    "date": "2026-07-26",
+    "label": "Jul 26 2026",
+    "title": "387 merged PRs, self-built",
+    "description": "the harness's own wave loop crossed 387 merged PRs / 1,180+ commits building the repo; stats live from git"
   }
 ]
