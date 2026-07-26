@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>An LLM Rediscovered Unix</title>
+<style>
+  :root{
+    --paper:#f4f3ee; --surface:#fbfaf6; --surface2:#ecebe2; --ink:#1b1d21;
+    --muted:#666b66; --border:#dbd9cf; --accent:#1a6b62; --accent-weak:#e2ece9;
+    --signal:#8a5e28; --signal-weak:#f0e7d6; --good:#2f8f5f;
+    --shadow:0 1px 2px rgba(20,22,26,.05),0 10px 30px rgba(20,22,26,.06);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0f1216; --surface:#161a20; --surface2:#1b2028; --ink:#e7e9ec;
+      --muted:#99a0a8; --border:#2a2f38; --accent:#57b9ac; --accent-weak:#132622;
+      --signal:#d1a054; --signal-weak:#241d10; --good:#58c489;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#f4f3ee; --surface:#fbfaf6; --surface2:#ecebe2; --ink:#1b1d21;
+    --muted:#666b66; --border:#dbd9cf; --accent:#1a6b62; --accent-weak:#e2ece9;
+    --signal:#8a5e28; --signal-weak:#f0e7d6; --good:#2f8f5f;
+    --shadow:0 1px 2px rgba(20,22,26,.05),0 10px 30px rgba(20,22,26,.06);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f1216; --surface:#161a20; --surface2:#1b2028; --ink:#e7e9ec;
+    --muted:#99a0a8; --border:#2a2f38; --accent:#57b9ac; --accent-weak:#132622;
+    --signal:#d1a054; --signal-weak:#241d10; --good:#58c489;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+    font-size:19px;line-height:1.72;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+  .measure{max-width:64ch}
+  a{color:var(--accent);text-underline-offset:3px}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  code,.mono{font-family:var(--mono);font-size:.86em}
+  p code{background:var(--surface2);border:1px solid var(--border);padding:.5px 5px;border-radius:4px}
+
+  /* hero */
+  header.hero{padding:64px 0 34px;border-bottom:1px solid var(--border)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 22px}
+  h1{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;line-height:1.02;
+    font-size:clamp(2.5rem,7vw,4.2rem);text-wrap:balance;margin:0 0 .28em}
+  .lede{font-style:italic;font-size:clamp(1.2rem,2.6vw,1.5rem);line-height:1.45;color:var(--ink);
+    opacity:.92;max-width:34ch;margin:0}
+  .byline{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:26px 0 0;letter-spacing:.02em}
+
+  section{padding:40px 0;border-top:1px solid var(--border)}
+  section:first-of-type{border-top:none}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 14px}
+  h2{font-family:var(--serif);font-weight:600;letter-spacing:-.015em;line-height:1.08;
+    font-size:clamp(1.6rem,3.8vw,2.35rem);text-wrap:balance;margin:0 0 .5em}
+  h3{font-family:var(--serif);font-weight:600;font-size:1.2rem;margin:1.4em 0 .3em;letter-spacing:-.01em}
+  p{margin:0 0 18px}
+  strong{font-weight:650}
+  .lead-p{font-size:1.12em}
+
+  /* constraint notice */
+  .notice{background:var(--signal-weak);border:1px solid var(--border);border-left:3px solid var(--signal);
+    border-radius:0 12px 12px 0;padding:20px 24px;margin:24px 0;box-shadow:var(--shadow)}
+  .notice .tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--signal);font-weight:700;display:block;margin-bottom:8px}
+  .notice p{margin:0;font-size:1.05em}
+  .notice .rule{font-family:var(--serif);font-style:italic;font-size:1.22em;line-height:1.4}
+
+  /* constraint -> principle map */
+  .map{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:12px;overflow:hidden;margin:22px 0;box-shadow:var(--shadow)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+  .cell{background:var(--surface);padding:16px 18px}
+  .cell .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-bottom:5px}
+  .cell.p .lbl{color:var(--accent)}
+  .cell p{margin:0;font-size:.98em;line-height:1.5}
+  .cell .term{font-family:var(--mono);font-size:.82em;color:var(--accent)}
+  @media (max-width:600px){.row{grid-template-columns:1fr}}
+
+  /* evolution steps */
+  ol.steps{list-style:none;counter-reset:s;margin:24px 0 0;padding:0}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 26px 62px;border-left:1px solid var(--border);margin-left:20px}
+  ol.steps li:last-child{border-left:1px solid transparent;padding-bottom:4px}
+  ol.steps li::before{content:counter(s);position:absolute;left:-21px;top:-4px;width:42px;height:42px;
+    display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);border-radius:50%;
+    font-family:var(--mono);font-size:15px;font-weight:600;color:var(--accent);box-shadow:var(--shadow)}
+  ol.steps h3{margin:0 0 4px;font-size:1.18rem}
+  ol.steps .when{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  ol.steps p{margin:.4em 0 0;font-size:1em}
+
+  /* code */
+  pre{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+    overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.55;margin:20px 0;color:var(--ink)}
+  pre .c{color:var(--muted)}
+  pre .k{color:var(--accent)}
+
+  /* stat chips */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:22px 0}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .stat .n{font-family:var(--serif);font-weight:600;font-size:1.9rem;line-height:1;letter-spacing:-.02em;
+    display:block;color:var(--accent)}
+  .stat .d{font-size:.92em;color:var(--muted);line-height:1.4;margin-top:8px;font-family:var(--sans)}
+
+  /* why-now mapping */
+  .why{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);
+    border-radius:12px;overflow:hidden;margin:22px 0;box-shadow:var(--shadow)}
+  .why .w{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px;background:var(--surface);
+    padding:16px 18px;align-items:baseline}
+  .why .prob{font-family:var(--sans);font-weight:600;font-size:.98em}
+  .why .ans{font-size:.98em;line-height:1.5;color:var(--ink)}
+  .why .ans .same{font-family:var(--mono);font-size:.8em;color:var(--accent);display:block;margin-bottom:3px;letter-spacing:.04em}
+  @media (max-width:600px){.why .w{grid-template-columns:1fr;gap:6px}}
+
+  .bounds{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--signal);
+    border-radius:0 12px 12px 0;padding:18px 22px;margin:24px 0}
+  .bounds .kicker{color:var(--signal)}
+  .bounds p{margin:0;font-size:.98em}
+
+  .links{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:14px;margin-top:6px}
+  footer{border-top:1px solid var(--border);padding:30px 0 64px;color:var(--muted);font-size:14.5px;font-family:var(--sans)}
+  footer p{margin:0 0 10px;line-height:1.6}
+  @media (prefers-reduced-motion:no-preference){
+    header.hero>*{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+    header.hero .lede{animation-delay:.08s}
+    header.hero .byline{animation-delay:.14s}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Aesop · Field Note</p>
+    <h1>An&nbsp;LLM rediscovered Unix</h1>
+    <p class="lede">Not from the papers. From the one rule it could never break — the machine can be wiped at any moment.</p>
+    <p class="byline">On a design that fell out of a survival constraint, and why the same idea keeps solving the AI industry's hardest problems.</p>
+  </div>
+</header>
+
+<main class="wrap measure">
+
+  <section>
+    <p class="lead-p">Aesop is a crash-only harness for running fleets of AI coding agents. But it didn't start as an architecture. It started as a <strong>constraint</strong> — and the architecture is what was left standing after everything fragile got knocked down.</p>
+    <p>The constraint was blunt: assume the box can be erased between one step and the next. A security agent quarantines your files. A session dies mid-thought. A process is killed with no warning. The number-one rule written down before any code was: <em>the system's memory must survive its own destruction.</em></p>
+    <div class="notice">
+      <span class="tag">Cardinal rule №1</span>
+      <p class="rule">"Nothing important lives in RAM. If it matters, it is a file on disk, in git, that a fresh process can re-read and continue from."</p>
+    </div>
+    <p>Follow that rule honestly and you don't get a clever framework. You get Unix. Every decision below was forced by "it can be wiped," and every one turns out to have a name that predates the LLM by fifty years.</p>
+  </section>
+
+  <section>
+    <p class="kicker">The constraint, and what it forced</p>
+    <h2>Survival rediscovered the primitives</h2>
+    <p>Read the left column as the practical problem "it can be wiped" creates. Read the right as the Unix principle that is the only real answer to it.</p>
+    <div class="map">
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>State can vanish, so it can't live in a running process.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">everything is a file.</span> STATE, the build log, the tracker, receipts — plain, diffable text on disk. The mind is inspectable with <code>cat</code> and <code>grep</code>.</p></div>
+      </div>
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>Restart is not an exception — it's the normal case.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">crash-only recovery.</span> There is no graceful shutdown because there's nothing in memory to save. Recovery is: re-read from disk, continue. Logs are append-only; every step is idempotent.</p></div>
+      </div>
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>Any worker might die, so no worker can be precious.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">stateless processes over durable state.</span> Agents are filters: read a task + the repo, emit a diff + a report, keep nothing. Kill one, respawn it, lose nothing.</p></div>
+      </div>
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>The thing that decides shouldn't be the thing that acts.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">mechanism vs. policy.</span> A worker seat executes; an orchestrator seat judges. Separated, each can be swapped without touching the other.</p></div>
+      </div>
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>A broken step must never masquerade as a good one.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">exit codes, fail-closed.</span> The secret-scan gate exits non-zero and the push dies. Errors block; they never silently pass. Success is a status code, not a vibe.</p></div>
+      </div>
+      <div class="row">
+        <div class="cell"><span class="lbl">The constraint</span><p>Parts get replaced; the seams have to hold.</p></div>
+        <div class="cell p"><span class="lbl">The principle</span><p><span class="term">the narrow waist.</span> One driver contract, like a device file: any model behind it presents the same "run this, return a Report" interface. Swap the model; the shape doesn't move.</p></div>
+      </div>
+    </div>
+    <p>Nobody sat down to implement Unix. The rule "it can be wiped" is a filter, and these are the only designs that pass through it.</p>
+  </section>
+
+  <section>
+    <p class="kicker">The same idea, over and over</p>
+    <h2>One primitive, four problems</h2>
+    <p>The reason this is worth writing down: the pattern wasn't designed once and applied once. It kept re-solving <em>different</em> problems, and each time the shape was identical — a stateless watcher or worker, running over durable files, that recovers by re-reading. That repetition is the whole thesis.</p>
+    <ol class="steps">
+      <li>
+        <span class="when">First</span>
+        <h3>An IOC monitor</h3>
+        <p>Watch for indicators of compromise, write findings to an append-only log, survive a restart. A small tool that owns one job and keeps its state on disk. It worked because it assumed it could die.</p>
+      </li>
+      <li>
+        <span class="when">Then</span>
+        <h3>A drift monitor</h3>
+        <p>Same shape, new target: instead of watching for intruders, watch the system for <em>drift</em> from its own rules — stale docs, broken gates, files that no longer match the numbers they claim. Auto-fix the safe cases, propose the rest. It was the IOC monitor with a different lens.</p>
+      </li>
+      <li>
+        <span class="when">The realization</span>
+        <h3>The Conductor</h3>
+        <p>If a monitor is just a stateless process over durable state, then <em>so is an orchestrator.</em> The whole fleet — workers, reviewers, watchdogs — is monitors and filters composed over git. The orchestration project was the monitor pattern all the way up.</p>
+      </li>
+      <li>
+        <span class="when">Now</span>
+        <h3>Aesop</h3>
+        <p>Conductor, refactored into a portable, source-available <strong>microkernel</strong>: a tiny fixed core, with the model in each seat as a swappable part. The kernel doesn't get smarter; it stays small and correct, and lets you drop in whichever model you want as userland.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <p class="kicker">The microkernel</p>
+    <h2>The model is a replaceable part</h2>
+    <p>A microkernel keeps almost nothing in the privileged core and pushes everything replaceable out to userland. Aesop's core is the state layer and the gates — the parts that must be correct. The models are userland. As of 0.4.0 you rebind either seat from one config block, the way you'd set <code>CC=clang</code> or <code>$SHELL</code>: config indirection, no code change.</p>
+    <pre><span class="c"># two seats; swap the model in either without touching code</span>
+"seats": {
+  "worker":       { "backend": <span class="k">"openai-compatible"</span>, "model": "…",
+                    "base_url": "http://localhost:11434/v1", "is_local": true },
+  "orchestrator": { "backend": <span class="k">"openai-compatible"</span>, "model": "gpt-4o-mini",
+                    "api_key_env": "OPENAI_API_KEY" }
+}
+<span class="c"># no seats block? byte-identical to before. opt in, or nothing changes.</span></pre>
+    <p>Once the model is a commodity behind a fixed seam, you can <em>optimize the seat</em>. Measured on the harness's own judgment work, a small cheap model held its own against a flagship — and the swappable judge seat, when fed real repository context, made calls the same model couldn't make blind.</p>
+    <div class="stats">
+      <div class="stat"><span class="n">39 / 39</span><span class="d">Haiku on a 39-task judgment benchmark, matching Opus's 38/39 at ~1/3 the per-token cost. Sufficient for the work, not frontier parity.</span></div>
+      <div class="stat"><span class="n">3 / 3</span><span class="d">On the hardest synthesis task, real seat context flipped both a frontier and a cheaper model from "I abstain" to a correct refutation — stable across runs.</span></div>
+      <div class="stat"><span class="n">387</span><span class="d">Merged PRs across 1,181 commits, built largely by the harness running its own wave loop on itself.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">The pride bar</p>
+    <h2>It refuses to ship what it can't verify</h2>
+    <p>The wipe rule has a twin. If you assume the disk can lie to you, you also assume <em>your own output can lie to you.</em> An LLM's most dangerous failure isn't crashing — it's producing a confident, plausible, wrong result and shipping it. So the same humility that put state on disk put a verification gate in front of every claim: nothing merges until an independent pass confirms it's real.</p>
+    <p>That gate earns its keep by <strong>rejecting hallucinations — including its own most-wanted results.</strong> The clearest case is reflexive: the swappable-judge seam this note celebrates was, for its first several attempts, quietly broken. The early live measurements looked like clean wins. They weren't — the judge was being handed a dropped prompt, a mismatched schema, evidence that never actually reached it. Each "result" was an artifact of a seam that didn't work yet. Run after run, the verification layer flagged them as confounds and threw them out, rather than let a breakthrough get written into the story on false numbers. The seam only counted once it was truly wired; the real result — the 3/3 flip above — arrived <em>after</em> the near-misses were rejected, not instead of them. It came close, repeatedly, and refused to ship anyway.</p>
+    <p>The same discipline shows up everywhere the system grades itself. An all-cheap audit once reported four "critical" defects; every one was shown to be invented before a single fix was dispatched. A ladder of ten different models was put to one genuinely hard judgment, and the harness held the line rather than rubber-stamp a plausible answer. The bar is embarrassingly simple and rarely held: <em>it does not ship known-broken, and it does not trust a result just because a model — even itself — sounded sure.</em></p>
+    <p>You saw the live version of this the day this note was written: a routine drift gate refused a documentation merge because a stat in the README didn't match the file it was generated from — off by a hundred-odd PRs. The number was wrong; the merge died; the number got fixed. Exactly as designed.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Why this matters now</p>
+    <h2>The industry's hard problems have one shape</h2>
+    <p>Every serious problem in shipping AI systems right now is a version of "you cannot trust the component to behave." Aesop's answer to each is not a new mechanism — it's the <em>same</em> primitive, pointed at a new failure.</p>
+    <div class="why">
+      <div class="w"><div class="prob">Models are non-deterministic and crash</div><div class="ans"><span class="same">crash-only</span>State lives on disk; a dead run is re-read and resumed, not lost.</div></div>
+      <div class="w"><div class="prob">Models hallucinate confidently</div><div class="ans"><span class="same">fail-closed gate</span>Nothing ships unverified; a plausible-but-false result is refuted, not merged.</div></div>
+      <div class="w"><div class="prob">Frontier inference is expensive</div><div class="ans"><span class="same">optimize the seat</span>Run the cheapest model that's sufficient per seat; pay for judgment only where it counts.</div></div>
+      <div class="w"><div class="prob">The best model changes every month</div><div class="ans"><span class="same">narrow waist</span>Swap the model behind the seam from config; the system doesn't notice.</div></div>
+      <div class="w"><div class="prob">No single model can be trusted alone</div><div class="ans"><span class="same">mechanism / policy</span>No one model is load-bearing. The state layer and the gates are — and those are just files and exit codes.</div></div>
+    </div>
+    <p>The bet Aesop makes is that the durable layer of an AI system should be the boring, inspectable, fifty-year-old part — plain files, git, exit codes — and the model should be the part you can rip out and replace on a Tuesday. That's not nostalgia. It's the only design that survives a component you fundamentally can't trust, whether the threat is a security agent deleting your disk or a language model inventing a fact.</p>
+  </section>
+
+  <div class="bounds">
+    <p class="kicker">Honest bounds</p>
+    <p>Single-instance is proven and shipped; the multi-instance coordination lifecycle (lease renewal, crash-orphan recovery, a repo-aware key) is scoped, scheduled work — documented, not hidden. The benchmark numbers are curated sets, not frontier parity claims, and every stat here is computed live from the repo and verifiable by cloning it. Aesop is source-available under PolyForm Strict — noncommercial, no-modify — <strong>not</strong> open-source.</p>
+  </div>
+
+  <section>
+    <p class="kicker">Read on</p>
+    <div class="links">
+      <a href="https://github.com/matt82198/aesop">source</a>
+      <a href="https://github.com/matt82198/aesop/blob/main/docs/MICROKERNEL.md">the two seats</a>
+      <a href="https://www.npmjs.com/package/@matt82198/aesop">npm</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap measure">
+    <p><strong>Aesop</strong> — a crash-only, model-agnostic orchestration harness. Built largely by its own supervised wave loop, under a human operator who sets the goals and owns the outward gates (publish, releases, history rewrites).</p>
+    <p>This is a field note, not marketing: proven where it says proven, bounded where it says bounded. The Unix part isn't a metaphor — it's what a survival constraint forces you to build.</p>
+  </div>
+</footer>
+
+</body>
+</html>
