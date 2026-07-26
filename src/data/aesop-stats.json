@@ -1,6 +1,6 @@
 {
   "commits": 1182,
-  "merged_prs": 396,
+  "merged_prs": 398,
   "waves": 30,
   "coauthors": 11,
   "domains": 13,
@@ -8,5 +8,5 @@
   "loc": 173036,
   "version": "v0.4.0",
   "iteration_cycles": 32,
-  "shipped_increments": 396
+  "shipped_increments": 398
 }
