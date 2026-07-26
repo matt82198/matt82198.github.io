@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context at the Seam — Aesop Field Notes</title>
+<style>
+  :root {
+    --paper: #f4f4f1;
+    --ink: #191b1f;
+    --surface: #ffffff;
+    --surface-2: #efefe9;
+    --border: #dad9d1;
+    --muted: #6b7079;
+    --accent: #1f6f6b;          /* slate-teal, structural */
+    --v-undet: #9a7b2e;         /* ochre — abstention */
+    --v-refute: #2f8f5f;        /* green — correct refutation (the good outcome) */
+    --v-miss: #c0563f;          /* clay — rubber-stamp / missed */
+    --shadow: 0 1px 2px rgba(20,22,26,.06), 0 8px 24px rgba(20,22,26,.05);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Consolas", "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0f1216;
+      --ink: #e7e9ec;
+      --surface: #171b21;
+      --surface-2: #1c2129;
+      --border: #2a303a;
+      --muted: #99a1ac;
+      --accent: #4fb3ac;
+      --v-undet: #cba646;
+      --v-refute: #58c489;
+      --v-miss: #e08067;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #f4f4f1; --ink: #191b1f; --surface: #ffffff; --surface-2: #efefe9;
+    --border: #dad9d1; --muted: #6b7079; --accent: #1f6f6b;
+    --v-undet: #9a7b2e; --v-refute: #2f8f5f; --v-miss: #c0563f;
+    --shadow: 0 1px 2px rgba(20,22,26,.06), 0 8px 24px rgba(20,22,26,.05);
+  }
+  :root[data-theme="dark"] {
+    --paper: #0f1216; --ink: #e7e9ec; --surface: #171b21; --surface-2: #1c2129;
+    --border: #2a303a; --muted: #99a1ac; --accent: #4fb3ac;
+    --v-undet: #cba646; --v-refute: #58c489; --v-miss: #e08067;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); line-height: 1.65;
+    font-size: 18px; letter-spacing: .002em;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .measure { max-width: 68ch; }
+
+  /* ---- header ---- */
+  header.top { border-bottom: 1px solid var(--border); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+  }
+  .dateline { font-family: var(--mono); font-size: 12.5px; color: var(--muted); letter-spacing: .04em; }
+  .masthead { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 22px 0 0; flex-wrap: wrap; }
+  h1 {
+    font-family: var(--serif); font-weight: 600; text-wrap: balance;
+    font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.02; letter-spacing: -.015em;
+    margin: .35em 0 .2em;
+  }
+  .lede {
+    font-family: var(--serif); font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    line-height: 1.4; color: var(--ink); max-width: 40ch; margin: 0 0 30px;
+    font-style: italic; opacity: .92;
+  }
+
+  /* ---- hero flip ---- */
+  .hero { padding: 34px 0 6px; }
+  .flipgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 8px 0 4px; }
+  @media (max-width: 720px){ .flipgrid { grid-template-columns: 1fr; } }
+  .flipcard {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 22px 20px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .flipcard .model { font-family: var(--mono); font-size: 13.5px; letter-spacing: .02em; color: var(--muted); }
+  .flipcard .model b { color: var(--ink); font-weight: 600; }
+  .flow { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+  .state { flex: 1 1 0; min-width: 130px; }
+  .state .lbl { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); display:block; margin-bottom: 6px; }
+  .verdict {
+    font-family: var(--mono); font-weight: 600; font-size: 15px;
+    display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 11px; border-radius: 7px;
+    border: 1px solid transparent; font-variant-numeric: tabular-nums;
+  }
+  .verdict .conf { font-size: 12px; opacity: .8; font-weight: 500; }
+  .v-undet { color: var(--v-undet); background: color-mix(in srgb, var(--v-undet) 12%, transparent); border-color: color-mix(in srgb, var(--v-undet) 30%, transparent); }
+  .v-refute { color: var(--v-refute); background: color-mix(in srgb, var(--v-refute) 13%, transparent); border-color: color-mix(in srgb, var(--v-refute) 34%, transparent); }
+  .arrow { color: var(--accent); font-family: var(--mono); font-size: 22px; line-height: 1; flex: 0 0 auto; }
+  .seated-stamp {
+    animation: stampin .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .35s;
+  }
+  @keyframes stampin { from { opacity: 0; transform: scale(1.14) rotate(-1.5deg); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce){ .seated-stamp { animation: none; } }
+  .herofoot { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+  .herofoot b { color: var(--ink); }
+  .genband { margin-top: 22px; border: 1px solid color-mix(in srgb, var(--v-refute) 42%, var(--border)); background: color-mix(in srgb, var(--v-refute) 7%, var(--surface)); border-radius: 12px; padding: 18px 22px; }
+  .genlead { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+  .gentag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--v-refute); border: 1px solid color-mix(in srgb, var(--v-refute) 42%, transparent); padding: 2px 8px; border-radius: 20px; margin-right: 10px; vertical-align: middle; white-space: nowrap; }
+  .genband p { margin: 0; font-size: 15.5px; line-height: 1.55; }
+  .correction { margin: 0 0 8px; border: 1px solid var(--v-miss); background: color-mix(in srgb, var(--v-miss) 10%, var(--surface)); border-radius: 12px; padding: 18px 22px; }
+  .correction .clbl { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--v-miss); font-weight: 600; display: block; margin-bottom: 8px; }
+  .correction p { margin: 0; font-size: 15px; line-height: 1.55; }
+
+  /* ---- sections ---- */
+  section { padding: 40px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+  h2 {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+    letter-spacing: -.01em; margin: 0 0 4px; text-wrap: balance;
+  }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+  p { margin: 0 0 18px; }
+  .measure p:last-child { margin-bottom: 0; }
+  strong { font-weight: 650; }
+  em.term { font-family: var(--mono); font-style: normal; font-size: .92em; background: var(--surface-2); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+  /* ---- seam fixes list ---- */
+  ol.fixes { list-style: none; counter-reset: fx; padding: 0; margin: 22px 0 0; display: grid; gap: 12px; }
+  ol.fixes li {
+    counter-increment: fx; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px 16px 56px; position: relative; box-shadow: var(--shadow);
+  }
+  ol.fixes li::before {
+    content: counter(fx); position: absolute; left: 16px; top: 15px;
+    font-family: var(--mono); font-weight: 600; font-size: 14px; color: var(--accent);
+    width: 26px; height: 26px; display: grid; place-items: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 6px;
+  }
+  ol.fixes .ver { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  ol.fixes .what { display: block; margin-top: 2px; }
+
+  /* ---- tables ---- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  caption { text-align: left; font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 12px 16px 0; letter-spacing: .03em; }
+  th, td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  thead th { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+  tbody td.model { font-family: var(--mono); font-weight: 600; font-size: 13.5px; }
+  tbody td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  tbody tr:last-child td { border-bottom: none; }
+  .tier { display:inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 8px; vertical-align: baseline; }
+  .t-anthropic { background: var(--v-refute); }
+  .t-openai-f { background: var(--v-undet); }
+  .t-openai-c { background: var(--v-miss); }
+  .rowhi { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .legend { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 12px; display: flex; gap: 18px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; }
+
+  /* ---- callout ---- */
+  .callout {
+    background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+    padding: 18px 22px; margin: 24px 0 0; font-family: var(--serif); font-size: 1.15rem; line-height: 1.45;
+  }
+  .bounds { border-left-color: var(--v-miss); }
+  .bounds .kicker { color: var(--v-miss); }
+
+  /* ---- corpus index ---- */
+  .corpus { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 22px; }
+  @media (max-width: 720px){ .corpus { grid-template-columns: 1fr; } }
+  .grp { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .grp h3 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+  .grp ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .grp li { display: grid; gap: 2px; }
+  .grp .fn { font-family: var(--mono); font-size: 12.5px; color: var(--ink); word-break: break-word; }
+  .grp .desc { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+
+  .statgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 6px; }
+  @media (max-width: 720px){ .statgrid { grid-template-columns: repeat(2,1fr); } }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  .stat .big { font-family: var(--mono); font-weight: 600; font-size: 1.6rem; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .stat .cap { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+
+  footer { border-top: 1px solid var(--border); padding: 34px 0 60px; color: var(--muted); font-size: 14px; }
+  footer .measure { max-width: 72ch; }
+  footer code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="masthead">
+      <span class="eyebrow">Aesop · Field Notes</span>
+      <span class="dateline">2026-07-24 · bounded result, N small</span>
+    </div>
+    <h1>Context at the Seam</h1>
+    <p class="lede">Real seated context flips a frontier model from confident abstention to correct refutation — and the whole corpus that got us there.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="correction" role="note">
+    <span class="clbl">Correction — found, fixed, re-verified · 2026-07-24</span>
+    <p>After publishing, an adversarial audit of our own machinery found a real <strong>context-leak confound</strong>: the seated context pack pulled this experiment's own <code>BUILDLOG</code>, which recorded prior item-9 verdicts — so the "flip" could have been the model reading a past answer, the exact failure class this essay warns about. We removed the leak (a pack verified leak-free against every verdict pattern) and re-ran. <strong>The flip survived</strong>: item 9 still lands <code>false_positive</code> 3/3 with the same multi-fact synthesis on both the commodity model (gpt-4o-mini) and the frontier model (gpt-5.6-sol). Finding a confound and having the result hold clean is the strongest version of this note — and the leaking tool is being fixed so it can't recur.</p>
+  </div>
+
+  <section class="hero" aria-label="The item-9 result">
+    <p class="kicker">The one result that changed the story</p>
+    <h2>Item&nbsp;9, before and after context</h2>
+    <div class="measure"><p>Item&nbsp;9 (<em class="term">whitelist-gate-weakening</em>, ground truth: <strong>false positive</strong>) is the hardest item in the corpus — a coherent-but-wrong <em>narrative</em> claim that an allowlist gate lets security exemptions propagate. Decontextualized, both models hedge. Given real seated context from the driver seam, both synthesize the multi-fact refutation and land it — every run.</p></div>
+
+    <div class="flipgrid">
+      <div class="flipcard">
+        <div class="model"><b>gpt-5.6-sol</b> · frontier</div>
+        <div class="flow">
+          <div class="state">
+            <span class="lbl">Facts only</span>
+            <span class="verdict v-undet">undetermined <span class="conf">0.96</span></span>
+          </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="state">
+            <span class="lbl">+ Seated context</span>
+            <span class="verdict v-refute seated-stamp">false_positive <span class="conf">3/3</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="flipcard">
+        <div class="model"><b>gpt-5.5</b> · cheaper than Fable</div>
+        <div class="flow">
+          <div class="state">
+            <span class="lbl">Facts only</span>
+            <span class="verdict v-undet">undetermined <span class="conf">0.82</span></span>
+          </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="state">
+            <span class="lbl">+ Seated context</span>
+            <span class="verdict v-refute seated-stamp">false_positive <span class="conf">3/3</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="herofoot">Controlled 2×2 A/B · same wired seam · same neutral corpus · <b>N=3</b> · schema-valid <b>48/48 (100%)</b> · the only variable is context.</p>
+
+    <div class="genband">
+      <div class="genlead"><span class="gentag">Generalizes</span> …and it holds at the commodity tier</div>
+      <p><strong>gpt-4o-mini</strong> — roughly one-seventh the cost of the frontier models — makes the same flip: item&nbsp;9 lands <span class="verdict v-refute" style="font-size:13px;padding:4px 8px">false_positive <span class="conf">3/3</span></span> with <b>100%</b> schema validity and 7/9 real defects held. The context effect is not a luxury of expensive models; put the finding and the real code in front of a cheap seat and it reaches the synthesis too.</p>
+    </div>
+  </section>
+
+  <section aria-label="The synthesis">
+    <p class="kicker">What the model actually reasoned</p>
+    <h2>The refutation is a synthesis, not a lookup</h2>
+    <div class="measure">
+      <p>The false positive claims that the health check and the secret scanner disagree, opening an exemption gap. The correct refutation requires holding two facts at once and composing them:</p>
+      <div class="callout">"The health check scans the top level only; <em class="term" style="background:transparent;border:0;padding:0">secret_scan.py</em> scans recursively, including subdirectories — therefore no exemption gap exists."</div>
+      <p style="margin-top:22px">Neither fact is the answer on its own. That is why this item resisted decontextualized scaffolding: for a narrative-refutation finding, the minimal fair-adjudicator evidence is nearly inseparable from the refutation itself. Put the real repository context in front of the seat, and the synthesis becomes reachable — for the frontier model <em>and</em> the cheaper one.</p>
+    </div>
+  </section>
+
+  <section aria-label="The seam">
+    <p class="kicker">Methodology · green is not correct</p>
+    <h2>The seam took four tries to actually carry context</h2>
+    <div class="measure"><p>The finding above is only trustworthy because the plumbing under it is. <em class="term">OrchestratorDriver.decide()</em> — the socket where the judgment model plugs in — looked green for weeks while silently failing to deliver the finding to the model. Each defect hid behind fake-backend tests that never read the prompt. Only real end-to-end runs exposed them:</p></div>
+    <ol class="fixes">
+      <li><span class="ver">increment 1.5</span><span class="what"><strong>The prompt was dropped.</strong> <em>decide()</em> built the context prompt, then called the backend without passing it. The only thing carrying context was a test-harness side-channel no production backend implemented.</span></li>
+      <li><span class="ver">increment 1.6</span><span class="what"><strong>Schema and validator disagreed.</strong> The decision schemas said one thing about evidence shape; the validator checked another. Every prior "schema-valid" was a string check. Reconciled to <em class="term">verdict = string enum</em>, <em class="term">evidence = array</em>, enforced.</span></li>
+      <li><span class="ver">increment 1.7</span><span class="what"><strong>The evidence channel was never rendered.</strong> The prompt showed the context but not the finding-under-adjudication, so the model returned a spurious <em>undetermined</em>. Fixed the render, dropped a double-clip, added the assertion the fakes never had.</span></li>
+      <li><span class="ver">increment 1 → 1.7</span><span class="what"><strong>The pattern itself.</strong> Four iterations, each masked by a passing suite. The corpus below is the receipt that the seat now really works — measured on real context, not on a mock that agrees with itself.</span></li>
+    </ol>
+  </section>
+
+  <section aria-label="The refusal ladder">
+    <p class="kicker">The refusal ladder · 10 models · 16-item corpus</p>
+    <h2>Mechanism refusal is universal; narrative refusal is the frontier</h2>
+    <div class="measure"><p>Before the context experiment, we ran the same blind corpus through ten models to find where the floor is. Two clean lines came out of it.</p></div>
+    <div class="tablewrap" style="margin-top:20px">
+      <table>
+        <caption>Blind adjudication, 16 items, single run per model. "FP refuted" = false-positive narratives the model correctly rejected (of 5).</caption>
+        <thead>
+          <tr><th>Model</th><th>Overall</th><th>FP refuted</th><th>Signature</th></tr>
+        </thead>
+        <tbody>
+          <tr class="rowhi"><td class="model"><span class="tier t-anthropic"></span>claude-opus-4.8</td><td class="num">81.2%</td><td class="num">4/5</td><td>0 rubber-stamps</td></tr>
+          <tr><td class="model"><span class="tier t-anthropic"></span>claude-sonnet-5</td><td class="num">75.0%</td><td class="num">3/5</td><td>2 rubber-stamps</td></tr>
+          <tr><td class="model"><span class="tier t-anthropic"></span>claude-haiku-4.5</td><td class="num">75.0%</td><td class="num">3/5</td><td>2 rubber-stamps</td></tr>
+          <tr><td class="model"><span class="tier t-anthropic"></span>claude-fable-5</td><td class="num">68.8%</td><td class="num">3/5</td><td>2 undetermined</td></tr>
+          <tr><td class="model"><span class="tier t-openai-f"></span>gpt-5.6-sol</td><td class="num">62.5%</td><td class="num">2/5</td><td>5 undetermined (hedges)</td></tr>
+          <tr><td class="model"><span class="tier t-openai-f"></span>gpt-5.6-luna</td><td class="num">62.5%</td><td class="num">2/5</td><td>2 rubber-stamps</td></tr>
+          <tr><td class="model"><span class="tier t-openai-f"></span>gpt-5.5</td><td class="num">56.2%</td><td class="num">2/5</td><td>4 undetermined</td></tr>
+          <tr><td class="model"><span class="tier t-openai-f"></span>gpt-5.6-terra</td><td class="num">50.0%</td><td class="num">2/5</td><td>5 undetermined</td></tr>
+          <tr><td class="model"><span class="tier t-openai-c"></span>gpt-4o-mini</td><td class="num">62.5%</td><td class="num">1/5</td><td>4 rubber-stamps</td></tr>
+          <tr><td class="model"><span class="tier t-openai-c"></span>gpt-4o</td><td class="num">50.0%</td><td class="num">0/5</td><td>5 rubber-stamps</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="tier t-anthropic"></span>Anthropic (culture-prior caveat)</span>
+      <span><span class="tier t-openai-f"></span>OpenAI frontier (seam-pure)</span>
+      <span><span class="tier t-openai-c"></span>OpenAI commodity</span>
+    </div>
+    <div class="measure" style="margin-top:24px">
+      <p><strong>The floor is generational, not price.</strong> Every 2025–26 model refutes <em>mechanism</em>-checkable false claims regardless of cost tier; total rubber-stamping only appears in the 2024 gpt-4o class. <strong>Narrative refusal is frontier-exclusive:</strong> refuting a coherent-but-wrong story runs from 80% (Opus) down to 0% (gpt-4o). That residue — items like #9 — is exactly what seated context reaches into.</p>
+      <p style="font-family:var(--mono);font-size:13px;color:var(--muted)">Caveat that keeps the ladder honest: Anthropic rungs run through harness subagents that inherit the repo's own audit culture and memory, so their verdicts aren't cleanly isolatable from that prior. OpenAI rungs go through the seam with captured receipts. The two columns aren't strictly comparable — read the split, not the leaderboard.</p>
+    </div>
+  </section>
+
+  <section aria-label="Numbers">
+    <p class="kicker">Receipts at a glance</p>
+    <h2>The numbers behind the claims</h2>
+    <div class="statgrid">
+      <div class="stat"><div class="big">100%</div><div class="cap">Seated A/B schema validity (48/48 verdicts well-formed)</div></div>
+      <div class="stat"><div class="big">7 / 9</div><div class="cap">Real defects still held as real under seated context</div></div>
+      <div class="stat"><div class="big">3 / 3</div><div class="cap">Item-9 runs that flip to correct refutation, per model</div></div>
+      <div class="stat"><div class="big">10</div><div class="cap">Models on the refusal ladder, one blind 16-item corpus</div></div>
+    </div>
+  </section>
+
+  <section aria-label="Bounds">
+    <div class="callout bounds">
+      <p class="kicker">What this is not</p>
+      <p style="margin:0">A bounded result, stated as one. The A/B is <strong>N=3 on a single item</strong> across <strong>three OpenAI-seam models</strong> (gpt-5.6-sol, gpt-5.5, gpt-4o-mini) — one decision each, not a running wave. An earlier draw that flipped on a leaky corpus (the evidence stated the conclusion) was discarded; this is the neutral-corpus version. A gpt-4o run was rate-limited and excluded rather than reported as data; gpt-5.6-luna and -terra remain to run. The ladder is single-run, 16 items, no repeated-variance measurement. None of it is a benchmark authority. It is a receipt that the seat carries context, and a signal about where narrative refusal lives.</p>
+    </div>
+  </section>
+
+  <section aria-label="Corpus index">
+    <p class="kicker">The artifact corpus</p>
+    <h2>Everything behind the two findings</h2>
+    <div class="measure"><p>The full run-set that produced the ladder and the A/B, grouped by what each measures. All results live under <em class="term">bench/results/</em> in the source-available repository.</p></div>
+    <div class="corpus">
+      <div class="grp">
+        <h3>Refusal ladder</h3>
+        <ul>
+          <li><span class="fn">LADDER-2026-07-23.md</span><span class="desc">10-model consolidated scorecard; the mechanism-floor / narrative-frontier split.</span></li>
+        </ul>
+      </div>
+      <div class="grp">
+        <h3>Seated A/B — context on the seam</h3>
+        <ul>
+          <li><span class="fn">SEATED-AB-2026-07-24.md</span><span class="desc">The 2×2 summary: item-9 flip + real-defect retention 7/9; schema 100%.</span></li>
+          <li><span class="fn">seated-redo-…-sol_repeat3.{json,md}</span><span class="desc">Three-run stability for gpt-5.6-sol, per-item verdicts + reasoning.</span></li>
+          <li><span class="fn">seated-redo-…-gpt55_repeat3.{json,md}</span><span class="desc">Three-run stability for gpt-5.5, schema validity 100%.</span></li>
+        </ul>
+      </div>
+      <div class="grp">
+        <h3>Shadow adjudication (non-seated)</h3>
+        <ul>
+          <li><span class="fn">shadow-adjudication-2026-07-23.md</span><span class="desc">Baseline blind scorecard across all models, 16 items.</span></li>
+          <li><span class="fn">…-enriched-summary.md</span><span class="desc">Increment 2.5 confound analysis — answer-leak and asymmetry detection.</span></li>
+          <li><span class="fn">…mechanism-*.{json,md}</span><span class="desc">Mechanism-only, confound-free evidence mode per model.</span></li>
+          <li><span class="fn">…neutral-2026-07-24-*.{json,md}</span><span class="desc">Verdict-neutral corpus re-runs, repeat-N stabilization.</span></li>
+        </ul>
+      </div>
+      <div class="grp">
+        <h3>Benchmarks &amp; validation</h3>
+        <ul>
+          <li><span class="fn">frontier_slice_results.json</span><span class="desc">Held-out benchmark slice, spend-capped external grading.</span></li>
+          <li><span class="fn">accuracy-harness-results.json · accuracy-live-*.json</span><span class="desc">Offline and live composite-scoring runs.</span></li>
+          <li><span class="fn">mutation-validation.md</span><span class="desc">Mutation-testing kill rates: wave_loop 51.9%, codex_driver 45%, wave_audit_tail 27.8%.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap measure">
+    <p><strong>Aesop</strong> is a source-available orchestration harness (PolyForm Strict 1.0.0 — noncommercial, no-modify). This page is a field note, not a paper: the point is the method — <em>green is not correct</em> — and an honest, bounded look at where model judgment holds and where it hedges. Model names are the seam's labels for the backends tested; verdicts are captured from real runs.</p>
+  </div>
+</footer>
+
+</body>
+</html>

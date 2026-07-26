@@ -11,40 +11,6 @@
   <h2 id="experience">Experience</h2>
 
   <div class="employers-grid">
-    <!-- FSCPay: Technical Cofounder + Lead Software Engineer -->
-    <article class="employer-card">
-      <div class="employer-header">
-        <h3>FSCPay</h3>
-        <span class="employer-duration">Oct 2025 – Present</span>
-      </div>
-      <p class="employer-location">Chicago, IL</p>
-
-      <div class="roles-list">
-        <div class="role">
-          <div class="role-header">
-            <h4>Technical Cofounder</h4>
-            <span class="role-duration">Self-employed, Oct 2025 – Present</span>
-          </div>
-        </div>
-        <div class="role">
-          <div class="role-header">
-            <h4>Lead Software Engineer</h4>
-            <span class="role-duration">Freelance, Aug 2025 – Present · Remote</span>
-          </div>
-        </div>
-      </div>
-
-      <ul class="role-bullets">
-        <li>Designed and developed payment solutions for FSCPay, a fintech startup.</li>
-        <li>Led backend development utilizing LLM intelligence APIs to enhance payment processing.</li>
-        <li>Collaborated with cross-functional teams to ensure seamless integration of payment systems.</li>
-      </ul>
-
-      <div class="employer-tags">
-        <span class="tag">Java</span>
-      </div>
-    </article>
-
     <!-- AT&T: Corporate Systems (three progressive roles) -->
     <article class="employer-card">
       <div class="employer-header">
@@ -104,6 +70,47 @@
         <span class="tag">Azure</span>
         <span class="tag">Terraform</span>
         <span class="tag">Vertica</span>
+      </div>
+    </article>
+
+    <!-- Post-AT&T trajectory -->
+    <article class="employer-card trajectory-bridge">
+      <p class="trajectory-note">
+        <em>Since AT&T: independent automation-systems engineering — client delivery systems and the aesop orchestration harness.</em>
+      </p>
+    </article>
+
+    <!-- FSCPay: Technical Cofounder + Lead Software Engineer -->
+    <article class="employer-card">
+      <div class="employer-header">
+        <h3>FSCPay</h3>
+        <span class="employer-duration">Oct 2025 – Present</span>
+      </div>
+      <p class="employer-location">Chicago, IL</p>
+
+      <div class="roles-list">
+        <div class="role">
+          <div class="role-header">
+            <h4>Technical Cofounder</h4>
+            <span class="role-duration">Self-employed, Oct 2025 – Present</span>
+          </div>
+        </div>
+        <div class="role">
+          <div class="role-header">
+            <h4>Lead Software Engineer</h4>
+            <span class="role-duration">Freelance, Aug 2025 – Present · Remote</span>
+          </div>
+        </div>
+      </div>
+
+      <ul class="role-bullets">
+        <li>Designed and developed payment solutions for FSCPay, a fintech startup.</li>
+        <li>Led backend development utilizing LLM intelligence APIs to enhance payment processing.</li>
+        <li>Collaborated with cross-functional teams to ensure seamless integration of payment systems.</li>
+      </ul>
+
+      <div class="employer-tags">
+        <span class="tag">Java</span>
       </div>
     </article>
 
@@ -335,6 +342,28 @@
     border: 1px solid var(--color-border);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
+  }
+
+  .trajectory-bridge {
+    background-color: transparent;
+    border: none;
+    padding: var(--space-2) var(--space-6);
+    text-align: center;
+    min-height: auto;
+  }
+
+  .trajectory-bridge:hover {
+    background-color: transparent;
+    border: none;
+  }
+
+  .trajectory-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0;
+    line-height: var(--leading-normal);
+    font-family: var(--font-sans);
   }
 
   /* Responsive adjustments */

@@ -1,0 +1,190 @@
+---
+// BenchmarkResults.astro — Measured, not asserted: judgment benchmarks and cost metrics
+// Anchor: benchmarks | Responsive section | No props
+---
+
+<section class="benchmark-section">
+  <p class="section-moral"><em>Measured, not asserted.</em></p>
+
+  <h2 id="benchmarks">Benchmarks: measured cost and capability</h2>
+
+  <div class="benchmark-grid">
+    <!-- Benchmark 1: Judgment accuracy -->
+    <div class="benchmark-card">
+      <h3>Judgment Accuracy</h3>
+      <p class="benchmark-subtitle">39-task judgment benchmark</p>
+      <div class="metric-pair">
+        <div class="metric">
+          <span class="metric-label">Haiku</span>
+          <span class="metric-value">39/39</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Opus</span>
+          <span class="metric-value">38/39</span>
+        </div>
+      </div>
+      <p class="benchmark-note">
+        <em>Curated set (N=39) · Haiku at ~1/3 the cost of Opus · Ground truth established by human review</em>
+      </p>
+    </div>
+
+    <!-- Benchmark 2: Cost of hierarchy -->
+    <div class="benchmark-card">
+      <h3>Architecture Cost</h3>
+      <p class="benchmark-subtitle">Hierarchical dispatch (cancelled)</p>
+      <div class="metric-single">
+        <span class="metric-value">4.3×</span>
+        <span class="metric-label">cost multiplier</span>
+      </div>
+      <p class="benchmark-note">
+        <em>Measured in A/B test · Same quality output · Decision: optimized for flat fan-out dispatch instead</em>
+      </p>
+    </div>
+
+    <!-- Benchmark 3: Frontier discrimination -->
+    <div class="benchmark-card">
+      <h3>Frontier Discrimination</h3>
+      <p class="benchmark-subtitle">Model tier separation</p>
+      <div class="metric-single">
+        <span class="metric-value">pending</span>
+        <span class="metric-label">results</span>
+      </div>
+      <p class="benchmark-note">
+        <em>Pre-declared margin: ±10pp · Designed to separate frontier and commodity models · Measurement in flight</em>
+      </p>
+    </div>
+  </div>
+
+  <p class="benchmark-methodology">
+    <em>Methodology:</em> These measurements come from closed experiments within the Aesop project itself. The judgment benchmark is a held-out set graded by human reviewers; the cost A/B was an in-flight dispatch architecture comparison; the frontier slice is a planned measurement against live models. Each publishes its method and its caveats — no post-hoc claim without the data to support it.
+  </p>
+</section>
+
+<style>
+  .benchmark-section {
+    margin: var(--space-16) 0;
+  }
+
+  .benchmark-section h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0 0 var(--space-8) 0;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .section-moral em {
+    font-style: italic;
+  }
+
+  .benchmark-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .benchmark-card {
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    transition: background-color var(--duration-base) var(--ease-out),
+                border-color var(--duration-base) var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .benchmark-card {
+      transition: none;
+    }
+  }
+
+  .benchmark-card:hover {
+    background: var(--color-bg);
+    border-color: var(--accent);
+  }
+
+  .benchmark-card h3 {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2) 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .benchmark-subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-6) 0;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .metric-pair {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .metric {
+    flex: 1;
+    text-align: center;
+  }
+
+  .metric-single {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .metric-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    display: block;
+  }
+
+  .metric-value {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    display: block;
+  }
+
+  .benchmark-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--leading-relaxed);
+    font-style: italic;
+  }
+
+  .benchmark-methodology {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    max-width: var(--width-prose);
+    margin: 0;
+    padding: var(--space-6);
+    background-color: var(--color-bg-tertiary);
+    border-left: 3px solid var(--color-border);
+    border-radius: 4px;
+  }
+
+  .benchmark-methodology em {
+    font-style: italic;
+  }
+</style>

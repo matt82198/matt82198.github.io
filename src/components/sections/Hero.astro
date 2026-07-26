@@ -18,7 +18,10 @@ import stats from '../../data/aesop-stats.json';
 
     <div class="hero-stats">
       <div class="stats-header">
-        <span class="live-badge" id="live-badge" title="Stats syncing from GitHub API and stats.json">● live</span>
+        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments">replay · stylized</span>
+      </div>
+      <div class="stat stat-primary">
+        <span class="stat-number">4.3×</span> cost of hierarchical dispatch (cancelled architecture)
       </div>
       <div class="stat">
         <span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by a self-building system
@@ -124,20 +127,10 @@ import stats from '../../data/aesop-stats.json';
 
   .live-badge {
     font-size: var(--text-xs);
-    color: var(--accent);
+    color: var(--color-text-secondary);
     font-weight: 600;
     letter-spacing: 0.05em;
     opacity: 0.8;
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% {
-      opacity: 0.6;
-    }
-    50% {
-      opacity: 1;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -153,6 +146,12 @@ import stats from '../../data/aesop-stats.json';
 
   .stat:not(:last-child) {
     margin-bottom: var(--space-4);
+  }
+
+  .stat-primary {
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
   }
 
   .stat-number {
