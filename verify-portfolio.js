@@ -43,12 +43,12 @@ async function runTests() {
 
     // Verify section order via heading checks
     const aesopHeading = await desktopPage.$eval('#aesop', el => el.textContent);
-    const fleetHeading = await desktopPage.$eval('#fleet', el => el.textContent);
+    const archHeading = await desktopPage.$eval('#architecture', el => el.textContent);
     const experienceHeading = await desktopPage.$eval('#experience', el => el.textContent);
 
     console.log(`\nSection headings found:`);
     console.log(`  - Aesop: "${aesopHeading.substring(0, 50)}..."`);
-    console.log(`  - Fleet: "${fleetHeading.substring(0, 50)}..."`);
+    console.log(`  - Architecture: "${archHeading.substring(0, 50)}..."`);
     console.log(`  - Experience: "${experienceHeading.substring(0, 50)}..."`);
 
     // Check iteration count value
@@ -60,11 +60,12 @@ async function runTests() {
     const heroHasIterations = heroStats.includes('iterations');
     console.log(`${heroHasIterations ? '✓' : '✗'} Hero stats contain "iterations": ${heroHasIterations}`);
 
-    // Verify "Iteration N" appears in FleetViz
-    const fleetLegend = await desktopPage.textContent('.fleet-legend');
-    const fleetHasIteration = /Iteration\s+\d+/.test(fleetLegend);
-    console.log(`${fleetHasIteration ? '✓' : '✗'} FleetViz legend has "Iteration N": ${fleetHasIteration}`);
-    console.log(`   Legend text: "${fleetLegend.substring(0, 80)}..."`);
+    // Verify "hub" and "spoke" appear in ArchViz section
+    const archVizText = await desktopPage.textContent('.arch-viz-section');
+    const hasHub = archVizText.includes('hub');
+    const hasSpoke = archVizText.includes('spoke');
+    console.log(`${hasHub ? '✓' : '✗'} ArchViz mentions "hub": ${hasHub}`);
+    console.log(`${hasSpoke ? '✓' : '✗'} ArchViz mentions "spoke": ${hasSpoke}`);
 
     await desktopPage.close();
 
