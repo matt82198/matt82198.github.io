@@ -1,0 +1,411 @@
+---
+// ArchViz.astro — Architecture illustration of hub-and-spoke coordination
+// Self-contained inline SVG, no external dependencies
+// Demonstrates filesystem-based agent coordination at scale
+import stats from '../../data/aesop-stats.json';
+---
+
+<section class="arch-viz-section">
+  <p class="section-moral"><em>One filesystem: not a mesh.</em></p>
+
+  <h2 id="architecture">Scaling through the filesystem</h2>
+
+  <div class="viz-container">
+    <!-- Main architecture diagram -->
+    <figure class="viz-figure">
+      <svg class="arch-diagram" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hub-and-spoke architecture: agents coordinate through filesystem, not with each other">
+        <defs>
+          <style>
+            /* Hub (center): filesystem */
+            .hub-circle { fill: var(--accent); }
+            .hub-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; fill: white; }
+
+            /* Orchestrator (inner ring): main thread */
+            .orchestrator-ring { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.7; }
+            .orchestrator-label { font-family: var(--font-mono); font-size: 10px; fill: var(--accent); }
+
+            /* Worker agents: spokes */
+            .hub-spoke { stroke: var(--color-text-secondary); stroke-width: 1.5; fill: none; opacity: 0.6; }
+            .worker-dot { fill: var(--color-text-secondary); }
+            .worker-label { font-family: var(--font-mono); font-size: 9px; fill: var(--color-text-secondary); }
+
+            /* Greyed/crashed spoke */
+            .spoke-crashed { stroke: var(--color-text-tertiary); stroke-width: 1.5; fill: none; opacity: 0.2; }
+            .dot-crashed { fill: var(--color-text-tertiary); opacity: 0.3; }
+            .label-crashed { fill: var(--color-text-tertiary); opacity: 0.4; }
+
+            /* Contrast diagram: mesh */
+            .mesh-line { stroke: var(--color-text-tertiary); stroke-width: 1; fill: none; opacity: 0.3; }
+            .mesh-dot { fill: var(--color-text-tertiary); opacity: 0.4; }
+
+            /* Heading text */
+            .diagram-title { font-family: var(--font-mono); font-size: 12px; font-weight: 600; fill: var(--accent); }
+
+            /* Annotation callouts */
+            .annotation-text { font-family: var(--font-sans); font-size: 10px; fill: var(--color-text-secondary); }
+            .annotation-bold { font-weight: 600; fill: var(--accent); }
+            .arrow-line { stroke: var(--color-text-tertiary); stroke-width: 1; fill: none; opacity: 0.5; }
+          </style>
+        </defs>
+
+        <!-- === LEFT SIDE: HUB-AND-SPOKE === -->
+        <g class="hub-spoke-diagram">
+          <text class="diagram-title" x="60" y="25">Hub-and-Spoke Coordination</text>
+
+          <!-- Hub circle (filesystem: STATE.md, BUILDLOG.md, tracker, worktrees) -->
+          <circle class="hub-circle" cx="120" cy="180" r="20" />
+          <text class="hub-label" x="120" y="185" text-anchor="middle">Filesystem</text>
+
+          <!-- Orchestrator ring (main thread, reads summaries) -->
+          <circle class="orchestrator-ring" cx="120" cy="180" r="45" />
+
+          <!-- Spokes and worker agents (5 visible, 1 greyed/crashed) -->
+          <!-- Worker 1: top -->
+          <line class="hub-spoke" x1="120" y1="180" x2="120" y2="80" />
+          <circle class="worker-dot" cx="120" cy="65" r="4" />
+          <text class="worker-label" x="130" y="70">W1</text>
+
+          <!-- Worker 2: top-right -->
+          <line class="hub-spoke" x1="120" y1="180" x2="180" y2="110" />
+          <circle class="worker-dot" cx="192" cy="100" r="4" />
+          <text class="worker-label" x="200" y="105">W2</text>
+
+          <!-- Worker 3: right -->
+          <line class="hub-spoke" x1="120" y1="180" x2="200" y2="180" />
+          <circle class="worker-dot" cx="215" cy="180" r="4" />
+          <text class="worker-label" x="222" y="185">W3</text>
+
+          <!-- Worker 4: bottom-right (crashed) -->
+          <line class="spoke-crashed" x1="120" y1="180" x2="180" y2="250" />
+          <circle class="dot-crashed" cx="192" cy="260" r="4" />
+          <text class="label-crashed" x="200" y="265">W4</text>
+
+          <!-- Worker 5: bottom -->
+          <line class="hub-spoke" x1="120" y1="180" x2="120" y2="280" />
+          <circle class="worker-dot" cx="120" cy="295" r="4" />
+          <text class="worker-label" x="130" y="300">W5</text>
+
+          <!-- Worker 6: left -->
+          <line class="hub-spoke" x1="120" y1="180" x2="40" y2="180" />
+          <circle class="worker-dot" cx="25" cy="180" r="4" />
+          <text class="worker-label" x="8" y="185">W6</text>
+
+          <!-- Annotation: topology stays clean -->
+          <text class="annotation-text" x="60" y="350">N agents → <tspan class="annotation-bold">N edges</tspan></text>
+          <text class="annotation-text" x="60" y="365">Orchestrator context: <tspan class="annotation-bold">fixed size</tspan></text>
+          <text class="annotation-text" x="60" y="380">Recovery: <tspan class="annotation-bold">a re-read</tspan></text>
+        </g>
+
+        <!-- === RIGHT SIDE: MESH CONTRAST === -->
+        <g class="mesh-contrast-diagram" transform="translate(340, 0)">
+          <text class="diagram-title" x="60" y="25">Mesh Coordination (anti-pattern)</text>
+
+          <!-- Central hub for contrast -->
+          <circle class="hub-circle" cx="120" cy="180" r="20" />
+          <text class="hub-label" x="120" y="185" text-anchor="middle">State</text>
+
+          <!-- Mesh: every agent talks to every other agent -->
+          <!-- This quickly becomes tangled as agent count grows -->
+
+          <!-- Agents in circle -->
+          <circle class="mesh-dot" cx="120" cy="65" r="4" />   <!-- W1 top -->
+          <circle class="mesh-dot" cx="192" cy="100" r="4" />  <!-- W2 top-right -->
+          <circle class="mesh-dot" cx="215" cy="180" r="4" />  <!-- W3 right -->
+          <circle class="mesh-dot" cx="192" cy="260" r="4" />  <!-- W4 bottom-right -->
+          <circle class="mesh-dot" cx="120" cy="295" r="4" />  <!-- W5 bottom -->
+          <circle class="mesh-dot" cx="25" cy="180" r="4" />   <!-- W6 left -->
+
+          <!-- All-to-all connections: these grow as n(n-1)/2 -->
+          <line class="mesh-line" x1="120" y1="65" x2="192" y2="100" />
+          <line class="mesh-line" x1="120" y1="65" x2="215" y2="180" />
+          <line class="mesh-line" x1="120" y1="65" x2="192" y2="260" />
+          <line class="mesh-line" x1="120" y1="65" x2="120" y2="295" />
+          <line class="mesh-line" x1="120" y1="65" x2="25" y2="180" />
+
+          <line class="mesh-line" x1="192" y1="100" x2="215" y2="180" />
+          <line class="mesh-line" x1="192" y1="100" x2="192" y2="260" />
+          <line class="mesh-line" x1="192" y1="100" x2="120" y2="295" />
+          <line class="mesh-line" x1="192" y1="100" x2="25" y2="180" />
+
+          <line class="mesh-line" x1="215" y1="180" x2="192" y2="260" />
+          <line class="mesh-line" x1="215" y1="180" x2="120" y2="295" />
+          <line class="mesh-line" x1="215" y1="180" x2="25" y2="180" />
+
+          <line class="mesh-line" x1="192" y1="260" x2="120" y2="295" />
+          <line class="mesh-line" x1="192" y1="260" x2="25" y2="180" />
+
+          <line class="mesh-line" x1="120" y1="295" x2="25" y2="180" />
+
+          <!-- Annotation: complexity explodes -->
+          <text class="annotation-text" x="60" y="350">N agents → <tspan class="annotation-bold">n(n−1)/2 channels</tspan></text>
+          <text class="annotation-text" x="60" y="365">Orchestrator context: <tspan class="annotation-bold">O(n²) growth</tspan></text>
+          <text class="annotation-text" x="60" y="380">Recovery: <tspan class="annotation-bold">complex protocol</tspan></text>
+        </g>
+      </svg>
+
+      <figcaption class="viz-caption">
+        <strong>Hub-and-spoke scales O(1).</strong> Every agent reads and writes to a shared filesystem (git-tracked STATE.md, BUILDLOG.md, per-worktree snapshots). The orchestrator coordinates by reading fixed-size briefs, never by managing agent-to-agent channels. One agent crash leaves the rest untouched: recovery is a re-read. The mesh diagram (right) shows why direct agent-to-agent coordination doesn't scale.
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- Real receipts section -->
+  <div class="receipts-section">
+    <h3>Real session from repository history</h3>
+    <p class="receipts-text">
+      One live session showed the model in motion: <strong>{stats.coauthors} concurrent agents</strong> (out of 30+ Haiku workers dispatched across {stats.iteration_cycles} iteration cycles). The central filesystem coordinated every task—<strong>{stats.merged_prs} PRs merged</strong>, {stats.waves} waves shipped—entirely through reads and writes to disk. No new coordination channels needed as agent count grew. No protocol overhead. Just Unix: processes coordinate through the filesystem.
+    </p>
+  </div>
+
+  <!-- Interactivity: agent slider (respects prefers-reduced-motion) -->
+  <div class="interactive-section">
+    <h3>Topology as agents grow</h3>
+    <div class="slider-container">
+      <label for="agent-slider" class="slider-label">Agents: <span id="agent-count">5</span></label>
+      <input type="range" id="agent-slider" class="agent-slider" min="3" max="15" value="5" aria-label="Adjust agent count to see hub-and-spoke topology scale" />
+      <span class="slider-hint">Drag to scale (3–15 agents)</span>
+    </div>
+    <div class="interactive-diagram-container">
+      <svg class="interactive-arch" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="presentation">
+        <defs>
+          <style>
+            .interactive-hub { fill: var(--accent); }
+            .interactive-spoke { stroke: var(--color-text-secondary); stroke-width: 1.5; fill: none; opacity: 0.6; }
+            .interactive-dot { fill: var(--color-text-secondary); }
+          </style>
+        </defs>
+        <!-- Hub -->
+        <circle class="interactive-hub" cx="150" cy="150" r="18" />
+        <!-- Spokes and workers: dynamically generated by JS -->
+        <g id="interactive-spokes"></g>
+      </svg>
+    </div>
+    <p class="interactive-note">
+      Observe: as agents multiply, the hub remains the single point of coordination. Each new agent adds exactly one spoke. The orchestrator's job stays constant—read the briefs, update the hub—regardless of how many workers spin up.
+    </p>
+  </div>
+</section>
+
+<style>
+  .arch-viz-section {
+    margin-bottom: var(--space-16);
+  }
+
+  .arch-viz-section h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-8);
+  }
+
+  .arch-viz-section h3 {
+    font-size: var(--text-lg);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
+  }
+
+  .section-moral {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+    font-style: italic;
+  }
+
+  .viz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .viz-figure {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .arch-diagram {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    aspect-ratio: 700 / 500;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+
+  .viz-caption {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    text-align: center;
+    max-width: 70ch;
+    margin: var(--space-6) auto 0;
+    line-height: var(--leading-normal);
+  }
+
+  .receipts-section {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-6);
+    margin-bottom: var(--space-12);
+  }
+
+  .receipts-section h3 {
+    margin-top: 0;
+  }
+
+  .receipts-text {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .receipts-text strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .interactive-section {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-6);
+    margin-bottom: var(--space-12);
+  }
+
+  .interactive-section h3 {
+    margin-top: 0;
+  }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .slider-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  #agent-count {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .agent-slider {
+    flex: 1;
+    min-width: 150px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-border);
+    outline: none;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+
+  .agent-slider:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .slider-hint {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+  }
+
+  .interactive-diagram-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .interactive-arch {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .interactive-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .arch-diagram,
+    .interactive-arch {
+      animation: none;
+    }
+
+    .agent-slider {
+      pointer-events: none;
+    }
+  }
+
+  /* Focus visible for SVG */
+  .arch-diagram:focus-visible,
+  .interactive-arch:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+</style>
+
+<script is:inline>
+(function() {
+  const sliderEl = document.getElementById('agent-slider');
+  const countEl = document.getElementById('agent-count');
+  const spokesGroupEl = document.getElementById('interactive-spokes');
+
+  function updateInteractiveDiagram() {
+    const numAgents = parseInt(sliderEl.value, 10);
+    countEl.textContent = numAgents;
+
+    // Clear existing spokes and dots
+    spokesGroupEl.innerHTML = '';
+
+    // Generate spokes radiating from center (150, 150)
+    const angleStep = (Math.PI * 2) / numAgents;
+    const radius = 100;
+
+    for (let i = 0; i < numAgents; i++) {
+      const angle = angleStep * i - Math.PI / 2;
+      const x = 150 + Math.cos(angle) * radius;
+      const y = 150 + Math.sin(angle) * radius;
+
+      // Spoke line
+      const spoke = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      spoke.setAttribute('class', 'interactive-spoke');
+      spoke.setAttribute('x1', '150');
+      spoke.setAttribute('y1', '150');
+      spoke.setAttribute('x2', x);
+      spoke.setAttribute('y2', y);
+      spokesGroupEl.appendChild(spoke);
+
+      // Worker dot
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('class', 'interactive-dot');
+      dot.setAttribute('cx', x);
+      dot.setAttribute('cy', y);
+      dot.setAttribute('r', '4');
+      spokesGroupEl.appendChild(dot);
+    }
+  }
+
+  // Initialize
+  updateInteractiveDiagram();
+
+  // Update on slider change
+  sliderEl.addEventListener('input', updateInteractiveDiagram);
+})();
+</script>
