@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distPath = path.join(__dirname, 'dist', 'index.html');
-const fileUrl = `file:///${distPath.replace(/\/g, '/')}`;
+const fileUrl = `file:///${distPath.replace(/\\/g, '/')}`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({

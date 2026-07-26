@@ -1,0 +1,25 @@
+{
+  "_README": "Manual overrides for writing/essays. 'views' sourced from Medium stats dashboard (no public API). 'featured=true' gives prominent card treatment. 'description' overrides feed excerpt.",
+  "overrides": {
+    "https://medium.com/@matt82198/the-system-that-builds-itself-field-notes-from-an-ai-orchestrator-4a012df2575d": {
+      "featured": true,
+      "description": "A self-building system is only as good as its honesty with itself."
+    },
+    "https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4": {
+      "featured": true,
+      "description": "Resilience by making failure cheap, visible, survivable."
+    },
+    "https://medium.com/@matt82198/claude-code-has-a-memory-problem-i-built-a-missing-layer-44c3f9f6248d": {
+      "description": "A persistent, git-tracked identity layer for stateless sessions."
+    },
+    "https://medium.com/@matt82198/architecture-that-can-turn-120-words-into-a-shipped-feature-78dcf9559dde": {
+      "description": "25-minute idea-to-shipped via orchestrated agents."
+    },
+    "https://medium.com/@matt82198/2-what-it-feels-like-to-be-hit-by-14-agents-running-on-your-own-github-bill-6e7de539c603": {
+      "description": "Agent-swarm economics from the target's side."
+    },
+    "https://medium.com/@matt82198/the-frame-distribution-problem-in-agentic-llms-14e92fc3da39": {
+      "description": "Harmful intent distributed across a pipeline evades per-component safety checks."
+    }
+  }
+}

@@ -52,8 +52,8 @@ async function runTests() {
     console.log(`  - Experience: "${experienceHeading.substring(0, 50)}..."`);
 
     // Check iteration count value
-    const iterationCount = await desktopPage.textContent('[data-count="30"]');
-    console.log(`\n✓ Iteration count displayed: ${iterationCount || '30'}`);
+    const iterationCount = await desktopPage.locator('.hero-stats [data-count]').nth(1).textContent();
+    console.log(`\n✓ Iteration count displayed: ${iterationCount}`);
 
     // Verify "iterations" appears in hero stats
     const heroStats = await desktopPage.textContent('.hero-stats');

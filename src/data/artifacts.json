@@ -1,0 +1,23 @@
+{
+  "_README": "Interactive field-note artifacts (self-contained HTML pages hosted on claude.ai). These are PRIVATE until the author shares each one from its artifact page; links 404 for visitors until then.",
+  "artifacts": [
+    {
+      "title": "An LLM Rediscovered Unix",
+      "url": "https://claude.ai/code/artifact/54b577e5-3914-4792-b115-69b477c85df5",
+      "date": "2026-07-26",
+      "description": "How a survival constraint — assume the machine can be wiped at any moment — rediscovered Unix. The interactive companion to \"We Don't Need Smarter LLMs. We Need Unix for Agents.\""
+    },
+    {
+      "title": "aesop 0.4.0 — Two Swappable Seats",
+      "url": "https://claude.ai/code/artifact/54be977d-1edf-45ee-ba2b-72bde4cbe437",
+      "date": "2026-07-25",
+      "description": "Release note: swap the worker AND orchestrator model per seat from one config block (Claude, Codex, or any OpenAI-compatible endpoint)."
+    },
+    {
+      "title": "Context at the Seam",
+      "url": "https://claude.ai/code/artifact/66fc8c3a-f310-4542-af23-fa565d30786e",
+      "date": "2026-07-24",
+      "description": "Giving a judgment seat real repository context flips it from confident abstention to a correct refutation — on both a frontier and a commodity model."
+    }
+  ]
+}
