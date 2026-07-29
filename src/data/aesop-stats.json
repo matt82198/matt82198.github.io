@@ -1,12 +1,12 @@
 {
-  "commits": 1232,
-  "merged_prs": 448,
+  "commits": 1245,
+  "merged_prs": 450,
   "waves": 30,
-  "coauthors": 12,
-  "domains": 13,
-  "test_files": 176,
-  "loc": 202821,
-  "version": "v0.4.1",
+  "coauthors": 13,
+  "domains": 14,
+  "test_files": 179,
+  "loc": 206099,
+  "version": "v1.0.0",
   "iteration_cycles": 32,
-  "shipped_increments": 448
+  "shipped_increments": 450
 }
