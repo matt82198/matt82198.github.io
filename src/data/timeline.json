@@ -1,27 +1,45 @@
 [
   {
-    "date": "2015",
-    "label": "2015–2017",
+    "date": "2014",
+    "label": "2014–2018",
     "title": "Glimpse",
-    "description": "cofounder, native iOS app (Objective-C / Swift)"
+    "description": "cofounder, native iOS app; won best in Illinois (Verizon Innovative App Challenge), pitched to live audiences, later acquired"
+  },
+  {
+    "date": "2016",
+    "label": "2016–2018",
+    "title": "The Tannery Row",
+    "description": "engineered a GTM-based backend for a backend-less Squarespace store; dynamic ads, product-feed API from tag events"
   },
   {
     "date": "2020",
-    "label": "2020",
-    "title": "The Tannery Row",
-    "description": "Lead System Architect & Operations Engineer (ongoing)"
+    "label": "Dec 2020",
+    "title": "Penn State",
+    "description": "B.S. Computer Science (Applied Mathematics minor)"
   },
   {
     "date": "2021",
-    "label": "2021–2025",
-    "title": "AT&T Corporate Systems",
-    "description": "TDP I → TDP II → Senior Software Engineering; full-stack data platforms"
+    "label": "Nov 2021",
+    "title": "AT&T People Analytics",
+    "description": "hired via Technology Development Program onto startup-style HR team; full-stack data platforms"
   },
   {
-    "date": "2025",
-    "label": "2025",
-    "title": "FSCPay",
-    "description": "technical cofounder, fintech + LLM payment processing"
+    "date": "2022",
+    "label": "2022",
+    "title": "Promoted to Senior",
+    "description": "within first year at AT&T; HRMAN company-wide RBAC service ships"
+  },
+  {
+    "date": "2024",
+    "label": "2024",
+    "title": "Canned Reporting",
+    "description": "config-driven reporting platform — report definitions as data over one generic engine (the precursor idea to Aesop)"
+  },
+  {
+    "date": "2025-06",
+    "label": "Jun 2025",
+    "title": "Left AT&T",
+    "description": "to build in the LLM space full-time"
   },
   {
     "date": "2026-05",

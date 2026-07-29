@@ -148,16 +148,21 @@ def main() -> None:
     stats = {
         "commits": git.total_commits,
         "merged_prs": git.merged_prs,
-        "waves": git.wave_count,
         "coauthors": git.distinct_coauthors,
         "domains": count_domains(aesop_repo),
         "test_files": count_test_files(aesop_repo),
         "loc": git.lines_of_code,
         "version": read_version(aesop_repo),
-        # New semantic keys for portfolio rendering
-        "iteration_cycles": iteration_cycles,
+        # Semantic keys for portfolio rendering (waves/iteration_cycles may be omitted if aesop deprecates them)
         "shipped_increments": shipped_increments,
     }
+
+    # Include waves and iteration_cycles only if they exist in the git stats
+    # (defensive tolerance for when aesop retires the waves concept)
+    if hasattr(git, 'wave_count') and git.wave_count is not None:
+        stats["waves"] = git.wave_count
+    if iteration_cycles > 0:
+        stats["iteration_cycles"] = iteration_cycles
 
     # Show a before -> after diff so the refresh is auditable.
     old = {}
