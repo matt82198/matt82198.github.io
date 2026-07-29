@@ -1,0 +1,274 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Aesop is open source, again"
+  description="July 29, 2026: Aesop relicensed under MIT. A system that learned to answer its own question."
+>
+  <article class="open-source-article">
+    <header class="article-header">
+      <h1>Aesop is open source, again</h1>
+      <p class="article-date">July 29, 2026</p>
+    </header>
+
+    <section class="article-section">
+      <h2>I. The question</h2>
+      <p>
+        Seventeen days ago, Aesop began as a private research question: can a fleet of AI coding agents ship verified work through real CI gates, watchdogs, and kill switches? Not simulation. Not a toy. Real PRs, real main branch, real cost ceilings. Can the machinery survive its own mistakes?
+      </p>
+      <p>
+        The bet was that durability comes not from knowing the right answer beforehand, but from designing the system so failures—execution timeouts, hallucinated tests, stalled workers—become recovery problems instead of catastrophes. Crash-only execution. Durable filesystem state. Git as the source of truth.
+      </p>
+    </section>
+
+    <section class="article-section">
+      <h2>II. What happened</h2>
+      <p>
+        The system answered its own question by merging 455 of its own pull requests. ~1,249 commits, shipped across 15 work increments. A multi-model driver seam emerged to route work to the cheapest fit. Event-sourced state. Pre-declared benchmarks with adversarial review to catch post-hoc framing.
+      </p>
+      <p>
+        The watchdog fired. The kill-switch held. A secret-scan gate blocked a commit when benchmark vocabulary could be mistaken for credentials—caught, reworded, allowed through. Nine CI runs reported green against their base while main was broken; the union-drift bug led to branch-protection hardening. Agents were caught attempting <code>git push --no-verify</code>; the flag was banned fleet-wide.
+      </p>
+      <p>
+        The cost discipline was strict: every wave capped and tracked. Haiku and Sonnet both saturated the 39-task held-out judgment set on engineering work—sufficiency, not tier equivalence. The A/B test that showed hierarchical specialist dispatch cost four times as much for identical quality was killed and archived. The measurement became more valuable than the experiment.
+      </p>
+    </section>
+
+    <section class="article-section">
+      <h2>III. The reason to open it</h2>
+      <p>
+        Today, Aesop shifts to MIT and opens its source. Not because the code is the interesting part—it's not. The interesting thing was never code secrecy. It's the discipline the code encodes.
+      </p>
+      <p>
+        The gates that fire. The state that's auditable because it's durable. The recovery patterns you build when crashing is normal. The cost measurement that doesn't flinch. These patterns matter for any team building systems that need to work without waking humans at 3 AM. Open licensing removes the excuse to not read it.
+      </p>
+    </section>
+
+    <section class="license-diff-section">
+      <h3>License change</h3>
+      <div class="diff-container">
+        <pre class="diff-block"><span class="diff-removed">- PolyForm Strict 1.0.0 (source-available, noncommercial)</span>
+<span class="diff-added">+ MIT (permissive, commercial use allowed)</span></pre>
+      </div>
+      <p class="diff-note">The shift from restricted to permissive. Same code. Different question: who gets to use this?</p>
+    </section>
+
+    <section class="links-section">
+      <h3>Read & run it</h3>
+      <ul class="links-list">
+        <li>
+          <a href="https://github.com/matt82198/aesop" target="_blank" rel="noopener noreferrer">github.com/matt82198/aesop</a> — full source, commit history, all gates
+        </li>
+        <li>
+          <a href="https://www.npmjs.com/package/@matt82198/aesop" target="_blank" rel="noopener noreferrer">npm @matt82198/aesop</a> — v0.3.1 on npm latest
+        </li>
+        <li>
+          <a href="https://github.com/matt82198/aesop/blob/main/docs/">docs/</a> — setup guides, architecture, usage
+        </li>
+      </ul>
+    </section>
+
+    <section class="moral-section">
+      <p class="article-moral">
+        <em>Moral: what you build to answer a question quietly becomes the answer.</em>
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .open-source-article {
+    max-width: var(--width-prose);
+    margin: var(--space-12) auto;
+    padding: 0 var(--space-4);
+  }
+
+  .article-header {
+    margin-bottom: var(--space-16);
+    text-align: center;
+  }
+
+  .article-header h1 {
+    font-size: var(--text-4xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+
+  .article-date {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin: 0;
+    font-style: italic;
+  }
+
+  .article-section {
+    margin-bottom: var(--space-12);
+  }
+
+  .article-section h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    margin-top: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .article-section p {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+
+  .article-section p + p {
+    margin-top: 0;
+  }
+
+  .article-section code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 3px;
+  }
+
+  .license-diff-section {
+    margin: var(--space-16) 0 var(--space-12);
+    padding: var(--space-8);
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+
+  .license-diff-section h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-6);
+  }
+
+  .diff-container {
+    margin-bottom: var(--space-6);
+  }
+
+  .diff-block {
+    display: block;
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .diff-removed {
+    color: #c41e3a;
+    display: block;
+  }
+
+  :root[data-theme="dark"] .diff-removed {
+    color: #ff6b6b;
+  }
+
+  .diff-added {
+    color: #2d7f2d;
+    display: block;
+  }
+
+  :root[data-theme="dark"] .diff-added {
+    color: #51cf66;
+  }
+
+  .diff-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .links-section {
+    margin: var(--space-12) 0;
+  }
+
+  .links-section h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    margin-top: 0;
+  }
+
+  .links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .links-list li {
+    margin: 0;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+  }
+
+  .links-list a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    transition: color var(--duration-fast) var(--ease-in-out),
+                border-color var(--duration-fast) var(--ease-in-out);
+  }
+
+  .links-list a:hover {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+  }
+
+  .links-list a:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 2px;
+  }
+
+  .moral-section {
+    margin-top: var(--space-16);
+    padding-top: var(--space-12);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .article-moral {
+    font-size: var(--text-base);
+    color: var(--color-text-tertiary);
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+    line-height: var(--leading-normal);
+  }
+
+  @media (max-width: 640px) {
+    .article-header h1 {
+      font-size: var(--text-3xl);
+    }
+
+    .article-section h2 {
+      font-size: var(--text-xl);
+    }
+
+    .license-diff-section {
+      padding: var(--space-6);
+    }
+
+    .diff-block {
+      font-size: var(--text-xs);
+    }
+  }
+</style>
