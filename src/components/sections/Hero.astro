@@ -45,7 +45,7 @@ import stats from '../../data/aesop-stats.json';
     </div>
     <p class="sync-status" id="sync-status"></p>
 
-    <p class="hero-kicker"><em>This site was assembled by the fleet it describes.</em></p>
+    <p class="hero-kicker"><em><a href="https://github.com/matt82198/matt82198.github.io" class="hero-kicker-link">This site was assembled by the fleet it describes.</a></em></p>
 
     <div class="hero-links">
       <a href="https://github.com/matt82198" class="hero-link">GitHub</a>
@@ -181,6 +181,23 @@ import stats from '../../data/aesop-stats.json';
     margin: 0 0 var(--space-8) 0;
     line-height: var(--leading-normal);
     font-family: var(--font-sans);
+  }
+
+  .hero-kicker-link {
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    cursor: pointer;
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .hero-kicker-link:hover {
+    color: var(--accent);
+  }
+
+  .hero-kicker-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
   }
 
   .hero-links {

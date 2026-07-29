@@ -26,6 +26,9 @@
       <p class="benchmark-note">
         <em>Curated set (N=39) · Haiku at ~1/3 the cost of Opus · Ground truth established by human review</em>
       </p>
+      <p class="benchmark-provenance">
+        <em><a href="https://github.com/matt82198/aesop/tree/main/bench" class="benchmark-link">Real benchmark runs (2026-07-17, pinned models); tasks, ground truth, and results committed in the repo</a></em>
+      </p>
     </div>
 
     <!-- Benchmark 2: Context enrichment fix rate -->
@@ -186,5 +189,29 @@
 
   .benchmark-methodology em {
     font-style: italic;
+  }
+
+  .benchmark-provenance {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    margin: var(--space-2) 0 0 0;
+    line-height: var(--leading-relaxed);
+  }
+
+  .benchmark-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .benchmark-link:hover {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+  }
+
+  .benchmark-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
   }
 </style>
