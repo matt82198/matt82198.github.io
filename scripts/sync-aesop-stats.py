@@ -162,6 +162,13 @@ def main() -> None:
                     stats["coauthors"] = git_stats["distinct_coauthors"]
                 if "wave_count" in git_stats:
                     stats["waves"] = git_stats["wave_count"]
+                # Classified author stats (new fields)
+                if "authors_human" in git_stats:
+                    stats["authors_human"] = git_stats["authors_human"]
+                if "model_tiers" in git_stats:
+                    stats["model_tiers"] = git_stats["model_tiers"]
+                if "model_tier_names" in git_stats:
+                    stats["model_tier_names"] = git_stats["model_tier_names"]
             # Top-level fields
             if "loc" in committed_stats:
                 stats["loc"] = committed_stats["loc"]
