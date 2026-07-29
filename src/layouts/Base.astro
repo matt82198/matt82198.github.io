@@ -40,13 +40,16 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
 
     <header class="site-header">
       <div class="header-content">
-        <div class="wordmark">MATT CULLITON</div>
+        <div class="wordmark-container">
+          <div class="wordmark">MATT CULLITON</div>
+          <div class="header-subtitle">Senior Software Engineer · AI Platforms &amp; Agents</div>
+        </div>
         <nav class="site-nav">
           <a href="#aesop">Work</a>
           <a href="#experience">Experience</a>
           <a href="#clientwork">Client</a>
           <a href="#writing">Writing</a>
-          <a href="#fleet">Fleet</a>
+          <a href="#fleet">Aesop</a>
           <a href="#review">Review</a>
           <a href="#community">Community</a>
           <a href="#timeline">Timeline</a>
@@ -132,6 +135,13 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
         gap: var(--space-6);
       }
 
+      .wordmark-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-1);
+      }
+
       .wordmark {
         font-family: var(--font-mono);
         font-size: var(--text-lg);
@@ -139,6 +149,14 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
         letter-spacing: var(--tracking-wide);
         color: var(--color-text);
         white-space: nowrap;
+      }
+
+      .header-subtitle {
+        font-family: var(--font-sans);
+        font-size: var(--text-xs);
+        color: var(--color-text-secondary);
+        letter-spacing: var(--tracking-normal);
+        font-weight: 500;
       }
 
       .site-nav {
@@ -214,6 +232,10 @@ const { title = "Matt Culliton — engineer of self-building systems", descripti
           flex-direction: column;
           align-items: center;
           gap: var(--space-4);
+        }
+
+        .wordmark-container {
+          align-items: center;
         }
 
         .site-nav {
