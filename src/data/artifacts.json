@@ -2,6 +2,12 @@
   "_README": "Interactive field-note artifacts (self-hosted HTML pages)",
   "artifacts": [
     {
+      "title": "The Seam Buys a Tier",
+      "url": "/writing/the-seam-buys-a-tier.html",
+      "date": "2026-07-28",
+      "description": "Haiku in the seat ≈ Fable unseated on tractable work; a failing test lifts long-horizon repair by +17pp, but the loop adds nothing — the binding constraint is specification, not iteration."
+    },
+    {
       "title": "An LLM Rediscovered Unix",
       "url": "/writing/llm-rediscovered-unix.html",
       "date": "2026-07-26",

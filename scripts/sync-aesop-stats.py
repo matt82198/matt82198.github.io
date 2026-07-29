@@ -139,30 +139,69 @@ def main() -> None:
             file=sys.stderr,
         )
         return
-    git = load_git_stats(aesop_repo)
 
-    # Compute new semantic metrics
-    iteration_cycles = compute_iteration_cycles(aesop_repo)
-    shipped_increments = git.merged_prs
+    # PRIORITY: Read the committed snapshot as source of truth (portfolio numbers == README == stats.json)
+    # This ensures the portfolio syncs with aesop's own committed snapshot, not its live git state
+    aesop_stats_file = aesop_repo / "stats.json"
+    stats = {}
+    fallback_to_git = False
 
-    stats = {
-        "commits": git.total_commits,
-        "merged_prs": git.merged_prs,
-        "coauthors": git.distinct_coauthors,
-        "domains": count_domains(aesop_repo),
-        "test_files": count_test_files(aesop_repo),
-        "loc": git.lines_of_code,
-        "version": read_version(aesop_repo),
-        # Semantic keys for portfolio rendering (waves/iteration_cycles may be omitted if aesop deprecates them)
-        "shipped_increments": shipped_increments,
-    }
+    if aesop_stats_file.exists():
+        try:
+            committed_stats = json.loads(aesop_stats_file.read_text(encoding="utf-8"))
+            # Map the committed snapshot's nested structure to portfolio flat keys
+            # aesop stats.json structure: { git: { merged_prs, total_commits, distinct_coauthors, wave_count }, loc, ... }
+            git_stats = committed_stats.get("git", {})
+            if git_stats:
+                # Map aesop's git structure to portfolio's flat structure
+                if "merged_prs" in git_stats:
+                    stats["merged_prs"] = git_stats["merged_prs"]
+                if "total_commits" in git_stats:
+                    stats["commits"] = git_stats["total_commits"]
+                if "distinct_coauthors" in git_stats:
+                    stats["coauthors"] = git_stats["distinct_coauthors"]
+                if "wave_count" in git_stats:
+                    stats["waves"] = git_stats["wave_count"]
+            # Top-level fields
+            if "loc" in committed_stats:
+                stats["loc"] = committed_stats["loc"]
+            print(f"aesop stats source: {aesop_stats_file} (committed snapshot)")
+        except (json.JSONDecodeError, IOError):
+            fallback_to_git = True
+            print(f"Failed to read committed stats.json, falling back to live git computation", file=sys.stderr)
+    else:
+        fallback_to_git = True
+        print(f"Committed stats.json not found at {aesop_stats_file}, falling back to live git computation", file=sys.stderr)
 
-    # Include waves and iteration_cycles only if they exist in the git stats
-    # (defensive tolerance for when aesop retires the waves concept)
-    if hasattr(git, 'wave_count') and git.wave_count is not None:
-        stats["waves"] = git.wave_count
-    if iteration_cycles > 0:
-        stats["iteration_cycles"] = iteration_cycles
+    # Fallback: compute live from git if stats.json is missing or unreadable
+    if fallback_to_git:
+        git = load_git_stats(aesop_repo)
+        iteration_cycles = compute_iteration_cycles(aesop_repo)
+        shipped_increments = git.merged_prs
+
+        stats = {
+            "commits": git.total_commits,
+            "merged_prs": git.merged_prs,
+            "coauthors": git.distinct_coauthors,
+            "domains": count_domains(aesop_repo),
+            "test_files": count_test_files(aesop_repo),
+            "loc": git.lines_of_code,
+            "version": read_version(aesop_repo),
+            "shipped_increments": shipped_increments,
+        }
+
+        # Include waves and iteration_cycles only if they exist
+        if hasattr(git, 'wave_count') and git.wave_count is not None:
+            stats["waves"] = git.wave_count
+        if iteration_cycles > 0:
+            stats["iteration_cycles"] = iteration_cycles
+    else:
+        # Compute only the domain/test/shipped metrics that aren't in the committed snapshot
+        stats["domains"] = count_domains(aesop_repo)
+        stats["test_files"] = count_test_files(aesop_repo)
+        # shipped_increments should be in the snapshot as merged_prs, but add it for rendering
+        if "merged_prs" in stats:
+            stats["shipped_increments"] = stats["merged_prs"]
 
     # Show a before -> after diff so the refresh is auditable.
     old = {}
