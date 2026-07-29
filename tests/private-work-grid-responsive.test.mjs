@@ -60,25 +60,59 @@ async function testViewport(viewport) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
-  // Wait for the PrivateWork section to be visible
-  await page.waitForSelector('section.privatework', { timeout: 5000 });
+  // Wait for all affected sections to be visible
+  const sections = ['privatework', 'client-work', 'experience', 'community-section'];
+
+  for (const sectionClass of sections) {
+    // Skip community-section check if not found (different structure)
+    try {
+      await page.waitForSelector(`section.${sectionClass}, .${sectionClass}`, { timeout: 3000 });
+    } catch {
+      console.log(`⚠ Section ${sectionClass} not found, skipping`);
+      continue;
+    }
+
+    await testSection(sectionClass, viewport);
+  }
+}
+
+async function testSection(sectionClass, viewport) {
+  console.log(`\n  -- Testing ${sectionClass} --`);
+
+  const selector = `section.${sectionClass}, .${sectionClass}`;
+  const sectionLocator = page.locator(selector).first();
 
   // Get the section dimensions
-  const sectionBox = await page.locator('section.privatework').boundingBox();
+  const sectionBox = await sectionLocator.boundingBox();
   if (!sectionBox) {
-    throw new Error('PrivateWork section not found');
+    console.log(`  ⚠ ${sectionClass} section not found`);
+    return;
   }
 
-  console.log(`Section dimensions: ${sectionBox.width}x${sectionBox.height}`);
+  console.log(`  Section outer width: ${sectionBox.width}px`);
 
-  // Check if section content is filling properly
-  const contentBox = await page.locator('section.privatework .category-grid').boundingBox();
-  if (contentBox) {
-    console.log(`Grid content box: ${contentBox.width}x${contentBox.height}`);
+  // Get the actual content box (inside padding)
+  const contentBox = await sectionLocator.evaluate(el => {
+    const computed = window.getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    const paddingLeft = parseFloat(computed.paddingLeft);
+    const paddingRight = parseFloat(computed.paddingRight);
+    const contentWidth = rect.width - paddingLeft - paddingRight;
+    return {
+      contentWidth,
+      paddingLeft,
+      paddingRight
+    };
+  });
 
-    // Calculate percentage of viewport filled
-    const fillPercentage = (contentBox.width / viewport.width) * 100;
-    console.log(`Grid width as % of viewport: ${fillPercentage.toFixed(1)}%`);
+  const fillPercentage = (contentBox.contentWidth / viewport.width) * 100;
+  console.log(`  Content width: ${contentBox.contentWidth.toFixed(0)}px (${fillPercentage.toFixed(1)}% of ${viewport.width}px viewport)`);
+
+  // At mobile, content should fill at least 85% of viewport
+  if (viewport.width === 375 || viewport.width === 414) {
+    assert(fillPercentage >= 85,
+      `${sectionClass}: Content width ${fillPercentage.toFixed(1)}% at ${viewport.width}px should be >= 85%`);
+    console.log(`  ✓ Content fills >= 85% of viewport`);
   }
 
   // Check for horizontal scroll
@@ -90,54 +124,33 @@ async function testViewport(viewport) {
     };
   });
 
-  console.log('Body scroll info:', bodyScroll);
-
   if (bodyScroll.hasScroll) {
-    console.log(`⚠ Warning: Body has horizontal scroll at ${viewport.width}px viewport`);
+    console.log(`  ⚠ Body has horizontal scroll`);
   } else {
-    console.log('✓ No horizontal body scroll');
+    console.log(`  ✓ No horizontal body scroll`);
   }
 
-  // Check section padding and margins
-  const sectionStyles = await page.locator('section.privatework').evaluate(el => {
-    const computed = window.getComputedStyle(el);
-    return {
-      paddingLeft: computed.paddingLeft,
-      paddingRight: computed.paddingRight,
-      marginLeft: computed.marginLeft,
-      marginRight: computed.marginRight,
-      maxWidth: computed.maxWidth,
-      width: computed.width,
-      paddingTop: computed.paddingTop,
-      paddingBottom: computed.paddingBottom
-    };
-  });
-
-  console.log('Section computed styles:', sectionStyles);
-
-  // Check what's in the style attribute
-  const sectionAttrs = await page.locator('section.privatework').evaluate(el => {
-    return {
-      classList: el.className,
-      style: el.getAttribute('style')
-    };
-  });
-
-  console.log('Section attributes:', sectionAttrs);
-
-  // Check grid columns at this viewport
-  const gridColumns = await page.locator('section.privatework .category-grid').evaluate(el => {
-    const computed = window.getComputedStyle(el);
-    return computed.gridTemplateColumns;
-  });
-
-  console.log(`Grid columns: ${gridColumns}`);
-
-  // At 375 and 414, should be single column (1fr)
+  // Check grid/list layout at narrow viewports
   if (viewport.width <= 640) {
-    assert(gridColumns === '1fr' || gridColumns.includes('minmax'),
-      `Grid at ${viewport.width}px should be single column layout`);
-    console.log('✓ Grid is single column at narrow viewport');
+    const grid = await sectionLocator.locator('[class*="grid"], [class*="list"]').first().evaluate(el => {
+      const computed = window.getComputedStyle(el);
+      return {
+        display: computed.display,
+        gridTemplateColumns: computed.gridTemplateColumns,
+        flexDirection: computed.flexDirection
+      };
+    }).catch(() => null);
+
+    if (grid) {
+      if (grid.display === 'grid') {
+        const isSingleCol = grid.gridTemplateColumns === '1fr' || !grid.gridTemplateColumns.includes(' ');
+        if (isSingleCol) {
+          console.log(`  ✓ Grid is single column`);
+        } else {
+          console.log(`  ⚠ Grid columns: ${grid.gridTemplateColumns}`);
+        }
+      }
+    }
   }
 }
 

@@ -168,9 +168,10 @@ import communityData from '../../data/community-posts.json';
   /* Responsive: fix grid layout on small screens */
   @media (max-width: 640px) {
     .community-section {
-      max-width: 100%;
-      margin: 0 0 var(--space-20) 0;
-      padding: var(--space-6) var(--space-4);
+      width: calc(100% + 2 * var(--space-4)) !important;
+      max-width: none !important;
+      margin: 0 calc(-1 * var(--space-4)) var(--space-20) calc(-1 * var(--space-4)) !important;
+      padding: var(--space-4) var(--space-2);
     }
 
     .post-list {
