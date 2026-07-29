@@ -164,4 +164,17 @@ import communityData from '../../data/community-posts.json';
   .post-list .community-post {
     width: 100%;
   }
+
+  /* Responsive: fix grid layout on small screens */
+  @media (max-width: 640px) {
+    .community-section {
+      max-width: 100%;
+      margin: 0 0 var(--space-20) 0;
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .post-list {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
