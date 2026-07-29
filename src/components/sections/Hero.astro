@@ -37,7 +37,7 @@ import stats from '../../data/aesop-stats.json';
         <span class="stat-number" data-count={stats.commits}>{stats.commits}</span> commits
       </div>
       <div class="stat">
-        <span class="stat-number" data-count={stats.coauthors}>{stats.coauthors}</span> co-authors on the fleet
+        <span class="stat-number">{stats.authors_human}</span> human · <span class="stat-number">{stats.model_tiers}</span> Claude model tiers on the fleet
       </div>
     </div>
     <p class="sync-status" id="sync-status"></p>
