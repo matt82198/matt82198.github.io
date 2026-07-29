@@ -17,18 +17,18 @@ import stats from '../../data/aesop-stats.json';
     <p class="hero-tagline">Automation Systems Design & Engineering</p>
 
     <p class="hero-subhead">
-      AI orchestration · full-stack automation · production systems that ship themselves
+      Senior software engineer — AI platforms &amp; agent infrastructure. I build orchestration systems that ship verified code: multi-agent dispatch, measured LLM cost optimization (4×), production guardrails. Chicago · open to senior AI platform / agent-infrastructure roles.
     </p>
 
     <div class="hero-stats">
       <div class="stats-header">
-        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments">replay · stylized</span>
+        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments"><a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" class="badge-link">recorded demo — live data at github.com/matt82198/aesop</a></span>
       </div>
       <div class="stat stat-primary">
         <span class="stat-number">4×</span> cheaper dispatch at equal measured quality (A/B)
       </div>
       <div class="stat">
-        <span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by a self-building system
+        <a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" class="stat-link"><span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by the system he built</a>
       </div>
       <div class="stat">
         <span class="stat-number" data-count={stats.iteration_cycles}>{stats.iteration_cycles}</span> iteration cycles
@@ -53,6 +53,10 @@ import stats from '../../data/aesop-stats.json';
       <a href="https://medium.com/@matt82198" class="hero-link">Medium</a>
       <span class="link-divider">·</span>
       <a href="https://linkedin.com/in/matt-culliton-a8327676" class="hero-link">LinkedIn</a>
+      <span class="link-divider">·</span>
+      <a href="/Matt_Culliton_Resume.pdf" class="hero-link">Resume (PDF)</a>
+      <span class="link-divider">·</span>
+      <a href="mailto:matt82198@gmail.com" class="hero-link">Email</a>
     </div>
 
     <p class="hero-moral"><em>Slow and steady wins; parallel and verified wins sooner.</em></p>
@@ -137,6 +141,21 @@ import stats from '../../data/aesop-stats.json';
     opacity: 0.8;
   }
 
+  .badge-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .badge-link:hover {
+    color: var(--accent);
+  }
+
+  .badge-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .live-badge {
       animation: none;
@@ -163,6 +182,21 @@ import stats from '../../data/aesop-stats.json';
     font-weight: 700;
     min-width: 3ch;
     font-variant-numeric: tabular-nums;
+  }
+
+  .stat-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--duration-base) var(--ease-out);
+  }
+
+  .stat-link:hover {
+    color: var(--accent);
+  }
+
+  .stat-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
   }
 
   .sync-status {
