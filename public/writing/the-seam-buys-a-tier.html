@@ -1,0 +1,294 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><title>The Seam Buys a Tier — Aesop Field Notes</title><style>
+  :root {
+    --paper:#f4f4f1; --ink:#191b1f; --surface:#fff; --surface-2:#efefe9;
+    --border:#dad9d1; --muted:#6b7079; --accent:#1f6f6b;
+    --gain:#2f8f5f; --flat:#9a7b2e; --loss:#c0563f;
+    --shadow:0 1px 2px rgba(20,22,26,.06),0 8px 24px rgba(20,22,26,.05);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Charter,Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","Consolas","Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#0f1216; --ink:#e7e9ec; --surface:#171b21; --surface-2:#1c2129;
+    --border:#2a303a; --muted:#99a1ac; --accent:#4fb3ac;
+    --gain:#58c489; --flat:#cba646; --loss:#e08067;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }}
+  :root[data-theme="light"]{--paper:#f4f4f1;--ink:#191b1f;--surface:#fff;--surface-2:#efefe9;--border:#dad9d1;--muted:#6b7079;--accent:#1f6f6b;--gain:#2f8f5f;--flat:#9a7b2e;--loss:#c0563f;--shadow:0 1px 2px rgba(20,22,26,.06),0 8px 24px rgba(20,22,26,.05);}
+  :root[data-theme="dark"]{--paper:#0f1216;--ink:#e7e9ec;--surface:#171b21;--surface-2:#1c2129;--border:#2a303a;--muted:#99a1ac;--accent:#4fb3ac;--gain:#58c489;--flat:#cba646;--loss:#e08067;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box;} html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:18px;letter-spacing:.002em;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .measure{max-width:68ch;}
+
+  header.top{border-bottom:1px solid var(--border);}
+  .masthead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:22px 0 0;flex-wrap:wrap;}
+  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .dateline{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;}
+  h1{font-family:var(--serif);font-weight:600;text-wrap:balance;font-size:clamp(2.3rem,6vw,4rem);line-height:1.02;letter-spacing:-.015em;margin:.35em 0 .2em;}
+  .lede{font-family:var(--serif);font-size:clamp(1.15rem,2.4vw,1.5rem);line-height:1.4;color:var(--ink);max-width:44ch;margin:0 0 30px;font-style:italic;opacity:.92;}
+  .prev{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding:14px 0 0;}
+  .prev a{color:var(--accent);}
+
+  section{padding:40px 0;border-top:1px solid var(--border);}
+  section:first-of-type{border-top:none;}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3.4vw,2.1rem);letter-spacing:-.01em;margin:0 0 4px;text-wrap:balance;}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;}
+  p{margin:0 0 18px;}
+  .measure p:last-child{margin-bottom:0;}
+  strong{font-weight:650;}
+  em.term{font-family:var(--mono);font-style:normal;font-size:.92em;background:var(--surface-2);padding:1px 6px;border-radius:4px;border:1px solid var(--border);}
+
+  /* dumbbell */
+  .chart{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:26px 26px 20px;margin-top:22px;}
+  .chart .ctitle{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);margin-bottom:20px;}
+  .dumb{display:grid;grid-template-columns:104px 1fr 66px;align-items:center;gap:14px;margin:0 0 16px;}
+  .dumb .name{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink);}
+  .track{position:relative;height:26px;}
+  .axis{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--surface-2);border-radius:2px;transform:translateY(-50%);}
+  .conn{position:absolute;top:50%;height:7px;border-radius:4px;transform:translateY(-50%);}
+  .dot{position:absolute;top:50%;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.2);}
+  .dot.u{background:var(--muted);}
+  .dot.s{background:var(--accent);z-index:2;}
+  .delta{font-family:var(--mono);font-size:13.5px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;}
+  .d-gain{color:var(--gain);} .d-flat{color:var(--flat);} .d-loss{color:var(--loss);}
+  .scale{display:grid;grid-template-columns:104px 1fr 66px;gap:14px;margin-top:4px;}
+  .ticks{position:relative;height:16px;font-family:var(--mono);font-size:10.5px;color:var(--muted);}
+  .ticks span{position:absolute;transform:translateX(-50%);}
+  .clegend{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;}
+  .clegend b{display:inline-flex;align-items:center;gap:7px;font-weight:400;}
+  .swatch{width:12px;height:12px;border-radius:50%;border:2px solid var(--surface);}
+
+  .callout{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:18px 22px;margin:24px 0 0;font-family:var(--serif);font-size:1.18rem;line-height:1.45;}
+  .callout.bound{border-left-color:var(--loss);}
+  .callout.bound .kicker{color:var(--loss);}
+
+  .statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px;}
+  @media (max-width:720px){.statgrid{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow);}
+  .stat .big{font-family:var(--mono);font-weight:600;font-size:1.55rem;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+  .stat .cap{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.35;}
+
+  ol.fixes{list-style:none;counter-reset:fx;padding:0;margin:22px 0 0;display:grid;gap:12px;}
+  ol.fixes li{counter-increment:fx;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px 16px 56px;position:relative;box-shadow:var(--shadow);font-size:15.5px;line-height:1.5;}
+  ol.fixes li::before{content:counter(fx);position:absolute;left:16px;top:15px;font-family:var(--mono);font-weight:600;font-size:14px;color:var(--accent);width:26px;height:26px;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);border-radius:6px;}
+
+  footer{border-top:1px solid var(--border);padding:34px 0 60px;color:var(--muted);font-size:14px;}
+  footer .measure{max-width:72ch;}
+  footer code,footer .m{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:4px;border:1px solid var(--border);}
+  a{color:var(--accent);text-underline-offset:3px;}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px;}
+</style></head><body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="masthead">
+      <span class="eyebrow">Aesop · Field Notes · II</span>
+      <span class="dateline">2026-07-28 · seated vs unseated · updated: the loop ran</span>
+    </div>
+    <h1>The Seam Buys a Tier</h1>
+    <p class="lede">Give a small model the seat and it climbs about one tier on tractable work — and stops climbing exactly where the repair loop would have to begin.</p>
+    <p class="prev">Previously: seated context flipped a frontier model on one hard item. This note asks the harder question — does the seat lift a <em class="term" style="background:transparent;border:0;padding:0">whole weak model</em> on real, multi-file repair work?</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section aria-label="The experiment">
+    <p class="kicker">The setup</p>
+    <h2>Same twelve tasks, two seats</h2>
+    <div class="measure">
+      <p>Twelve seeded-defect repositories, each graded by a hidden pytest oracle — short single-file bugs, medium cross-file bugs, and long multi-module bugs. Five model tiers repair each one three times, in two conditions:</p>
+      <p><strong>Unseated (U)</strong> — the raw model, one shot: task statement plus the repo files, return a patch. No scaffold. <strong>Seated (S)</strong> — the same task through the aesop worker seam: scoped context, dispatch template, and a structured submission channel. The oracle is identical; the only variable is the seat.</p>
+    </div>
+  </section>
+
+  <section aria-label="The compression result">
+    <p class="kicker">The result that carries the note</p>
+    <h2>The seat lifts the weak, not the strong</h2>
+    <div class="measure"><p>Pass rate by tier, unseated&nbsp;<span style="color:var(--muted)">●</span>&nbsp;→&nbsp;seated&nbsp;<span style="color:var(--accent)">●</span>. The frontier tiers were already near their ceiling and barely move. The small models jump — the gap between tiers <em>compresses</em>.</p></div>
+
+    <div class="chart">
+      <div class="ctitle">Oracle pass rate · n = 36 runs per tier per arm</div>
+      <div class="dumb">
+        <span class="name">opus-5</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:86%;width:0%;background:var(--flat);"></div>
+          <div class="dot u" style="left:86%"></div><div class="dot s" style="left:86%"></div></div>
+        <span class="delta d-flat">86→86</span>
+      </div>
+      <div class="dumb">
+        <span class="name">sonnet-5</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:86%;width:0%;background:var(--flat);"></div>
+          <div class="dot u" style="left:86%"></div><div class="dot s" style="left:86%"></div></div>
+        <span class="delta d-flat">86→86</span>
+      </div>
+      <div class="dumb">
+        <span class="name">fable-5</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:64%;width:5%;background:var(--loss);"></div>
+          <div class="dot s" style="left:64%"></div><div class="dot u" style="left:69%"></div></div>
+        <span class="delta d-loss">69→64*</span>
+      </div>
+      <div class="dumb">
+        <span class="name">haiku-4.5</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:50%;width:17%;background:var(--gain);"></div>
+          <div class="dot u" style="left:50%"></div><div class="dot s" style="left:67%"></div></div>
+        <span class="delta d-gain">50→67</span>
+      </div>
+      <div class="dumb">
+        <span class="name">gpt-4o-mini</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:14%;width:22%;background:var(--gain);"></div>
+          <div class="dot u" style="left:14%"></div><div class="dot s" style="left:36%"></div></div>
+        <span class="delta d-gain">14→36</span>
+      </div>
+      <div class="scale">
+        <span></span>
+        <div class="ticks"><span style="left:0%">0%</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="left:100%">100%</span></div>
+        <span></span>
+      </div>
+      <div class="clegend">
+        <b><span class="swatch" style="background:var(--muted)"></span>unseated</b>
+        <b><span class="swatch" style="background:var(--accent)"></span>seated</b>
+        <b><span class="swatch" style="background:var(--gain);border:0;width:16px;height:7px;border-radius:4px"></span>gain</b>
+        <b>* fable's dip is 6 seated refusals counted as fails; excluding them, fable-seated ≈ 77%</b>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p class="kicker" style="margin-bottom:6px">The headline, in one line</p>
+      <p style="margin:0"><strong>haiku, seated (67%) ≈ fable, unseated (69%).</strong> On this task mix, the seam is worth about one full tier to a small model — the exact "Haiku is enough inside the seat" claim, quantified.</p>
+    </div>
+  </section>
+
+  <section aria-label="The bound">
+    <p class="kicker">Where it stops — and why that matters most</p>
+    <h2>The lift is real on short work and gone on long</h2>
+    <div class="measure"><p>Split the same runs by task horizon and the compression has a hard edge. Seating helps on short and medium bugs; on the long, multi-module ones — the band where the unseated gap was widest — it does nothing.</p></div>
+
+    <div class="chart">
+      <div class="ctitle">Pass rate, all tiers pooled · by task horizon · unseated → seated</div>
+      <div class="dumb">
+        <span class="name">short</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:70%;width:15%;background:var(--gain);"></div>
+          <div class="dot u" style="left:70%"></div><div class="dot s" style="left:85%"></div></div>
+        <span class="delta d-gain">70→85</span>
+      </div>
+      <div class="dumb">
+        <span class="name">medium</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:70%;width:10%;background:var(--gain);"></div>
+          <div class="dot u" style="left:70%"></div><div class="dot s" style="left:80%"></div></div>
+        <span class="delta d-gain">70→80</span>
+      </div>
+      <div class="dumb">
+        <span class="name">long</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:38%;width:5%;background:var(--loss);"></div>
+          <div class="dot s" style="left:38%"></div><div class="dot u" style="left:43%"></div></div>
+        <span class="delta d-loss">43→38</span>
+      </div>
+      <div class="scale">
+        <span></span>
+        <div class="ticks"><span style="left:0%">0%</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="left:100%">100%</span></div>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="callout bound">
+      <p class="kicker" style="margin-bottom:6px">The honest reason the long band is flat</p>
+      <p style="margin:0">These tasks ship <strong>no visible tests</strong> — only the hidden grading oracle — so the seam's <em class="term" style="background:transparent;border:0;padding:0">iterative repair loop had nothing to iterate against</em>. The seated arm here is single-pass: scoped context and structure, but no feedback cycle. Short bugs a small model can one-shot with good context; long-horizon bugs are exactly where you'd need the loop that never fired. So this note measures the seam's <strong>context</strong>, not its <strong>loop</strong>.</p>
+    </div>
+  </section>
+
+  <section aria-label="Methodology">
+    <p class="kicker">Methodology · green is not correct</p>
+    <h2>Every number here was defended, not trusted</h2>
+    <div class="measure"><p>The same discipline as the first note, and it earned its keep. Both harnesses looked green on mocked tests while failing on the real path; the true numbers only appeared after running the actual thing and refusing a suspiciously clean result. What got fixed on the way to this table:</p></div>
+    <ol class="fixes">
+      <li><strong>The oracle never ran.</strong> The sandbox copied code flat; <em class="term">pytest oracle</em> found nothing and scored every run a fail — a uniform 0/all that looked like total model failure. It was the harness.</li>
+      <li><strong>Correct fixes were rejected for wrong line numbers.</strong> Frontier models emit diffs with slightly-off <em class="term">@@</em> headers; strict apply refused them while a weaker model's exact-line diff slipped through — <em>inverting</em> the ranking until a content-based applier fixed it.</li>
+      <li><strong>The seated arm called an empty API.</strong> Wrong auth header and env var, an argument the shell helper rejected, a result object unpacked as a tuple — three transport bugs, all masked by a fake backend that never made a call.</li>
+      <li><strong>"Refusal" wasn't refusal.</strong> With no visible test to pass, the seated loop mislabeled every correct submission as a refusal — until success was re-gated on the worker's own output and the hidden oracle.</li>
+    </ol>
+    <p style="font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:20px">Nine distinct harness defects between the question and this chart. None reached a published number, because a clean-looking result was treated as a claim to disprove, not a finding to ship.</p>
+  </section>
+
+  <section aria-label="The loop ran">
+    <div class="callout bound" style="margin-bottom:26px">
+      <p class="kicker" style="margin-bottom:6px">Update · 2026-07-28 · the loop ran, and it disproved the tidy story</p>
+      <p style="margin:0">This note first predicted the seam's <em class="term" style="background:transparent;border:0;padding:0">repair loop</em> would close the long-horizon gap that context alone left flat. We gave each task a visible reproduction test so the loop could engage, and ran it. <strong>It did not.</strong> The loop helped short and medium work — and barely touched the long band. What moved the long band was something simpler.</p>
+    </div>
+    <p class="kicker">What runs next → what actually happened</p>
+    <h2>A failing test beats iteration</h2>
+    <div class="measure">
+      <p>Two findings, both against the prediction:</p>
+      <p><strong>The reproduction test — not the loop — is the long-horizon lever.</strong> Simply placing a concrete failing test in the <em>one-shot, unseated</em> context lifted the long band from <strong>43% → 60%</strong> (+17pp). A clear specification of the broken behavior does more for hard multi-module work than any scaffolding — the model was rarely short on <em>tries</em>, it was short on knowing exactly what "correct" meant.</p>
+      <p><strong>The loop, on top of that spec, added almost nothing on the long band</strong> (60% → 58%). And it barely fired: across 161 seated runs, only <strong>16 used a single repair</strong> and just 2 used a second. With a good spec, models either land it first attempt or can't recover with feedback — iteration wasn't the binding constraint. On short and medium work the seat still helped (+12 / +8pp); on the long band, the frontier gap held. <em class="term">gpt-4o-mini</em> scored <strong>0/12</strong> on long-horizon tasks in every single condition — unseated, seated, spec, loop. No configuration here closed it.</p>
+    </div>
+
+    <div class="chart">
+      <div class="ctitle">Long band, one lever at a time · pass rate on the 4 multi-module tasks</div>
+      <div class="dumb">
+        <span class="name">no test</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:0;width:43%;background:var(--surface-2);"></div>
+          <div class="dot s" style="left:43%;background:var(--muted)"></div></div>
+        <span class="delta d-flat">43%</span>
+      </div>
+      <div class="dumb">
+        <span class="name">+ repro test</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:43%;width:17%;background:var(--gain);"></div>
+          <div class="dot u" style="left:43%"></div><div class="dot s" style="left:60%"></div></div>
+        <span class="delta d-gain">+17</span>
+      </div>
+      <div class="dumb">
+        <span class="name">+ repair loop</span>
+        <div class="track"><div class="axis"></div>
+          <div class="conn" style="left:58%;width:2%;background:var(--loss);"></div>
+          <div class="dot s" style="left:58%"></div><div class="dot u" style="left:60%"></div></div>
+        <span class="delta d-loss">−2</span>
+      </div>
+      <div class="scale">
+        <span></span>
+        <div class="ticks"><span style="left:0%">0%</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="left:100%">100%</span></div>
+        <span></span>
+      </div>
+      <div class="clegend"><b>Each row adds one lever to the row above. The jump is the spec; the loop is a rounding error on this band.</b></div>
+    </div>
+
+    <div class="statgrid" style="margin-top:26px">
+      <div class="stat"><div class="big" style="color:var(--gain)">+17pp</div><div class="cap">Long-band lift from a failing test, one-shot — the real lever</div></div>
+      <div class="stat"><div class="big">16 / 161</div><div class="cap">Seated runs that used even one repair — the loop rarely fired</div></div>
+      <div class="stat"><div class="big" style="color:var(--loss)">0 / 12</div><div class="cap">gpt-4o-mini on long tasks, in every condition tried</div></div>
+      <div class="stat"><div class="big">≈ 1 tier</div><div class="cap">The seat's headline still holds on tractable work</div></div>
+    </div>
+
+    <div class="callout" style="margin-top:26px">
+      <p class="kicker" style="margin-bottom:6px">The honest reversal</p>
+      <p style="margin:0">Two field notes, one method: predict, run the real thing, and let it disprove you. The seat buys a tier on tractable work — that held. The loop closes the long-horizon gap — that didn't. What helped hard work most was the cheapest thing on the table: telling the model, concretely, what "fixed" looks like.</p>
+    </div>
+  </section>
+
+  <section aria-label="Bounds">
+    <div class="callout bound">
+      <p class="kicker">What this is not</p>
+      <p style="margin:0">A bounded result, stated as one. <strong>N is small</strong> — 12 tasks, 3 repeats, n=36 per tier per arm; these are directional, not confidence intervals. The seated arm is <strong>single-pass</strong>; the seam's repair loop is untested here. Nine seated "refusals" (fable 6, opus 2, haiku 1) count as fails and slightly understate those tiers. Both arms count a patch that doesn't apply or fix as a failure, consistently. This is a receipt about where context carries a small model, and an honest marker of where the loop still has to prove itself.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap measure">
+    <p><strong>Aesop</strong> is a source-available orchestration harness (PolyForm Strict 1.0.0 — noncommercial, no-modify). This is a field note, not a paper: the method is the point — <em>run the real thing, disprove the clean number</em> — and the finding is bounded on purpose. Tasks, runners, and per-run results live under <span class="m">bench/seam_tasks/</span> and <span class="m">bench/results/</span> in the repository.</p>
+  </div>
+</footer>
+
+</body></html>

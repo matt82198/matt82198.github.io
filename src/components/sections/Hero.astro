@@ -31,9 +31,6 @@ import stats from '../../data/aesop-stats.json';
         <a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" class="stat-link"><span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by the system he built</a>
       </div>
       <div class="stat">
-        <span class="stat-number" data-count={stats.iteration_cycles}>{stats.iteration_cycles}</span> iteration cycles
-      </div>
-      <div class="stat">
         <span class="stat-number" data-count={stats.loc}>{(stats.loc / 1000).toFixed(1)}K</span> lines of code
       </div>
       <div class="stat">

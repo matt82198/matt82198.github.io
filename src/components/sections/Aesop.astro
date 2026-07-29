@@ -13,10 +13,10 @@ import stats from '../../data/aesop-stats.json';
 
   <div class="aesop-pitch">
     <p>
-      Source-available orchestration harness for Claude Code. Stateless agent execution over git-backed durable memory: crash-proof by design, recovery just means re-reading committed state. Cost-optimized by measured dispatch economics (Haiku matched Opus on judgment at ~1/3 token cost).
+      Source-available research platform for autonomous software development. Built on Unix principles: small decoupled components, plain durable files, crash-only recovery. Stateless agent execution over git-backed state; flat O(1)-depth orchestration where productivity scales with parallel subagent count, no coordination bottleneck.
     </p>
     <p>
-      <strong>{stats.merged_prs} of its own PRs implemented, tested, and merged by its iteration cycle.</strong>
+      Cost-optimized by measured dispatch economics (Haiku matched Opus on judgment at ~1/3 token cost). <strong>{stats.merged_prs} PRs built by the system itself</strong>, end-to-end from backlog through CI-verified merge.
     </p>
     <p>
       <a href="https://github.com/matt82198/aesop" class="cta-link">github.com/matt82198/aesop</a>
@@ -27,7 +27,13 @@ import stats from '../../data/aesop-stats.json';
     <h3>Architecture highlights</h3>
     <ul class="architecture-list">
       <li>
+        <strong>Unix principles</strong> — small decoupled components, plain durable files (git + SQLite), crash-only recovery
+      </li>
+      <li>
         <strong>Haiku-first dispatch</strong> — ~1/3 the token cost; quality-parity measured on a committed, externally-graded held-out benchmark (Haiku matched Opus on extraction, edged it on judgment)
+      </li>
+      <li>
+        <strong>O(1)-depth orchestration</strong> — flat dispatch where productivity scales with parallel subagent count, zero coordination bottleneck
       </li>
       <li>
         <strong>Event-sourced SQLite</strong> (WAL) state store with git demoted to rendered export
@@ -40,9 +46,6 @@ import stats from '../../data/aesop-stats.json';
       </li>
       <li>
         <strong>Read-only MCP server</strong> for fleet status querying
-      </li>
-      <li>
-        <strong>One-turn iteration workflow</strong> — backlog → parallel build → verify → merge train
       </li>
       <li>
         <strong>Resilience by design</strong> — kill-switch proven live; cost ceiling at dispatch; recovery by re-reading git-committed state
@@ -117,10 +120,6 @@ import stats from '../../data/aesop-stats.json';
         <tr>
           <td>Shipped increments</td>
           <td>{stats.shipped_increments}</td>
-        </tr>
-        <tr>
-          <td>Iteration cycles</td>
-          <td>{stats.iteration_cycles}</td>
         </tr>
         <tr>
           <td>Domains</td>
