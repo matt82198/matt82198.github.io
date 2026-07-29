@@ -5,11 +5,13 @@ import Base from '../layouts/Base.astro';
 <Base
   title="Aesop is open source, again"
   description="July 29, 2026: Aesop relicensed under MIT. A system that learned to answer its own question."
+  isArticle={true}
 >
   <article class="open-source-article">
     <header class="article-header">
       <h1>Aesop is open source, again</h1>
       <p class="article-date">July 29, 2026</p>
+      <p class="article-nav-back"><a href="/">← Back to home</a></p>
     </header>
 
     <section class="article-section">
@@ -101,6 +103,28 @@ import Base from '../layouts/Base.astro';
     color: var(--color-text-tertiary);
     margin: 0;
     font-style: italic;
+  }
+
+  .article-nav-back {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: var(--space-4) 0 0 0;
+  }
+
+  .article-nav-back a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-in-out);
+  }
+
+  .article-nav-back a:hover {
+    color: var(--accent-light);
+  }
+
+  .article-nav-back a:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 2px;
   }
 
   .article-section {
