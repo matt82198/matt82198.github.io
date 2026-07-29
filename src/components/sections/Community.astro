@@ -1,5 +1,5 @@
 ---
-// Community section: field notes shared on Reddit
+// Community section: field notes from community discussions
 // Data-driven: posts sourced from src/data/community-posts.json at build time
 import communityData from '../../data/community-posts.json';
 ---
@@ -12,18 +12,21 @@ import communityData from '../../data/community-posts.json';
   <h2 id="community">Community — field notes in public</h2>
 
   <p class="community-intro">
-    Writes on Reddit as <a href="https://reddit.com/user/rehtorical" class="reddit-link">u/rehtorical</a>.
     <span class="community-theme">token economics · agent orchestration · AI security</span>
   </p>
 
   <!-- Featured post -->
   <div class="featured-post">
     <div class="featured-badge">FEATURED</div>
-    <article class="reddit-post">
-      <a href={communityData.featured.url} class="post-link">
+    <article class="community-post">
+      {communityData.featured.url ? (
+        <a href={communityData.featured.url} class="post-link">
+          <h3>{communityData.featured.title}</h3>
+        </a>
+      ) : (
         <h3>{communityData.featured.title}</h3>
-      </a>
-      <p class="post-meta">{communityData.featured.subreddit} · {communityData.featured.meta}</p>
+      )}
+      <p class="post-meta">{communityData.featured.meta}</p>
       <p class="post-desc">{communityData.featured.description}</p>
     </article>
   </div>
@@ -32,12 +35,16 @@ import communityData from '../../data/community-posts.json';
   <ul class="post-list">
     {communityData.additional.map((post) => (
       <li>
-        <article class="reddit-post">
-          <a href={post.url} class="post-link">
+        <article class="community-post">
+          {post.url ? (
+            <a href={post.url} class="post-link">
+              <h3>{post.title}</h3>
+            </a>
+          ) : (
             <h3>{post.title}</h3>
-          </a>
+          )}
           <p class="post-meta">
-            {post.subreddit} {post.upvotes ? `· ${post.upvotes} upvotes` : ''}
+            {post.meta}
           </p>
           <p class="post-desc">{post.description}</p>
         </article>
@@ -59,29 +66,6 @@ import communityData from '../../data/community-posts.json';
     margin-bottom: var(--space-12);
     font-family: var(--font-sans);
     line-height: var(--leading-normal);
-  }
-
-  .reddit-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reddit-link {
-      transition: none;
-    }
-  }
-
-  .reddit-link:hover {
-    color: var(--accent-light);
-  }
-
-  .reddit-link:focus-visible {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-ring-offset);
-    border-radius: 0.125rem;
   }
 
   .community-theme {
@@ -108,7 +92,7 @@ import communityData from '../../data/community-posts.json';
     font-family: var(--font-mono);
   }
 
-  .reddit-post {
+  .community-post {
     padding: var(--space-8);
     border: 1px solid var(--color-border);
     background: var(--color-bg-secondary);
@@ -118,12 +102,12 @@ import communityData from '../../data/community-posts.json';
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .reddit-post {
+    .community-post {
       transition: none;
     }
   }
 
-  .reddit-post:hover {
+  .community-post:hover {
     background: var(--color-bg);
     border-color: var(--accent);
   }
@@ -139,7 +123,7 @@ import communityData from '../../data/community-posts.json';
     border-radius: 0.25rem;
   }
 
-  .reddit-post h3 {
+  .community-post h3 {
     font-size: var(--text-lg);
     font-weight: 700;
     color: var(--color-text);
@@ -177,7 +161,7 @@ import communityData from '../../data/community-posts.json';
     display: flex;
   }
 
-  .post-list .reddit-post {
+  .post-list .community-post {
     width: 100%;
   }
 </style>
