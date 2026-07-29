@@ -51,14 +51,13 @@ async function runTests() {
     console.log(`  - Architecture: "${archHeading.substring(0, 50)}..."`);
     console.log(`  - Experience: "${experienceHeading.substring(0, 50)}..."`);
 
-    // Check iteration count value
-    const iterationCount = await desktopPage.locator('.hero-stats [data-count]').nth(1).textContent();
-    console.log(`\n✓ Iteration count displayed: ${iterationCount}`);
+    // Check fleet simulation is present
+    const fleetSession = await desktopPage.locator('.fleet-session').count();
+    console.log(`\n${fleetSession > 0 ? '✓' : '✗'} Fleet session visible: ${fleetSession > 0}`);
 
-    // Verify "iterations" appears in hero stats
-    const heroStats = await desktopPage.textContent('.hero-stats');
-    const heroHasIterations = heroStats.includes('iterations');
-    console.log(`${heroHasIterations ? '✓' : '✗'} Hero stats contain "iterations": ${heroHasIterations}`);
+    // Verify agents row exists
+    const agentsContainer = await desktopPage.locator('#fleet-agents').count();
+    console.log(`${agentsContainer > 0 ? '✓' : '✗'} Agents container present: ${agentsContainer > 0}`);
 
     // Verify "hub" and "spoke" appear in ArchViz section
     const archVizText = await desktopPage.textContent('.arch-viz-section');

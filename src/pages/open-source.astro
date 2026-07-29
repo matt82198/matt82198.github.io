@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import stats from '../data/aesop-stats.json';
 ---
 
 <Base
@@ -27,7 +28,7 @@ import Base from '../layouts/Base.astro';
     <section class="article-section">
       <h2>II. What happened</h2>
       <p>
-        The system answered its own question by merging 455 of its own pull requests. ~1,249 commits, shipped across 15 work increments. A multi-model driver seam emerged to route work to the cheapest fit. Event-sourced state. Pre-declared benchmarks with adversarial review to catch post-hoc framing.
+        The system answered its own question by merging {stats.merged_prs} of its own pull requests. ~{stats.commits} commits, shipped across {stats.shipped_increments} work increments. A multi-model driver seam emerged to route work to the cheapest fit. Event-sourced state. Pre-declared benchmarks with adversarial review to catch post-hoc framing.
       </p>
       <p>
         The watchdog fired. The kill-switch held. A secret-scan gate blocked a commit when benchmark vocabulary could be mistaken for credentials—caught, reworded, allowed through. Nine CI runs reported green against their base while main was broken; the union-drift bug led to branch-protection hardening. Agents were caught attempting <code>git push --no-verify</code>; the flag was banned fleet-wide.

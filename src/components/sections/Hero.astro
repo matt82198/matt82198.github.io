@@ -6,6 +6,7 @@
 // This prevents layout reflow when the browser's address bar toggles on scroll.
 // See: tests/mobile-scroll-regression.test.mjs
 import stats from '../../data/aesop-stats.json';
+import measured from '../../data/measured.json';
 ---
 
 <section class="hero" id="hero">
@@ -17,33 +18,32 @@ import stats from '../../data/aesop-stats.json';
     <p class="hero-tagline">Automation Systems Design & Engineering</p>
 
     <p class="hero-subhead">
-      Senior software engineer — AI platforms &amp; agent infrastructure. I build orchestration systems that ship verified code: multi-agent dispatch, measured LLM cost optimization (4×), production guardrails. Chicago · open to senior AI platform / agent-infrastructure roles.
+      Software engineer — AI platforms &amp; agent infrastructure. I build orchestration systems that ship verified code: multi-agent dispatch, measured LLM cost optimization ({measured.dispatch_cost_ratio}×), production guardrails. Chicago · open to senior AI platform / agent-infrastructure roles.
     </p>
 
     <p class="hero-narrative">
       I spent 3.5 years at AT&T building HR platforms at enterprise scale, promoted to Senior in year one, growing the team from 5 to 12 engineers. In June 2025, I stepped back to spend a deliberate year on independent R&D — building Aesop, measuring what actually works in autonomous-agent orchestration, shipping verified results. Now I'm looking for a senior AI platform or agent-infrastructure role where autonomous-system principles can become team leverage.
     </p>
 
-    <div class="hero-stats">
-      <div class="stats-header">
-        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments"><a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" target="_blank" rel="noopener noreferrer" class="badge-link">recorded demo — live data at github.com/matt82198/aesop</a></span>
-        <p>All of this in 17 days, by one person and their fleet — every number verifiable in the repo.</p>
+    <div class="fleet-sim-container">
+      <div class="fleet-session" role="img" aria-label="Interactive fleet simulation: user typing natural language prompts while agents spawn and return results concurrently">
+        <div class="session-header">
+          <div class="session-dot session-dot-red"></div>
+          <div class="session-dot session-dot-yellow"></div>
+          <div class="session-dot session-dot-green"></div>
+          <span class="session-title">orchestrator session</span>
+        </div>
+        <div class="session-messages" id="session-messages">
+          <div class="message-group">
+            <div class="message user-message">
+              <span class="message-marker">you:</span>
+              <span class="message-text" id="user-prompt"></span><span class="message-cursor" id="cursor">▋</span>
+            </div>
+          </div>
+        </div>
+        <div class="fleet-agents" id="fleet-agents"></div>
       </div>
-      <div class="stat stat-primary">
-        <span class="stat-number">4×</span> Flat dispatch: 4x lower cost than hierarchical, identical graded quality (two A/Bs)
-      </div>
-      <div class="stat">
-        <a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" target="_blank" rel="noopener noreferrer" class="stat-link"><span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by the system he built</a>
-      </div>
-      <div class="stat">
-        <span class="stat-number" data-count={stats.loc}>{(stats.loc / 1000).toFixed(1)}K</span> lines of code
-      </div>
-      <div class="stat">
-        <span class="stat-number" data-count={stats.commits}>{stats.commits}</span> commits
-      </div>
-      <div class="stat">
-        <span class="stat-number">{stats.authors_human}</span> human · <span class="stat-number">{stats.model_tiers}</span> Claude model tiers on the fleet
-      </div>
+      <p class="fleet-caption">Live data at <a href="https://github.com/matt82198/aesop" target="_blank" rel="noopener noreferrer">github.com/matt82198/aesop</a> — every number verifiable from git</p>
     </div>
     <p class="sync-status" id="sync-status"></p>
 
@@ -130,93 +130,199 @@ import stats from '../../data/aesop-stats.json';
     max-width: var(--width-prose);
   }
 
-  .hero-stats {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    padding: var(--space-8);
+  .fleet-sim-container {
     margin: 0 0 var(--space-12) 0;
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    line-height: var(--leading-relaxed);
+    max-width: 100%;
+    overflow: hidden;
   }
 
-  .stats-header {
-    margin-bottom: var(--space-6);
+  .fleet-session {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-bg-secondary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    max-height: 420px;
   }
 
-  .honest-context-badge {
-    font-size: var(--text-xs);
-    color: var(--color-text-secondary);
-    margin: var(--space-4) 0 0 0;
-    line-height: var(--leading-normal);
+  .session-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .session-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .session-dot-red { background: #ff5f56; }
+  .session-dot-yellow { background: #ffbd2e; }
+  .session-dot-green { background: #27c93f; }
+
+  .session-title {
+    margin-left: var(--space-2);
     font-family: var(--font-sans);
-    font-style: italic;
-  }
-
-  .live-badge {
-    font-size: var(--text-xs);
+    font-size: 0.8rem;
     color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+
+  .session-messages {
+    padding: var(--space-4);
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .message-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .message {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .user-message {
+    color: var(--color-text);
+  }
+
+  .orchestrator-message {
+    color: var(--color-text-secondary);
+  }
+
+  .message-marker {
+    flex: none;
     font-weight: 600;
-    letter-spacing: 0.05em;
-    opacity: 0.8;
-  }
-
-  .badge-link {
-    color: inherit;
-    text-decoration: none;
-    transition: color var(--duration-base) var(--ease-out);
-  }
-
-  .badge-link:hover {
     color: var(--accent);
+    min-width: 30px;
   }
 
-  .badge-link:focus {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-ring-offset);
+  .message-text {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .message-cursor {
+    color: var(--accent);
+    animation: cursor-blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes cursor-blink { 50% { opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .message-cursor { animation: none; opacity: 1; }
+  }
+
+  .ft-agents {
+    padding: var(--space-4);
+    display: grid;
+    gap: var(--space-3);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .agent-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    min-height: 28px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .agent-id {
+    flex: none;
+    color: var(--accent);
+    font-weight: 600;
+    min-width: 4ch;
+  }
+
+  .agent-task {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8rem;
+  }
+
+  .agent-status {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .status-spinner {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .live-badge {
-      animation: none;
-      opacity: 0.8;
-    }
+    .status-spinner { animation: none; }
   }
 
-  .stat {
-    color: var(--color-text-secondary);
-  }
-
-  .stat:not(:last-child) {
-    margin-bottom: var(--space-4);
-  }
-
-  .stat-primary {
+  .status-check {
+    color: #4ade80;
     font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: var(--space-6);
   }
 
-  .stat-number {
+  .status-result {
+    flex: none;
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+    min-width: 80px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fleet-caption {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    margin: var(--space-3) 0 0 0;
+    text-align: center;
+  }
+
+  .fleet-caption a {
     color: var(--accent);
-    font-weight: 700;
-    min-width: 3ch;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .stat-link {
-    color: inherit;
     text-decoration: none;
-    transition: color var(--duration-base) var(--ease-out);
   }
 
-  .stat-link:hover {
-    color: var(--accent);
-  }
-
-  .stat-link:focus {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-ring-offset);
+  .fleet-caption a:hover {
+    text-decoration: underline;
   }
 
   .sync-status {
@@ -226,6 +332,134 @@ import stats from '../../data/aesop-stats.json';
     text-align: center;
     margin: 0;
     min-height: 1.2em;
+    display: none;
+  }
+
+  /* Mobile responsive: narrow viewports */
+  @media (max-width: 640px) {
+    .fleet-session {
+      max-height: 380px;
+    }
+
+    .session-header {
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .session-title {
+      font-size: 0.75rem;
+    }
+
+    .session-messages {
+      padding: var(--space-3);
+      gap: var(--space-2);
+    }
+
+    .message {
+      font-size: 0.85rem;
+    }
+
+    .message-marker {
+      min-width: 28px;
+      font-size: 0.85rem;
+    }
+
+    .agent-row {
+      padding: var(--space-1) var(--space-2);
+      font-size: 0.75rem;
+      min-height: 24px;
+      gap: var(--space-2);
+    }
+
+    .agent-id {
+      min-width: 3ch;
+      font-size: 0.75rem;
+    }
+
+    .agent-task {
+      font-size: 0.7rem;
+      max-width: 100px;
+    }
+
+    .status-result {
+      font-size: 0.7rem;
+      min-width: 70px;
+    }
+
+    .fleet-caption {
+      font-size: 0.7rem;
+      padding: 0 var(--space-3);
+    }
+  }
+
+  @media (max-width: 414px) {
+    .fleet-session {
+      max-height: 360px;
+      border-radius: 6px;
+    }
+
+    .session-header {
+      padding: var(--space-1) var(--space-2);
+      gap: var(--space-1);
+    }
+
+    .session-dot {
+      width: 9px;
+      height: 9px;
+    }
+
+    .session-title {
+      font-size: 0.7rem;
+      margin-left: var(--space-1);
+    }
+
+    .session-messages {
+      padding: var(--space-2);
+      gap: var(--space-1);
+    }
+
+    .message {
+      font-size: 0.8rem;
+      gap: var(--space-1);
+    }
+
+    .message-marker {
+      min-width: 24px;
+      font-size: 0.75rem;
+    }
+
+    .agent-row {
+      padding: var(--space-1) var(--space-2);
+      font-size: 0.7rem;
+      min-height: 22px;
+      gap: var(--space-1);
+      border-radius: 3px;
+    }
+
+    .agent-id {
+      min-width: 2.5ch;
+      font-size: 0.7rem;
+    }
+
+    .agent-task {
+      font-size: 0.65rem;
+      max-width: 80px;
+    }
+
+    .status-spinner {
+      width: 10px;
+      height: 10px;
+      border-width: 1.5px;
+    }
+
+    .status-result {
+      font-size: 0.65rem;
+      min-width: 60px;
+    }
+
+    .fleet-caption {
+      font-size: 0.65rem;
+      padding: 0 var(--space-2);
+    }
   }
 
   .hero-kicker {
@@ -304,175 +538,207 @@ import stats from '../../data/aesop-stats.json';
   }
 </style>
 
-<script define:vars={{ bakedStats: stats }} is:inline>
+<script is:inline>
 (function() {
-  // Live stats from GitHub API (PRs) + stats.json (commits, waves, co-authors, LOC)
-  // Graceful degradation: baked fallbacks on any failure
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const REPO = 'matt82198/aesop';
+  const promptEl = document.getElementById('user-prompt');
+  const cursorEl = document.getElementById('cursor');
+  const agentsEl = document.getElementById('fleet-agents');
+  const messagesEl = document.getElementById('session-messages');
 
-  let liveData = {};
-  const statusEl = document.getElementById('sync-status');
-  const badgeEl = document.getElementById('live-badge');
+  const prompts = [
+    'clear the backlog while we apply',
+    'run the audit loop until zero issues',
+    'ship it',
+    'keep the velo',
+    'is the backlog empty?',
+    'reconcile tracker state',
+    'what are the open P1s?',
+  ];
 
-  async function fetchLiveStats() {
-    try {
-      // Fetch merged PRs from GitHub search API (accurate)
-      const prRes = await fetch(`https://api.github.com/search/issues?q=repo:${REPO}+type:pr+is:merged&per_page=1`);
-      if (prRes.ok) {
-        const prData = await prRes.json();
-        liveData.mergedPRs = prData.total_count || bakedStats.merged_prs;
-      }
+  const replies = [
+    'on it — 6 lanes dispatched',
+    '3 workers running, 4 queued',
+    '12 agents spawned, results incoming',
+    '⚙️  concurrent audit in progress',
+    'dispatched 8 haikus to the fleet',
+  ];
 
-      // Fetch repo info for last push time
-      const repoRes = await fetch(`https://api.github.com/repos/${REPO}`);
-      if (repoRes.ok) {
-        const repoData = await repoRes.json();
-        liveData.stars = repoData.stargazers_count || 0;
-        if (repoData.pushed_at) {
-          liveData.lastPush = new Date(repoData.pushed_at);
-        }
-      }
+  const taskSlugs = [
+    'audit·drift',
+    'review·core',
+    'test·state',
+    'compile·check',
+    'ui·render',
+    'verify·cli',
+    'merge·pr',
+    'scan·secret',
+    'check·linter',
+    'build·dist',
+    'run·tests',
+    'deploy·docs',
+    'sync·fork',
+    'trace·perf',
+    'validate·schema',
+    'push·main',
+    'tag·release',
+    'notify·slack',
+  ];
 
-      // Fetch stats.json for git-derived stats (commits, waves, co-authors, LOC)
-      const statsRes = await fetch(`https://raw.githubusercontent.com/${REPO}/main/stats.json`);
-      if (statsRes.ok) {
-        const statsFile = await statsRes.json();
-        // Navigate the nested structure: stats.json has { git: { total_commits, wave_count, distinct_coauthors }, loc: ... }
-        if (statsFile.git) {
-          liveData.commits = statsFile.git.total_commits || bakedStats.commits;
-          liveData.waves = statsFile.git.wave_count || bakedStats.waves;
-          liveData.coauthors = statsFile.git.distinct_coauthors || bakedStats.coauthors;
-          liveData.loc = statsFile.loc || bakedStats.loc;
-        } else {
-          // Fallback if nested structure is different
-          liveData.commits = bakedStats.commits;
-          liveData.waves = bakedStats.waves;
-          liveData.coauthors = bakedStats.coauthors;
-          liveData.loc = bakedStats.loc;
-        }
+  const results = [
+    '✓ green 46/46',
+    '✓ merged #481',
+    '✓ pushed',
+    '✓ 0 findings',
+    '✓ passed in 2.3s',
+    '✓ verified',
+    '✓ no diffs',
+    '✓ clean',
+  ];
+
+  let currentPromptIdx = 0;
+  let currentPromptCharIdx = 0;
+  let agentsMap = new Map();
+  let nextAgentId = 1;
+
+  function getRandomItem(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function renderAgents() {
+    agentsEl.innerHTML = '';
+    agentsMap.forEach((agent) => {
+      const row = document.createElement('div');
+      row.className = 'agent-row';
+
+      const idEl = document.createElement('div');
+      idEl.className = 'agent-id';
+      idEl.textContent = agent.id;
+
+      const taskEl = document.createElement('div');
+      taskEl.className = 'agent-task';
+      taskEl.textContent = agent.task;
+
+      const statusEl = document.createElement('div');
+      statusEl.className = 'agent-status';
+
+      if (agent.done) {
+        const checkEl = document.createElement('div');
+        checkEl.className = 'status-check';
+        checkEl.textContent = '✓';
+        statusEl.appendChild(checkEl);
+
+        const resultEl = document.createElement('div');
+        resultEl.className = 'status-result';
+        resultEl.textContent = agent.result;
+        statusEl.appendChild(resultEl);
       } else {
-        // Fallback if stats.json doesn't exist yet
-        liveData.commits = bakedStats.commits;
-        liveData.waves = bakedStats.waves;
-        liveData.coauthors = bakedStats.coauthors;
-        liveData.loc = bakedStats.loc;
+        const spinEl = document.createElement('div');
+        spinEl.className = 'status-spinner';
+        statusEl.appendChild(spinEl);
       }
 
-      return true;
-    } catch (err) {
-      // Silently fail — keep baked values; show caption when live fetch fails
-      if (statusEl) {
-        statusEl.textContent = '(showing repo-verified snapshot)';
-        statusEl.style.color = 'var(--color-text-tertiary)';
-        statusEl.style.fontStyle = 'italic';
-      }
-      return false;
-    }
-  }
-
-  function formatRelativeTime(date) {
-    if (!date) return '';
-    const now = new Date();
-    const diff = now - date;
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    if (minutes > 0) return `${minutes}m ago`;
-    return 'just now';
-  }
-
-  function updateStats() {
-    // Map live data to DOM elements
-    const updates = [
-      { attr: 'data-count', key: 'mergedPRs', selector: `[data-count="${bakedStats.merged_prs}"]` },
-      { attr: 'data-count', key: 'iterationCycles', selector: `[data-count="${bakedStats.iteration_cycles}"]` },
-      { attr: 'data-count', key: 'loc', selector: `[data-count="${bakedStats.loc}"]` },
-      { attr: 'data-count', key: 'commits', selector: `[data-count="${bakedStats.commits}"]` },
-      { attr: 'data-count', key: 'coauthors', selector: `[data-count="${bakedStats.coauthors}"]` },
-    ];
-
-    updates.forEach(({ key, selector }) => {
-      const el = document.querySelector(selector);
-      if (el && liveData[key]) {
-        const oldValue = parseInt(el.dataset.count, 10);
-        const newValue = liveData[key];
-        el.dataset.count = newValue;
-        animateCount(el, oldValue, newValue);
-      }
+      row.appendChild(idEl);
+      row.appendChild(taskEl);
+      row.appendChild(statusEl);
+      agentsEl.appendChild(row);
     });
-
-    // Update sync status with relative time
-    if (liveData.lastPush) {
-      const relTime = formatRelativeTime(liveData.lastPush);
-      if (statusEl) {
-        statusEl.textContent = `synced from GitHub · updated ${relTime}`;
-      }
-    }
   }
 
-  function animateCount(el, from, to) {
-    if (prefersReducedMotion || from === to) {
-      // Instant update on reduced motion or no change
-      el.textContent = to.toLocaleString('en-US');
+  function spawnAgent() {
+    if (agentsMap.size >= 18) {
+      const firstKey = agentsMap.keys().next().value;
+      agentsMap.delete(firstKey);
+    }
+
+    const id = `H${String(nextAgentId).padStart(2, '0')}`;
+    nextAgentId++;
+
+    const workDuration = 1500 + Math.random() * 3000;
+    const agent = {
+      id,
+      task: getRandomItem(taskSlugs),
+      done: false,
+      result: getRandomItem(results),
+      spawnTime: Date.now(),
+      doneTime: Date.now() + workDuration,
+    };
+
+    agentsMap.set(id, agent);
+    renderAgents();
+
+    setTimeout(() => {
+      if (agentsMap.has(id)) {
+        agent.done = true;
+        renderAgents();
+      }
+    }, workDuration);
+  }
+
+  function typePrompt() {
+    if (prefersReducedMotion) {
+      promptEl.textContent = prompts[currentPromptIdx];
       return;
     }
 
-    const duration = 1500;
-    const start = Date.now();
-
-    const update = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const current = Math.floor(from + (to - from) * progress);
-      el.textContent = current.toLocaleString('en-US');
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        el.textContent = to.toLocaleString('en-US');
-      }
-    };
-
-    update();
+    if (currentPromptCharIdx < prompts[currentPromptIdx].length) {
+      promptEl.textContent += prompts[currentPromptIdx][currentPromptCharIdx];
+      currentPromptCharIdx++;
+      setTimeout(typePrompt, 45);
+    }
   }
 
-  function setupStatAnimation() {
-    // Animate baked stats on page load (count-up from 0)
-    if (prefersReducedMotion) return;
+  function cyclePrompt() {
+    currentPromptIdx = (currentPromptIdx + 1) % prompts.length;
+    currentPromptCharIdx = 0;
+    promptEl.textContent = '';
+    typePrompt();
+  }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-          const elements = entry.target.querySelectorAll('[data-count]');
-          elements.forEach(el => {
-            const target = parseInt(el.dataset.count, 10);
-            animateCount(el, 0, target);
-          });
-          entry.target.classList.add('animated');
-          // Unobserve after animating to clean up
-          observer.unobserve(entry.target);
+  function mainLoop() {
+    // Spawn agents every 400-600ms
+    if (Math.random() < 0.5) {
+      spawnAgent();
+    }
+
+    // Check for agent completion
+    agentsMap.forEach((agent) => {
+      if (!agent.done && Date.now() >= agent.doneTime) {
+        agent.done = true;
+      }
+    });
+    renderAgents();
+  }
+
+  // Start simulation
+  if (promptEl && agentsEl && messagesEl) {
+    if (!prefersReducedMotion) {
+      typePrompt();
+      const mainInterval = setInterval(mainLoop, 300);
+
+      // Cycle prompts every 5 seconds
+      const promptInterval = setInterval(cyclePrompt, 5000);
+
+      // Cleanup on unmount
+      const observer = new MutationObserver(() => {
+        if (!document.contains(promptEl)) {
+          clearInterval(mainInterval);
+          clearInterval(promptInterval);
         }
       });
-    }, { threshold: 0.1 });
-
-    const statsSection = document.querySelector('.hero-stats');
-    if (statsSection) {
-      observer.observe(statsSection);
+      observer.observe(document.body, { childList: true, subtree: true });
+    } else {
+      // Reduced motion: show static fleet
+      promptEl.textContent = 'keep the velo';
+      for (let i = 0; i < 8; i++) {
+        spawnAgent();
+      }
+      for (const agent of agentsMap.values()) {
+        agent.done = true;
+      }
+      renderAgents();
     }
   }
-
-  // On page load: setup animation + fetch live stats
-  setupStatAnimation();
-  fetchLiveStats().then(success => {
-    if (success) {
-      updateStats();
-    }
-  });
 })();
 </script>

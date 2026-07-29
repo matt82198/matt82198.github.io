@@ -1,0 +1,4 @@
+{
+  "dispatch_cost_ratio": 4,
+  "dispatch_cost_ratio_desc": "Flat dispatch: 4x lower cost than hierarchical, identical graded quality (two A/Bs)"
+}
