@@ -1,6 +1,10 @@
 ---
 // Hero section — full-viewport landing statement
 // Data-count values and JS fallbacks derived from src/data/aesop-stats.json at build time
+//
+// MOBILE FIX (PR #25): Uses min-height: 100dvh (dynamic viewport height) with 100vh fallback.
+// This prevents layout reflow when the browser's address bar toggles on scroll.
+// See: tests/mobile-scroll-regression.test.mjs
 import stats from '../../data/aesop-stats.json';
 ---
 
