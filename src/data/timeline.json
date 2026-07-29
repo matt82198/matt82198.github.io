@@ -110,5 +110,12 @@
     "label": "Jul 26 2026",
     "title": "387 merged PRs, self-built",
     "description": "the harness's own wave loop crossed 387 merged PRs / 1,180+ commits building the repo; stats live from git"
+  },
+  {
+    "date": "2026-07-28",
+    "label": "Jul 26–28 2026",
+    "title": "v0.4.1 on npm; seat optimization ships",
+    "description": "initial-dispatch repro enrichment + exact-gate fake-green guard from 360-run A/B; zero-friction `npx @matt82198/aesop reproduce`; 11 PRs merged in one night by the fleet",
+    "isFeature": true
   }
 ]
