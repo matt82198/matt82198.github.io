@@ -318,6 +318,18 @@ section h2 {
   border-radius: 2px;
 }
 
+/* External link indicator — CSS-only subtle visual cue */
+a[target="_blank"]::after {
+  content: ' ↗';
+  font-size: 0.85em;
+  opacity: 0.7;
+  transition: opacity var(--duration-fast) var(--ease-in-out);
+}
+
+a[target="_blank"]:hover::after {
+  opacity: 1;
+}
+
 /* Reduced motion: disable transitions and animations */
 @media (prefers-reduced-motion: reduce) {
   *,

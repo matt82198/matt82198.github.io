@@ -53,6 +53,11 @@ const WAVES = stats.waves;
       wave counts are listed below the diagram.
     </p>
 
+    <!-- Noscript fallback for when JavaScript is disabled -->
+    <noscript>
+      <p class="noscript-message">The fleet orchestration diagram requires JavaScript. The system dispatches Haiku worker agents through dispatch, build, verify, and merge phases, returning results before restarting the cycle.</p>
+    </noscript>
+
     <!-- Mono caption cycling through phases. role="status" makes phase changes
          a polite live region so screen reader users hear each transition. -->
     <p class="phase-caption" role="status"><span class="sr-only">Current phase: </span><code id="phase-text">dispatch</code></p>
@@ -129,6 +134,19 @@ const WAVES = stats.waves;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* Noscript fallback message */
+  .noscript-message {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+    padding: var(--space-6);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-align: center;
+    margin: 0;
   }
 
   /* Reduce motion: show static diagram */
