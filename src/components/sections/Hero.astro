@@ -178,11 +178,12 @@ import measured from '../../data/measured.json';
 
   .session-messages {
     padding: var(--space-4);
-    overflow-y: auto;
-    flex: 1;
+    overflow: hidden;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    min-height: 50px;
   }
 
   .message-group {
@@ -232,12 +233,13 @@ import measured from '../../data/measured.json';
     .message-cursor { animation: none; opacity: 1; }
   }
 
-  .ft-agents {
+  .fleet-agents {
     padding: var(--space-4);
     display: grid;
     gap: var(--space-3);
-    max-height: 300px;
-    overflow-y: auto;
+    max-height: 200px;
+    overflow: hidden;
+    text-align: left;
   }
 
   .agent-row {
@@ -252,6 +254,8 @@ import measured from '../../data/measured.json';
     min-height: 28px;
     white-space: nowrap;
     overflow: hidden;
+    text-align: left;
+    flex-shrink: 0;
   }
 
   .agent-id {
@@ -557,14 +561,6 @@ import measured from '../../data/measured.json';
     'what are the open P1s?',
   ];
 
-  const replies = [
-    'on it — 6 lanes dispatched',
-    '3 workers running, 4 queued',
-    '12 agents spawned, results incoming',
-    '⚙️  concurrent audit in progress',
-    'dispatched 8 haikus to the fleet',
-  ];
-
   const taskSlugs = [
     'audit·drift',
     'review·core',
@@ -611,6 +607,7 @@ import measured from '../../data/measured.json';
     agentsMap.forEach((agent) => {
       const row = document.createElement('div');
       row.className = 'agent-row';
+      row.setAttribute('data-astro-cid-yodha2z4', '');
 
       const idEl = document.createElement('div');
       idEl.className = 'agent-id';
@@ -647,7 +644,8 @@ import measured from '../../data/measured.json';
   }
 
   function spawnAgent() {
-    if (agentsMap.size >= 18) {
+    // Recycle oldest agent if we have too many
+    if (agentsMap.size >= 16) {
       const firstKey = agentsMap.keys().next().value;
       agentsMap.delete(firstKey);
     }
@@ -697,17 +695,33 @@ import measured from '../../data/measured.json';
   }
 
   function mainLoop() {
-    // Spawn agents every 400-600ms
-    if (Math.random() < 0.5) {
+    // Maintain 12-16 concurrent agents with varied states
+    const agentCount = agentsMap.size;
+    const workingCount = Array.from(agentsMap.values()).filter(a => !a.done).length;
+
+    // Spawn new agents to maintain fleet size and working load
+    if (agentCount < 15 || (workingCount < 4 && agentCount < 16)) {
       spawnAgent();
     }
 
-    // Check for agent completion
+    // If we have too many done agents, recycle them
+    if (agentCount > 16) {
+      const doneAgents = Array.from(agentsMap.entries())
+        .filter(([_, agent]) => agent.done)
+        .sort((a, b) => a[1].doneTime - b[1].doneTime);
+
+      if (doneAgents.length > 0) {
+        agentsMap.delete(doneAgents[0][0]);
+      }
+    }
+
+    // Update agent completion status
     agentsMap.forEach((agent) => {
       if (!agent.done && Date.now() >= agent.doneTime) {
         agent.done = true;
       }
     });
+
     renderAgents();
   }
 
@@ -715,6 +729,13 @@ import measured from '../../data/measured.json';
   if (promptEl && agentsEl && messagesEl) {
     if (!prefersReducedMotion) {
       typePrompt();
+
+      // Spawn initial batch of agents
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => spawnAgent(), i * 200);
+      }
+
+      // Main loop: maintain fleet lifecycle every 300ms
       const mainInterval = setInterval(mainLoop, 300);
 
       // Cycle prompts every 5 seconds
@@ -729,13 +750,22 @@ import measured from '../../data/measured.json';
       });
       observer.observe(document.body, { childList: true, subtree: true });
     } else {
-      // Reduced motion: show static fleet
+      // Reduced motion: show static fleet with varied states
       promptEl.textContent = 'keep the velo';
-      for (let i = 0; i < 8; i++) {
-        spawnAgent();
-      }
-      for (const agent of agentsMap.values()) {
-        agent.done = true;
+
+      // Create a mix of working and completed agents
+      const initialAgents = 16;
+      for (let i = 0; i < initialAgents; i++) {
+        const agent = {
+          id: `H${String(i + 1).padStart(2, '0')}`,
+          task: getRandomItem(taskSlugs),
+          done: i < 10, // First 10 are done, rest are working
+          result: i < 10 ? getRandomItem(results) : '',
+          spawnTime: Date.now(),
+          doneTime: Date.now(),
+        };
+        agentsMap.set(agent.id, agent);
+        nextAgentId = i + 2;
       }
       renderAgents();
     }
