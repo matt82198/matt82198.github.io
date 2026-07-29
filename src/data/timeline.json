@@ -6,12 +6,6 @@
     "description": "cofounder, native iOS app; won best in Illinois (Verizon Innovative App Challenge), pitched to live audiences, later acquired"
   },
   {
-    "date": "2016",
-    "label": "2016–2018",
-    "title": "The Tannery Row",
-    "description": "engineered a GTM-based backend for a backend-less Squarespace store; dynamic ads, product-feed API from tag events"
-  },
-  {
     "date": "2020",
     "label": "Dec 2020",
     "title": "Penn State",
@@ -30,47 +24,16 @@
     "description": "within first year at AT&T; HRMAN company-wide RBAC service ships"
   },
   {
-    "date": "2024",
-    "label": "2024",
-    "title": "Canned Reporting",
-    "description": "config-driven reporting platform — report definitions as data over one generic engine (the precursor idea to Aesop)"
-  },
-  {
     "date": "2025-06",
     "label": "Jun 2025",
     "title": "Left AT&T",
     "description": "to build in the LLM space full-time"
   },
   {
-    "date": "2026-05",
-    "label": "May 2026",
-    "title": "Claude Code Has a Memory Problem",
-    "description": "builds the Conductor memory layer",
-    "isFeature": true
-  },
-  {
     "date": "2026-07-11",
     "label": "Jul 11 2026",
     "title": "Aesop goes public",
-    "description": "v0.1.0-beta.1; Iteration 18 audit-fixes complete"
-  },
-  {
-    "date": "2026-07-12",
-    "label": "Jul 12 2026",
-    "title": "Iteration 19",
-    "description": "npm publish diagnostics, UI freshness, host-header guard, backup-fleet hardening (7 features)"
-  },
-  {
-    "date": "2026-07-13",
-    "label": "Jul 13 2026",
-    "title": "v0.1.0-beta.4",
-    "description": "released; 128 merged PRs, 19 self-built iterations"
-  },
-  {
-    "date": "2026-07-14",
-    "label": "Jul 14–15 2026",
-    "title": "Iteration 20",
-    "description": "claims hygiene, stats currency, portfolio refresh + this site"
+    "description": "v0.1.0-beta.1; research project that grew into a self-building system"
   },
   {
     "date": "2026-07",
@@ -80,42 +43,10 @@
     "isFeature": true
   },
   {
-    "date": "2026-07-17",
-    "label": "Jul 17 2026",
-    "title": "@matt82198/aesop 0.1.0",
-    "description": "promoted to npm @latest — stable release"
-  },
-  {
-    "date": "2026-07-21",
-    "label": "Jul 21–22 2026",
-    "title": "Backlog Clearance + 0.2.0 Prep",
-    "description": "All audit backlog closed; 75 PRs merged in one session; 0.2.0 release-ready"
-  },
-  {
-    "date": "2026-07-22",
-    "label": "Jul 22 2026",
-    "title": "5-Pass Hardening Loop Complete",
-    "description": "Adversarial convergence: 52→23→17→5→0 defects; zero code defects shipped",
-    "isFeature": true
-  },
-  {
-    "date": "2026-07-22",
-    "label": "Jul 22 2026",
-    "title": "Aesop v0.2.0 Ready",
-    "description": "wave engine + multi-model drivers + hardened gates; user-gated release pending"
-  },
-  {
-    "date": "2026-07-21-22",
-    "label": "Jul 21–22 2026",
-    "title": "Waves 21–30: Multi-model AgentDriver",
-    "description": "Hierarchical orchestration, WriteAPI + optimistic concurrency control, cost analytics, adversarial refinement loops, Windows CI green + required",
-    "isFeature": true
-  },
-  {
     "date": "2026-07-22",
     "label": "Jul 22 2026",
     "title": "v0.2.0 → v0.3.1 on npm",
-    "description": "non-Claude core proof (Codex wave), 4-round adversarial hardening clean, Windows CI required"
+    "description": "major release with multi-model drivers, non-Claude core proof, Windows CI required"
   },
   {
     "date": "2026-07-25",
@@ -124,16 +55,9 @@
     "description": "swap the worker AND orchestrator model per seat from one config block (Claude, Codex, any OpenAI-compatible endpoint); shipped to npm"
   },
   {
-    "date": "2026-07-26",
-    "label": "Jul 26 2026",
-    "title": "387 merged PRs, self-built",
-    "description": "the harness's own wave loop crossed 387 merged PRs / 1,180+ commits building the repo; stats live from git"
-  },
-  {
-    "date": "2026-07-28",
-    "label": "Jul 26–28 2026",
-    "title": "v0.4.1 on npm; seat optimization ships",
-    "description": "initial-dispatch repro enrichment + exact-gate fake-green guard from 360-run A/B; zero-friction `npx @matt82198/aesop reproduce`; 11 PRs merged in one night by the fleet",
-    "isFeature": true
+    "date": "2026-07-29",
+    "label": "Jul 29 2026",
+    "title": "Aesop relicensed MIT — open source, again",
+    "description": "the research project that grew into a self-building system returns to open source; MIT as of today"
   }
 ]
