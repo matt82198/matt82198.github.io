@@ -85,7 +85,7 @@ const itemsByRecent = [...items].sort((a, b) => new Date(b.date).getTime() - new
 const featuredItems = itemsByRecent.slice(0, 2);
 const additionalItems = itemsByRecent.slice(2);
 
-// For Most Viewed sort, prepare items with views (those without views go to the end)
+// For Most Viewed sort: items with views by count, then featured items, then by date
 const itemsByViews = [...items].sort((a, b) => {
   // Both have views: sort by views descending
   if (a.views !== null && b.views !== null) {
@@ -95,7 +95,11 @@ const itemsByViews = [...items].sort((a, b) => {
   if (a.views !== null) return -1;
   // Only b has views: b comes first
   if (b.views !== null) return 1;
-  // Neither has views: sort by date descending
+  // Neither has views: use featured status as tiebreaker (featured first), then date
+  if (a.featured !== b.featured) {
+    return a.featured ? -1 : 1; // featured items come first
+  }
+  // Both featured status same: sort by date descending
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 });
 
