@@ -30,6 +30,7 @@ import privateReposData from '../../data/private-repos.json';
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
+    width: 100%;
     max-width: var(--width-container);
     margin: 0 auto var(--space-20);
     padding: var(--space-8);
@@ -124,6 +125,10 @@ import privateReposData from '../../data/private-repos.json';
     }
 
     .privatework {
+      width: 100%;
+      max-width: none !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
       padding: var(--space-4);
       gap: var(--space-6);
     }

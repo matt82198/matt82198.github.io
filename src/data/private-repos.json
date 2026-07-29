@@ -29,8 +29,16 @@
       "name": "Business Systems",
       "repos": [
         {
+          "name": "tr-sample-tracker",
+          "description": "Spring Boot 3 + Angular sample-order tracking"
+        },
+        {
           "name": "ecm-ai",
-          "description": "Invoice automation bridge"
+          "description": "Invoice automation with AI bridging"
+        },
+        {
+          "name": "TR-Automation-Scripts",
+          "description": "Operational automation tooling"
         },
         {
           "name": "TRShopServer",
