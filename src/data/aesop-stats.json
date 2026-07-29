@@ -13,7 +13,7 @@
   ],
   "loc": 207714,
   "domains": 14,
-  "test_files": 188,
-  "version": "v0.4.1",
+  "test_files": 189,
+  "version": "v0.5.0",
   "shipped_increments": 455
 }

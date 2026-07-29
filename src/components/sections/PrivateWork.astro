@@ -125,11 +125,10 @@ import privateReposData from '../../data/private-repos.json';
     }
 
     .privatework {
-      width: 100%;
+      width: calc(100% + 2 * var(--space-4));
       max-width: none !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding: var(--space-4);
+      margin: 0 calc(-1 * var(--space-4)) var(--space-20) calc(-1 * var(--space-4)) !important;
+      padding: var(--space-2) var(--space-2);
       gap: var(--space-6);
     }
   }
