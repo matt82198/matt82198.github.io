@@ -20,15 +20,20 @@ import stats from '../../data/aesop-stats.json';
       Senior software engineer — AI platforms &amp; agent infrastructure. I build orchestration systems that ship verified code: multi-agent dispatch, measured LLM cost optimization (4×), production guardrails. Chicago · open to senior AI platform / agent-infrastructure roles.
     </p>
 
+    <p class="hero-narrative">
+      I spent 3.5 years at AT&T building HR platforms at enterprise scale, promoted to Senior in year one, growing the team from 5 to 12 engineers. In June 2025, I stepped back to spend a deliberate year on independent R&D — building Aesop, measuring what actually works in autonomous-agent orchestration, shipping verified results. Now I'm looking for a senior AI platform or agent-infrastructure role where autonomous-system principles can become team leverage.
+    </p>
+
     <div class="hero-stats">
       <div class="stats-header">
-        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments"><a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" class="badge-link">recorded demo — live data at github.com/matt82198/aesop</a></span>
+        <span class="live-badge" id="live-badge" title="Benchmarks from measured experiments"><a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" target="_blank" rel="noopener noreferrer" class="badge-link">recorded demo — live data at github.com/matt82198/aesop</a></span>
+        <p class="honest-context-badge">All of this in 17 days, by one person and their fleet — every number verifiable in the repo.</p>
       </div>
       <div class="stat stat-primary">
         <span class="stat-number">4×</span> cheaper dispatch at equal measured quality (A/B)
       </div>
       <div class="stat">
-        <a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" class="stat-link"><span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by the system he built</a>
+        <a href="https://github.com/matt82198/aesop/pulls?q=is%3Apr+is%3Amerged" target="_blank" rel="noopener noreferrer" class="stat-link"><span class="stat-number" data-count={stats.merged_prs}>{stats.merged_prs}</span> PRs merged by the system he built</a>
       </div>
       <div class="stat">
         <span class="stat-number" data-count={stats.loc}>{(stats.loc / 1000).toFixed(1)}K</span> lines of code
@@ -42,16 +47,16 @@ import stats from '../../data/aesop-stats.json';
     </div>
     <p class="sync-status" id="sync-status"></p>
 
-    <p class="hero-kicker"><em><a href="https://github.com/matt82198/matt82198.github.io" class="hero-kicker-link">This site was assembled by the fleet it describes.</a></em></p>
+    <p class="hero-kicker"><em><a href="https://github.com/matt82198/matt82198.github.io" target="_blank" rel="noopener noreferrer" class="hero-kicker-link">This site was assembled by the fleet it describes.</a></em></p>
 
     <div class="hero-links">
-      <a href="https://github.com/matt82198" class="hero-link">GitHub</a>
+      <a href="https://github.com/matt82198" target="_blank" rel="noopener noreferrer" class="hero-link">GitHub</a>
       <span class="link-divider">·</span>
-      <a href="https://medium.com/@matt82198" class="hero-link">Medium</a>
+      <a href="https://medium.com/@matt82198" target="_blank" rel="noopener noreferrer" class="hero-link">Medium</a>
       <span class="link-divider">·</span>
-      <a href="https://linkedin.com/in/matt-culliton-a8327676" class="hero-link">LinkedIn</a>
+      <a href="https://linkedin.com/in/matt-culliton-a8327676" target="_blank" rel="noopener noreferrer" class="hero-link">LinkedIn</a>
       <span class="link-divider">·</span>
-      <a href="/Matt_Culliton_Resume.pdf" class="hero-link">Resume (PDF)</a>
+      <a href="/Matt_Culliton_Resume.pdf" class="hero-link">Resume (PDF · updated July 2026)</a>
       <span class="link-divider">·</span>
       <a href="mailto:matt82198@gmail.com" class="hero-link">Email</a>
     </div>
@@ -112,8 +117,17 @@ import stats from '../../data/aesop-stats.json';
     font-size: var(--text-base);
     font-family: var(--font-sans);
     color: var(--color-text-secondary);
-    margin: 0 0 var(--space-12) 0;
+    margin: 0 0 var(--space-8) 0;
     line-height: var(--leading-normal);
+  }
+
+  .hero-narrative {
+    font-size: var(--text-base);
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    margin: 0 auto var(--space-12) auto;
+    line-height: var(--leading-relaxed);
+    max-width: var(--width-prose);
   }
 
   .hero-stats {
@@ -127,7 +141,16 @@ import stats from '../../data/aesop-stats.json';
   }
 
   .stats-header {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .honest-context-badge {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    margin: var(--space-4) 0 0 0;
+    line-height: var(--leading-normal);
+    font-family: var(--font-sans);
+    font-style: italic;
   }
 
   .live-badge {
@@ -339,7 +362,12 @@ import stats from '../../data/aesop-stats.json';
 
       return true;
     } catch (err) {
-      // Silently fail — keep baked values
+      // Silently fail — keep baked values; show caption when live fetch fails
+      if (statusEl) {
+        statusEl.textContent = '(showing repo-verified snapshot)';
+        statusEl.style.color = 'var(--color-text-tertiary)';
+        statusEl.style.fontStyle = 'italic';
+      }
       return false;
     }
   }
@@ -427,6 +455,8 @@ import stats from '../../data/aesop-stats.json';
             animateCount(el, 0, target);
           });
           entry.target.classList.add('animated');
+          // Unobserve after animating to clean up
+          observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1 });

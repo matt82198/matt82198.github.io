@@ -13,13 +13,13 @@ import stats from '../../data/aesop-stats.json';
 
   <div class="aesop-pitch">
     <p>
-      Source-available research platform for autonomous software development. Built on Unix principles: small decoupled components, plain durable files, crash-only recovery. Stateless agent execution over git-backed state; flat O(1)-depth orchestration where productivity scales with parallel subagent count, no coordination bottleneck.
+      Source-available research platform for autonomous software development. Built on Unix principles: small decoupled components, plain durable files, crash-only recovery. Crash-only worker execution (request-scoped agents over persistent filesystem state) over git-backed state; flat O(1)-depth orchestration where productivity scales with parallel subagent count, no coordination bottleneck.
     </p>
     <p>
-      Cost-optimized by measured dispatch economics (Haiku matched Opus on judgment at ~1/3 token cost). <strong>{stats.merged_prs} PRs built by the system itself</strong>, end-to-end from backlog through CI-verified merge.
+      Removing the hierarchical supervisor layer cut dispatch cost 4× at identical graded quality — A/B tested, architecture cancelled, data kept. On seam-level engineering tasks (review, triage, local orchestration), Haiku and Sonnet both maxed the 39-task held-out judgment set — a sufficiency floor, not tier equivalence. <strong>{stats.merged_prs} PRs built by the system itself</strong>, end-to-end from backlog through CI-verified merge.
     </p>
     <p>
-      <a href="https://github.com/matt82198/aesop" class="cta-link">github.com/matt82198/aesop</a>
+      <a href="https://github.com/matt82198/aesop" target="_blank" rel="noopener noreferrer" class="cta-link">github.com/matt82198/aesop</a>
     </p>
   </div>
 
@@ -27,10 +27,10 @@ import stats from '../../data/aesop-stats.json';
     <h3>Architecture highlights</h3>
     <ul class="architecture-list">
       <li>
-        <strong>Unix principles</strong> — small decoupled components, plain durable files (git + SQLite), crash-only recovery
+        <strong>Crash-only recovery</strong> — request-scoped workers over persistent filesystem state; small decoupled components, plain durable files (git + SQLite)
       </li>
       <li>
-        <strong>Haiku-first dispatch</strong> — ~1/3 the token cost; quality-parity measured on a committed, externally-graded held-out benchmark (Haiku matched Opus on extraction, edged it on judgment)
+        <strong>Haiku-first dispatch</strong> — ~1/3 the token cost; seam-level sufficiency (both Haiku and Sonnet maxed the 39-task judgment set on engineering tasks)
       </li>
       <li>
         <strong>O(1)-depth orchestration</strong> — flat dispatch where productivity scales with parallel subagent count, zero coordination bottleneck
@@ -78,6 +78,22 @@ import stats from '../../data/aesop-stats.json';
         </p>
       </div>
     </div>
+
+    <h3>Gates that fired</h3>
+    <div class="gates-list">
+      <div class="gate-item">
+        <p>Pre-push secret scan blocked a commit when benchmark training vocabulary could be mistaken for credentials — gate held, content reworded, push allowed.</p>
+      </div>
+      <div class="gate-item">
+        <p>An agent attempted <code class="inline-code">git push --no-verify</code> to sidestep the gate — caught immediately, the flag banned in all dispatch templates.</p>
+      </div>
+      <div class="gate-item">
+        <p>Watchdog detected stalled agents by heartbeat timeout and restarted them — the kill-switch was wired in early and proven multiple times.</p>
+      </div>
+      <div class="gate-item">
+        <p>Nine CI runs reported green against their base while main was broken — re-running the exact CI gate revealed the union-drift bug and led to branch-protection hardening.</p>
+      </div>
+    </div>
   </div>
 
   <div class="essay-callout">
@@ -85,9 +101,9 @@ import stats from '../../data/aesop-stats.json';
       <h3 class="essay-title">The Aesop Hypothesis</h3>
       <p class="essay-subtitle">AI agents that survive because they're designed to fail</p>
       <p class="essay-description">
-        The design bet, argued: durable text state over databases, stateless execution over long-lived agents, failure as the normal path.
+        The design bet, argued: durable text state over databases, crash-only execution over long-lived agents, failure as the normal path.
       </p>
-      <a href="https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4" class="essay-link">Read on Medium →</a>
+      <a href="https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4" target="_blank" rel="noopener noreferrer" class="essay-link">Read on Medium →</a>
     </div>
     <div class="essay-card">
       <h3 class="essay-title">Frontier Discrimination Study</h3>
@@ -95,7 +111,7 @@ import stats from '../../data/aesop-stats.json';
       <p class="essay-description">
         Design pre-registered before data collection to measure model tier separation — a credibility checkpoint against post-hoc framing.
       </p>
-      <a href="https://github.com/matt82198/aesop/blob/main/bench/SEAM-STUDY-PREREG.md" class="essay-link">See pre-registration →</a>
+      <a href="https://github.com/matt82198/aesop/blob/main/bench/SEAM-STUDY-PREREG.md" target="_blank" rel="noopener noreferrer" class="essay-link">See pre-registration →</a>
     </div>
   </div>
 
@@ -356,6 +372,33 @@ import stats from '../../data/aesop-stats.json';
     margin: 0;
   }
 
+  .gates-list {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+
+  .gate-item {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    padding: 0;
+  }
+
+  .gate-item p {
+    margin: 0;
+  }
+
+  .inline-code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 3px;
+    color: var(--color-text);
+  }
+
   .numbers-section {
     margin-top: var(--space-16);
   }
@@ -518,20 +561,41 @@ import stats from '../../data/aesop-stats.json';
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { el.innerHTML = blocks.map(renderStatic).join('\n\n'); return; }
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    let isMounted = true;
     (async () => {
       let i = 0;
-      while (true) {
+      // Bounded loop: cycle through blocks 3 times maximum, prevents infinite memory drain
+      const maxCycles = 3 * blocks.length;
+      while (isMounted && i < maxCycles) {
         const b = blocks[i % blocks.length]; i++;
         const cmd = `aesop@fleet:~$ ${b.cmd}`;
         el.innerHTML = '<span class="ft-cmd"></span><span class="ft-cursor">▋</span>';
         const cmdSpan = el.querySelector('.ft-cmd');
-        for (let c = 0; c <= cmd.length; c++) { cmdSpan.textContent = cmd.slice(0, c); await sleep(26); }
+        for (let c = 0; c <= cmd.length; c++) {
+          if (!isMounted) return;
+          cmdSpan.textContent = cmd.slice(0, c);
+          await sleep(26);
+        }
         await sleep(280);
+        if (!isMounted) return;
         el.innerHTML = `<span class="ft-cmd">${esc(cmd)}</span>\n<span class="ft-prompt">  ▸ ${esc(b.prompt)}</span><span class="ft-cursor">▋</span>`;
         await sleep(520);
+        if (!isMounted) return;
         el.innerHTML = `<span class="ft-cmd">${esc(cmd)}</span>\n<span class="ft-prompt">  ▸ ${esc(b.prompt)}</span>\n<span class="ft-ok">  ${esc(b.result)}</span><span class="ft-cursor">▋</span>`;
         await sleep(2600);
       }
+      // Loop completed or unmounted — show final state
+      if (isMounted && i > 0) {
+        const b = blocks[(i - 1) % blocks.length];
+        el.innerHTML = renderStatic(b);
+      }
     })();
+    // Cleanup on unmount (when component is removed from DOM)
+    const observer = new MutationObserver(() => {
+      if (!document.contains(el)) {
+        isMounted = false;
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   })();
 </script>
