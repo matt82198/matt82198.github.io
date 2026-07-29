@@ -206,6 +206,8 @@ def main() -> None:
         # Compute only the domain/test/shipped metrics that aren't in the committed snapshot
         stats["domains"] = count_domains(aesop_repo)
         stats["test_files"] = count_test_files(aesop_repo)
+        # Always include version (derives from aesop package.json)
+        stats["version"] = read_version(aesop_repo)
         # shipped_increments should be in the snapshot as merged_prs, but add it for rendering
         if "merged_prs" in stats:
             stats["shipped_increments"] = stats["merged_prs"]

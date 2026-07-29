@@ -25,6 +25,47 @@ import measured from '../../data/measured.json';
       I spent 3.5 years at AT&T building HR platforms at enterprise scale, promoted to Senior in year one, growing the team from 5 to 12 engineers. In June 2025, I stepped back to spend a deliberate year on independent R&D — building Aesop, measuring what actually works in autonomous-agent orchestration, shipping verified results. Now I'm looking for a senior AI platform or agent-infrastructure role where autonomous-system principles can become team leverage.
     </p>
 
+    <div class="numbers-section">
+      <h3>By the numbers</h3>
+      <table class="numbers-table">
+        <thead>
+          <tr>
+            <th scope="col">Metric</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Commits</td>
+            <td>{stats.commits}</td>
+          </tr>
+          <tr>
+            <td>PRs merged</td>
+            <td>{stats.merged_prs}</td>
+          </tr>
+          <tr>
+            <td>Domains</td>
+            <td>{stats.domains}</td>
+          </tr>
+          <tr>
+            <td>Test files</td>
+            <td>{stats.test_files}</td>
+          </tr>
+          <tr>
+            <td>LOC</td>
+            <td>{(stats.loc / 1000).toFixed(1)}K</td>
+          </tr>
+          <tr>
+            <td>Version</td>
+            <td>{stats.version}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="numbers-note">
+        <em>Every number computed from git, reproducible by cloning.</em>
+      </p>
+    </div>
+
     <div class="fleet-sim-container">
       <div class="fleet-session" role="img" aria-label="Interactive fleet simulation: user typing natural language prompts while agents spawn and return results concurrently">
         <div class="session-header">
@@ -535,7 +576,71 @@ import measured from '../../data/measured.json';
     font-style: italic;
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  .numbers-section {
+    margin-top: var(--space-16);
+  }
+
+  .numbers-table {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--color-code-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: var(--space-6);
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .numbers-table thead {
+    background-color: transparent;
+  }
+
+  .numbers-table th {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-align: left;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .numbers-table th:last-child {
+    text-align: right;
+  }
+
+  .numbers-table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .numbers-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .numbers-table td {
+    padding: var(--space-4) var(--space-6);
+    color: var(--color-text-secondary);
+  }
+
+  .numbers-table td:last-child {
+    color: var(--accent);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .numbers-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    line-height: var(--leading-normal);
+    margin: 0;
+  }
+
+  .numbers-note em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+    @media (prefers-reduced-motion: reduce) {
     .hero-link {
       transition: none;
     }

@@ -107,46 +107,6 @@ import stats from '../../data/aesop-stats.json';
     </div>
   </div>
 
-  <div class="numbers-section">
-    <h3>By the numbers</h3>
-    <table class="numbers-table">
-      <thead>
-        <tr>
-          <th scope="col">Metric</th>
-          <th scope="col">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Commits</td>
-          <td>{stats.commits}</td>
-        </tr>
-        <tr>
-          <td>PRs merged</td>
-          <td>{stats.merged_prs}</td>
-        </tr>
-        <tr>
-          <td>Domains</td>
-          <td>{stats.domains}</td>
-        </tr>
-        <tr>
-          <td>Test files</td>
-          <td>{stats.test_files}</td>
-        </tr>
-        <tr>
-          <td>LOC</td>
-          <td>{(stats.loc / 1000).toFixed(1)}K</td>
-        </tr>
-        <tr>
-          <td>Version</td>
-          <td>{stats.version}</td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="numbers-note">
-      <em>Every number computed from git, reproducible by cloning.</em>
-    </p>
-  </div>
 
   <div class="fleet-terminal-wrap">
     <div class="fleet-terminal" role="img" aria-label="Stylized terminal replaying how the aesop harness dispatches parallel agent teams with prompts and reports their results.">
@@ -387,21 +347,7 @@ import stats from '../../data/aesop-stats.json';
     color: var(--color-text);
   }
 
-  .numbers-section {
-    margin-top: var(--space-16);
-  }
 
-  .numbers-table {
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    background-color: var(--color-code-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: var(--space-6);
-    width: 100%;
-    border-collapse: collapse;
-  }
 
   .numbers-table thead {
     background-color: transparent;
@@ -439,12 +385,6 @@ import stats from '../../data/aesop-stats.json';
     text-align: right;
   }
 
-  .numbers-note {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    line-height: var(--leading-normal);
-    margin: 0;
-  }
 
   .numbers-note em {
     font-style: italic;
