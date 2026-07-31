@@ -2,6 +2,7 @@
 // Aesop section: the orchestration harness that ships its own features
 // Component contract: no props, system fonts only, tokens.css custom properties
 import stats from '../../data/aesop-stats.json';
+import DemoClip from '../DemoClip.astro';
 ---
 
 <section class="aesop-section">
@@ -54,6 +55,13 @@ import stats from '../../data/aesop-stats.json';
         <strong>Cross-OS CI rigor</strong> — 8-shard parallel suites (Windows 3min via 4-way sharding); post-merge drift guard
       </li>
     </ul>
+
+    <DemoClip
+      src="/media/clips/parallel-fleet.mp4"
+      poster="/media/clips/parallel-fleet.gif"
+      alt="Multiple agents running in parallel across different domains — security linting, doc generation, and concurrent fixes. Several PRs being created simultaneously by independent agents."
+      caption="Multiple agents dispatched simultaneously across domains, creating PRs in parallel."
+    />
   </div>
 
   <div class="scars-section">
