@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew J. Culliton — Resume</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: letter;
+            margin: 0.6in 0.6in 0.6in 0.6in;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Georgia', 'Garamond', serif;
+            line-height: 1.2;
+            color: #1a1a1a;
+            background: white;
+            padding: 0.6in;
+            max-width: 7.5in;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Georgia', 'Garamond', serif;
+            font-size: 15pt;
+            font-weight: 600;
+            margin-bottom: 1pt;
+            letter-spacing: 0.5pt;
+        }
+
+        .contact-info {
+            text-align: center;
+            font-size: 8.5pt;
+            margin-bottom: 5pt;
+            color: #333;
+        }
+
+        .contact-info span {
+            margin: 0 3pt;
+        }
+
+        h2 {
+            font-family: 'Georgia', 'Garamond', serif;
+            font-size: 9.5pt;
+            font-weight: 600;
+            margin-top: 4pt;
+            margin-bottom: 2pt;
+            border-bottom: 0.5pt solid #ccc;
+            padding-bottom: 1pt;
+            text-transform: uppercase;
+            letter-spacing: 0.3pt;
+        }
+
+        .education-item,
+        .experience-item {
+            margin-bottom: 4pt;
+            font-size: 8.5pt;
+        }
+
+        .education-item {
+            line-height: 1.25;
+        }
+
+        .job-title {
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0pt;
+        }
+
+        .company {
+            font-weight: 600;
+        }
+
+        .job-dates {
+            font-size: 8.5pt;
+            color: #444;
+        }
+
+        .job-location {
+            font-size: 8.5pt;
+            color: #555;
+        }
+
+        .job-subtitle {
+            font-size: 8.5pt;
+            color: #333;
+            margin-bottom: 2pt;
+        }
+
+        ul {
+            margin-left: 10pt;
+            margin-top: 1pt;
+            margin-bottom: 2pt;
+        }
+
+        li {
+            margin-bottom: 1pt;
+            font-size: 8.5pt;
+            line-height: 1.25;
+        }
+
+        li:before {
+            content: "➢ ";
+            margin-right: 3pt;
+            color: #333;
+        }
+
+        .skills-text {
+            font-size: 8.5pt;
+            line-height: 1.25;
+            margin-bottom: 2pt;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>MATTHEW J. CULLITON</h1>
+    <div class="contact-info">
+        <span>(847) 804-3089</span>
+        <span>|</span>
+        <span>matt82198@gmail.com</span>
+    </div>
+
+    <h2>Education</h2>
+    <div class="education-item">
+        <div style="font-weight: 600;">Pennsylvania State University College of Engineering</div>
+        <div>University Park, PA</div>
+        <div>Major: Computer Science | Graduated: December 2020</div>
+        <div>Minor: Applied Mathematics and Engineering Leadership Development</div>
+    </div>
+
+    <h2>Skills</h2>
+    <div class="skills-text">
+        Python, Java, Spring Boot, TypeScript, Node.js, React, Angular, LLM APIs (Anthropic Claude, OpenAI), multi-agent orchestration, agentic systems, Kubernetes (AKS), Terraform, Azure Cloud Services, Azure DevOps pipelines, GitHub Actions CI/CD, SQL (Postgres, Vertica), MongoDB, Redis, SQLite / event sourcing, Maven, NPM, SAFe Certified, SAFe 5.0 Advanced Scrum Master Certified
+    </div>
+
+    <h2>Relevant Work Experience</h2>
+
+    <div class="experience-item">
+        <div class="job-title">
+            <span><span class="company">Aesop</span> — Multi-Agent Orchestration Platform (Independent)</span>
+            <span class="job-location">Chicago, IL</span>
+        </div>
+        <div class="job-subtitle">Creator & Lead Engineer <span style="float: right;">2026 – Present</span></div>
+        <ul>
+            <li>Architected on Unix principles — small decoupled components, plain durable files, crash-only recovery: event-sourced state layer (SQLite WAL + projections), multi-model driver seam across Anthropic and OpenAI-compatible backends, real-time React/SSE dashboard, MCP server for fleet observability.</li>
+            <li>Designed and shipped Aesop (npm-published), a source-available research platform for autonomous software development — flat O(1)-depth dispatch proven across 588 CI-gated PRs: every agent isolated in its own git worktree, no central coordination point; work flows from ranked backlog to CI-verified merge with no human in the loop.</li>
+            <li>Ran pre-registered benchmarks across 5 model tiers (equivalence testing); A/B isolation showed context quality — not model tier — drives outcomes (+17pp one-shot fix rate from repro-in-context), and flat dispatch cut costs ~4× vs the cancelled hierarchical design at equal graded quality.</li>
+            <li>Engineered reliability and governance: watchdog daemons with heartbeat liveness, kill switch and cost ceilings, fail-closed secret-scan and drift gates, append-only audit logs; every merge gated across Windows/Linux test matrices.</li>
+        </ul>
+    </div>
+
+    <div class="experience-item">
+        <div class="job-title">
+            <span><span class="company">AT&T</span></span>
+            <span class="job-location">Chicago, IL</span>
+        </div>
+        <div class="job-subtitle">Software Engineer → Senior Software Engineer, People Analytics <span style="float: right;">November 2021 – June 2025</span></div>
+        <ul>
+            <li>Hired through AT&T's Technology Development Program onto People Analytics, a startup-style HR team building full-stack reporting products on the HR DataHub (Java/Spring Boot, Angular, Azure — millions of rows of SPI); operated as a lead developer from the start and promoted to Senior within the first year.</li>
+            <li>Designed HRMAN, a company-wide RBAC service grown from the team's user/role logic, serving tool-access control and real-time reporting-data authorization to teams across AT&T.</li>
+            <li>Initiated and led "Canned Reporting": a config-driven reporting platform — report definitions live in the database over one generic frontend and backend; built the POC APIs and ran live demos of report creation, RBAC integration, and compound reports on a Java task-executor pool.</li>
+            <li>Shipped the PLE reporting tool for enterprise learning data — 1M+ reports delivered per year — and built stochastic workforce-modeling tools for HR planning.</li>
+            <li>Rearchitected backend cross-cutting concerns with Spring AOP — argument resolvers and exception handlers reduced authn/authz to a single annotation; rebuilt low-level result-set processing (HashMap-based) for a 40% memory reduction; introduced Redis caching to the team.</li>
+            <li>Grew the team from 5 to 12 developers as its first TDP — recruited through the program, mentored new hires, and wrote the onboarding guide that cut developer ramp-up from 3 days to 1.</li>
+            <li>Owned production releases and observability: Azure Application Insights monitoring and tracing saved ~20 developer-hours a month; served 8 months as Senior Scrum Master, lifting team velocity 27%.</li>
+        </ul>
+    </div>
+
+    <div class="experience-item">
+        <div class="job-title">
+            <span><span class="company">The Tannery Row</span></span>
+            <span class="job-location">Chicago, IL</span>
+        </div>
+        <div class="job-subtitle">Technology & Operations Lead <span style="float: right;">December 2018 – Present</span></div>
+        <ul>
+            <li>Proposed and launched the company's leather sample-book product line, then scaled it into the full-time program I run today — engineering the swatch-book and leather-panel manufacturing processes and managing staff.</li>
+            <li>Engineered a Google Tag Manager "backend" for a backend-less Squarespace store: dynamic ads, organic listings, and a product-feed API built by treating page visits as tag-firing events through Google's own infrastructure; maintained to this day — online sales +10% YoY.</li>
+            <li>Own SEO end to end: grew organic Google traffic to rival direct traffic for the first time in company history; online sales rose 24% in my first three months back.</li>
+            <li>Built ECM-ai, an accounting tool that gamifies repairing bad order data so invoices import cleanly (a daily manual job became a monthly automated one), and TRTools, an internal RBAC-gated automation toolbox for all employees.</li>
+        </ul>
+    </div>
+
+    <div class="experience-item">
+        <div class="job-title">
+            <span><span class="company">Glimpse</span> (Mobile App)</span>
+            <span class="job-location"></span>
+        </div>
+        <div class="job-subtitle">UI/UX Developer / Co-Founder <span style="float: right;">2014 – 2018</span></div>
+        <ul>
+            <li>Built and released the social media app "Glimpse" (Swift); won best in Illinois in the Verizon Innovative App Challenge and pitched the app to live audiences and investors — later rebranded and sold after my departure.</li>
+        </ul>
+    </div>
+</body>
+</html>
