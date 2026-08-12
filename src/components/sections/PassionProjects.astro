@@ -1,0 +1,395 @@
+---
+// PassionProjects section: work built for love of the problem, led by the mathematics
+// Component contract: no props, system fonts only, tokens.css custom properties
+//
+// NOTE ON LINE WRAPPING: Astro compresses HTML at build time and strips the whitespace
+// at a line break that sits directly against an inline tag, in BOTH directions -- a
+// newline before <code> or after </strong> disappears and the words glue together. So
+// prose here is written one paragraph per line rather than wrapped. Verify with:
+//   grep -oE '</(strong|em|code)>[a-zA-Z]|[a-zA-Z]<(strong|em|code)[ >]' dist/index.html
+---
+
+<section class="passion-section">
+  <p class="section-moral">
+    <em>The astronomer never touched a star, and still wrote down its weight.</em>
+  </p>
+
+  <h2 id="passion">Passion projects</h2>
+
+  <div class="passion-intro">
+    <p>Work taken on because the problem was interesting, not because anything depended on it. Which is exactly why the maths gets to lead: there is no deadline arguing for the approximation that would have been good enough.</p>
+  </div>
+
+  <div class="project-block">
+    <h3>Tuono — estimating a value you are not allowed to read</h3>
+
+    <p class="project-tagline">A rotation-helper framework for <em>World of Warcraft: Midnight</em>. Legal by construction: reads no protected value, automates no input.</p>
+
+    <p>Midnight's <strong>secret values</strong> system hid the combat state that a whole generation of addons was built on. Tuono reads none of it and reconstructs most of it anyway — not by defeating anything, but by ordinary applied mathematics on the data Blizzard deliberately left readable.</p>
+
+    <p>The argument the project actually makes is not about a game. Hiding a value behind an effort barrier does not remove the capability; it decides who keeps it. The free, audited addons died and the private ones did not, and the players who lost most were the ones using these tools for accessibility. So the technique is published in full, MIT, with every uncertainty rendered on screen rather than papered over.</p>
+  </div>
+
+  <div class="maths-block">
+    <h3>The mathematics</h3>
+
+    <blockquote class="thesis">You never need to read the hidden value. You need any never-secret <em>function</em> of it, and then you invert.</blockquote>
+
+    <div class="maths-item">
+      <div class="maths-title">Invert to a set, not to a number</div>
+      <p>Hidden state <code class="inline-code">x</code> cannot be read, but <code class="inline-code">y = f(x)</code> can be, for various never-secret <code class="inline-code">f</code>. Each reading locates <code class="inline-code">x</code> in a preimage; accuracy is the size of the intersection across every channel available.</p>
+      <pre class="formula"><code>X̂ = ⋂ᵢ fᵢ⁻¹(yᵢ)        accuracy = |X̂|</code></pre>
+      <p>Two properties pull against each other. <strong>Soundness</strong> — the true value is always inside the estimate — is never traded. <strong>Precision</strong> is sacrificed freely to protect it.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Intervals, because the observations are monotone thresholds</div>
+      <p>The readable <code class="inline-code">insufficientPower</code> flag at cost <code class="inline-code">c</code> is literally the indicator <code class="inline-code">1[x &lt; c]</code>. Its preimages are half-lines, half-lines are closed under intersection, and so intervals are the natural carrier: cheap, sound by construction, and never wrong — only wide.</p>
+      <pre class="formula"><code>false → x ∈ [c, ∞)      true → x ∈ [0, c)</code></pre>
+      <p>The ability cost ladder — <code class="inline-code">15 / 25 / 35 / 40 / 45 / 50</code> — is therefore a six-level quantizer strapped to a continuous quantity the client refuses to return.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">The key move: crossings, not levels</div>
+      <p>Read statically, six booleans are mediocre — they localise the value to a bin of width 5&ndash;10, and no amount of re-reading improves it. The information is not in the levels. At the instant the flag flips at cost <code class="inline-code">c</code>, the hidden value is not "somewhere above <code class="inline-code">c</code>". It <em>is</em> <code class="inline-code">c</code>.</p>
+      <pre class="formula"><code>lo = hi = c            width 0</code></pre>
+      <p>This is <strong>level-crossing sampling</strong>, and it is old: it is how a dual-slope ADC measures voltage with a comparator and a clock, how a Vernier scale beats the resolution of its own graduations. The quantizer's output is coarse; its transition <em>times</em> are not. Residual error stops being the bin width and becomes <code class="inline-code">r·δt</code> — the sampling interval. Poll faster, measure better.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Differencing out the unknown</div>
+      <p>Two consecutive crossings with a known spend ledger <code class="inline-code">S</code> between them solve the rate outright — and the unknown initial condition cancels. You never needed to know where the value was, only that it touched <code class="inline-code">c₁</code> and later touched <code class="inline-code">c₂</code>.</p>
+      <pre class="formula"><code>r = (c₂ − c₁ + S) / Δt        δr/r ≈ δc/Δc + δt/Δt</code></pre>
+      <p>Crossing values are exact, so <code class="inline-code">δc = 0</code> and timing jitter dominates. One equation retires both a stat read that went secret mid-expansion and a stochastic proc that had previously been averaged into a constant.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Predict / update, with set-membership semantics</div>
+      <p>Between observations the estimate propagates under bounded dynamics; because the rate is itself only known within bounds, time makes the estimate <em>worse</em>, which is the honest outcome.</p>
+      <pre class="formula"><code>predict  [lo, hi] ← [min(cap, lo + r_lo·dt), min(cap, hi + r_hi·dt)]
+update   [lo, hi] ← [max(lo, a),             min(hi, b)]
+spend    [lo, hi] ← [max(0,  lo − c),        max(0,  hi − c)]</code></pre>
+      <p>This is the predict/update cycle of a Kalman filter with <strong>set-membership</strong> rather than probabilistic semantics — a bounded-error estimator in the Schweppe/Witsenhausen sense. It buys guaranteed containment instead of a confidence interval, which is the right trade whenever a confidently wrong answer costs more than an admittedly vague one. In a recommender it does: a wrong suggestion gets pressed.</p>
+      <p>The <code class="inline-code">min(cap, …)</code> is not mere clamping. <strong>Saturation is free information</strong> — once both endpoints reach the ceiling the width is zero, so sitting at full resource is self-measuring with no observation at all. Nonlinearity that contracts the state is a gift.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Why it deliberately refuses to converge</div>
+      <p>Soundness holds only while the model is complete, and this one is not: unobserved procs add resource the estimator never sees. If the filter ever becomes confident enough to exclude the true value, soundness is lost <em>permanently</em> — intersection only ever removes possibilities, so every later observation narrows around a wrong answer and the estimator can never recover on its own.</p>
+      <p>That is covariance collapse, the classic divergence failure of an over-tuned Kalman filter, and the reason real ones inject process noise they do not strictly believe in. Two defences: a permanent floor on the width, so no single corrupted sample can lock in a lie; and treating <code class="inline-code">lo &gt; hi</code> as a signal rather than a bug. An empty intersection is the model announcing that one of its own premises is false, and the correct response is to discard history and re-anchor on the newest evidence.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">The output is a lattice, not a number</div>
+      <p>Nothing downstream ever asks "how much?" — it asks a predicate, and a set-valued estimate answers predicates three-valued.</p>
+      <pre class="formula"><code>[lo,hi] ⊆ [c,∞)      → yes      provably affordable
+[lo,hi] ∩ [c,∞) = ∅  → no       provably not
+otherwise            → maybe    the interval straddles c</code></pre>
+      <p>This is <strong>abstract interpretation</strong>: an abstract domain answering concrete questions, where imprecision surfaces as <code class="inline-code">maybe</code> and never as a wrong answer. Every consumer must handle three cases. That is a real cost, and it is the price of never lying — each rule then declares which way it fails when the answer is <code class="inline-code">maybe</code>.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Observability, and where it fails</div>
+      <p>In control terms, "can I reconstruct the state from the outputs?" is <strong>observability</strong>, and this system is observable only under <strong>persistent excitation</strong> — the value must keep sweeping across tripwires. Constant spending is the best case; sitting at the ceiling is also fine, for free; and hovering between two tripwires is the genuine worst case, where width grows to the gap between adjacent costs and stops improving.</p>
+      <p>That yields a real, checkable claim rather than an assumption: a dense cost ladder is more observable than a sparse one, so the technique demonstrably serves some specs better than others.</p>
+    </div>
+
+    <div class="maths-item">
+      <div class="maths-title">Secret-agnostic by construction</div>
+      <p>No branch anywhere asks <em>"is this value hidden?"</em>. Every channel is optional evidence and the estimator consumes whatever arrives, so the consequences follow from the algebra instead of from special-case code.</p>
+      <div class="table-wrap">
+        <table class="degradation-table">
+          <thead>
+            <tr><th>Evidence available</th><th>Interval</th><th>Behaviour</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Crossings + casts + saturation</td><td>tight</td><td>full confidence</td></tr>
+            <tr><td>Casts only</td><td>moderate</td><td>runs, rendered as bounded</td></tr>
+            <tr><td>Nothing</td><td><code class="inline-code">[0, max]</code></td><td>every answer <code class="inline-code">maybe</code>; falls back</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The platform can hide or unhide anything and the only consequence is interval width. That is what makes the design durable against a system explicitly built to change.</p>
+    </div>
+  </div>
+
+  <div class="measured-block">
+    <h3>Measured, not claimed</h3>
+    <div class="table-wrap">
+      <table class="numbers-table">
+        <thead>
+          <tr><th>Metric</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Mean interval width, 94 in-combat ticks</td><td>7.13</td></tr>
+          <tr><td>Width at a threshold crossing</td><td>0 (exact)</td></tr>
+          <tr><td>Ticks with an active bound</td><td>71 / 94</td></tr>
+          <tr><td>Behavioural tests</td><td>180</td></tr>
+          <tr><td>Secret-value regressions</td><td>77</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="numbers-note"><em>The suite is mutation-checked: every fix must turn its covering test red against the broken code before it counts. A test that only passes proves nothing.</em></p>
+  </div>
+
+  <div class="scar-block">
+    <h3>A scar worth keeping</h3>
+    <div class="scar-item">
+      <div class="scar-title">A confident diagnosis, formally argued, and wrong</div>
+      <p>A live trace showed the estimate pinned at maximum while the client refused casts for want of resource. Under the algebra that combination is impossible, so the write-up concluded — with a proof sketch — that the update step was not connected at all.</p>
+      <p>It was connected. The reading had been taken from the last thirteen ticks of the trace, which land <em>after</em> combat ends, where a pinned maximum is the correct answer for a rested player. The next trace showed bounds active on 71 of 94 ticks with exact pins at every crossing. The real story was low excitation — four casts in the whole run — which is precisely the observability caveat the theory already documented.</p>
+      <p>The formalism did its job twice: it made the first diagnosis falsifiable, and it named the failure mode that actually applied. The trace reader now prints the full distribution before the tail, so the misreading is not repeatable, and the retraction sits in the project's state file above the claim it replaced.</p>
+    </div>
+  </div>
+
+  <p class="project-links">
+    <a href="https://github.com/matt82198/Tuono" target="_blank" rel="noopener noreferrer" class="cta-link">github.com/matt82198/Tuono</a>
+    <a href="https://github.com/matt82198/Tuono/blob/main/docs/INVERSION.md" target="_blank" rel="noopener noreferrer" class="cta-link">docs/INVERSION.md — the full treatment</a>
+  </p>
+</section>
+
+<style>
+  .passion-section {
+    margin: var(--space-16) 0;
+  }
+
+  /* Use shared .section-moral from global.css */
+
+  .passion-section h2 {
+    scroll-margin-top: 80px;
+  }
+
+  .passion-section h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-tight);
+    font-family: var(--font-sans);
+  }
+
+  .passion-intro {
+    max-width: var(--width-prose);
+    margin-bottom: var(--space-8);
+  }
+
+  .passion-intro p,
+  .project-block p,
+  .maths-item p,
+  .measured-block p {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+    max-width: var(--width-prose);
+  }
+
+  .project-block strong,
+  .maths-item strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .project-tagline {
+    color: var(--color-text-secondary) !important;
+    font-style: italic;
+  }
+
+  .thesis {
+    margin: 0 0 var(--space-8) 0;
+    padding: var(--space-6);
+    background-color: var(--color-bg-secondary);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    max-width: var(--width-prose);
+  }
+
+  .thesis em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .maths-block {
+    margin-bottom: var(--space-12);
+  }
+
+  .maths-item {
+    margin-bottom: var(--space-10);
+  }
+
+  .maths-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-sans);
+  }
+
+  .formula {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--color-code-bg);
+    color: var(--color-code-text);
+    padding: var(--space-4) var(--space-6);
+    border-radius: 6px;
+    border-left: 2px solid var(--color-border-strong);
+    margin: 0 0 var(--space-4) 0;
+    overflow-x: auto;
+    line-height: var(--leading-normal);
+  }
+
+  .formula code {
+    font-family: inherit;
+    background: none;
+    padding: 0;
+    color: inherit;
+    white-space: pre;
+  }
+
+  .inline-code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    background-color: var(--color-bg-secondary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 3px;
+    color: var(--color-text);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: var(--space-4);
+  }
+
+  .degradation-table,
+  .numbers-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .degradation-table th,
+  .numbers-table th {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    text-align: left;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .degradation-table th:last-child,
+  .numbers-table th:last-child {
+    text-align: right;
+  }
+
+  .degradation-table tbody tr,
+  .numbers-table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .degradation-table tbody tr:last-child,
+  .numbers-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .degradation-table td,
+  .numbers-table td {
+    padding: var(--space-4) var(--space-6);
+    color: var(--color-text-secondary);
+  }
+
+  .degradation-table td:last-child,
+  .numbers-table td:last-child {
+    color: var(--accent);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .measured-block {
+    margin-bottom: var(--space-12);
+  }
+
+  .numbers-note {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    max-width: var(--width-prose);
+  }
+
+  .numbers-note em {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+  }
+
+  .scar-block {
+    margin-bottom: var(--space-12);
+  }
+
+  .scar-item {
+    padding: var(--space-6);
+    background-color: var(--color-bg-secondary);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    max-width: var(--width-prose);
+  }
+
+  .scar-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-sans);
+  }
+
+  .scar-item p {
+    font-size: var(--text-base);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .scar-item p:last-child {
+    margin-bottom: 0;
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  .cta-link {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    border-bottom: 1px solid var(--accent);
+    transition: color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out),
+                background-color var(--duration-fast) var(--ease-out);
+    padding: var(--space-1) var(--space-2);
+    margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1);
+    border-radius: 2px;
+  }
+
+  .cta-link:hover {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .cta-link:focus {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-link {
+      transition: none;
+    }
+  }
+</style>
