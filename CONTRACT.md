@@ -24,6 +24,7 @@ Each section (Hero, Aesop, ClientWork, Writing, PrivateWork, TwoAIReview, FleetV
      - `id="clientwork"` (ClientWork section)
      - `id="writing"` (Writing section)
      - `id="privatework"` (PrivateWork section)
+     - `id="passion"` (PassionProjects section)
      - `id="review"` (TwoAIReview section)
      - `id="fleet"` (FleetViz section)
      - `id="timeline"` (Timeline section)
@@ -87,6 +88,7 @@ Style this with:
 | ClientWork | `src/components/sections/ClientWork.astro` | `#clientwork` | TBD |
 | Writing | `src/components/sections/Writing.astro` | `#writing` | TBD |
 | PrivateWork | `src/components/sections/PrivateWork.astro` | `#privatework` | TBD |
+| PassionProjects | `src/components/sections/PassionProjects.astro` | `#passion` | TBD |
 | TwoAIReview | `src/components/sections/TwoAIReview.astro` | `#review` | TBD |
 | FleetViz | `src/components/sections/FleetViz.astro` | `#fleet` | TBD |
 | Timeline | `src/components/sections/Timeline.astro` | `#timeline` | TBD |
