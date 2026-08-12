@@ -121,14 +121,15 @@ otherwise            → maybe    the interval straddles c</code></pre>
           <tr><th>Metric</th><th>Value</th></tr>
         </thead>
         <tbody>
-          <tr><td>Mean interval width, 94 in-combat ticks</td><td>7.13</td></tr>
+          <tr><td>Mean interval width, 113 in-combat ticks</td><td><strong>2.76</strong> of a 0&ndash;100 range</td></tr>
           <tr><td>Width at a threshold crossing</td><td>0 (exact)</td></tr>
-          <tr><td>Ticks with an active bound</td><td>71 / 94</td></tr>
-          <tr><td>Behavioural tests</td><td>180</td></tr>
+          <tr><td>Ticks with an active bound</td><td>75 / 113</td></tr>
+          <tr><td>Behavioural tests</td><td>183</td></tr>
           <tr><td>Secret-value regressions</td><td>77</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="numbers-note">A value the platform refuses to return at all, held to <strong>under 3% of its range</strong> for the length of a fight — using only things it was willing to say. It arrived in three steps as each channel came online: <code class="inline-code">7.13 → 3.44 → 2.76</code>, from the crossing solve, then an out-of-combat rate seed, then per-input provenance carried into the forward simulation.</p>
     <p class="numbers-note"><em>The suite is mutation-checked: every fix must turn its covering test red against the broken code before it counts. A test that only passes proves nothing.</em></p>
   </div>
 
