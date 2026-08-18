@@ -10,7 +10,7 @@
     "sync:stats": "python scripts/sync-aesop-stats.py"
   },
   "dependencies": {
-    "astro": "^7.2.0"
+    "astro": "^7.2.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
