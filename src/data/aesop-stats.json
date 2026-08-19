@@ -1,9 +1,9 @@
 {
-  "merged_prs": 588,
-  "commits": 1724,
-  "coauthors": 15,
+  "merged_prs": 538,
+  "commits": 2070,
+  "coauthors": 17,
   "waves": 31,
-  "authors_human": 1,
+  "authors_human": 0,
   "model_tiers": 5,
   "model_tier_names": [
     "Fable 5",
@@ -12,9 +12,10 @@
     "Opus 4.8",
     "Opus 5"
   ],
-  "loc": 311498,
+  "loc": 340429,
   "domains": 14,
   "test_files": 254,
   "version": "0.7.2",
-  "shipped_increments": 588
+  "shipped_increments": 538,
+  "generated_at": "2026-08-05"
 }
