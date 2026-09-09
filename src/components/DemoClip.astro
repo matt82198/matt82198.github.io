@@ -1,0 +1,86 @@
+---
+// DemoClip: Responsive video component for aesop orchestration demo clips
+// Params:
+//   - src: path to .mp4 file (relative to /public)
+//   - poster: path to .gif fallback or static image (relative to /public)
+//   - alt: accessibility description of the video content
+//   - caption: text shown below the video
+
+interface Props {
+  src: string;
+  poster: string;
+  alt: string;
+  caption: string;
+}
+
+const { src, poster, alt, caption } = Astro.props;
+---
+
+<figure class="demo-clip-figure">
+  <div class="demo-clip-wrapper">
+    <video
+      class="demo-clip"
+      controls
+      preload="metadata"
+      aria-label={alt}
+      poster={poster}
+    >
+      <source src={src} type="video/mp4" />
+      <img src={poster} alt={alt} class="demo-clip-fallback" />
+    </video>
+  </div>
+  <figcaption class="demo-clip-caption">{caption}</figcaption>
+</figure>
+
+<style>
+  .demo-clip-figure {
+    margin: var(--space-8) 0;
+    width: 100%;
+  }
+
+  .demo-clip-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-secondary);
+  }
+
+  .demo-clip {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .demo-clip-fallback {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .demo-clip-caption {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-3);
+    padding: 0 var(--space-2);
+    font-style: italic;
+    line-height: var(--leading-relaxed);
+  }
+
+  /* Ensure video never forces horizontal scroll on mobile */
+  @media (max-width: 640px) {
+    .demo-clip-wrapper {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .demo-clip {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+</style>
