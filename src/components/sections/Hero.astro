@@ -11,98 +11,40 @@ import measured from '../../data/measured.json';
 
 <section class="hero" id="hero">
   <div class="hero-content">
-    <p class="section-moral"><em>The best systems are those that build themselves.</em></p>
-
     <h1 class="hero-title">MATT CULLITON</h1>
 
-    <p class="hero-tagline">Automation Systems Design & Engineering</p>
+    <p class="hero-tagline">Senior Full-Stack &amp; AI Systems Engineer</p>
 
     <p class="hero-subhead">
-      Software engineer — AI platforms &amp; agent infrastructure. I build orchestration systems that ship verified code: multi-agent dispatch, measured LLM cost optimization ({measured.dispatch_cost_ratio}×), production guardrails. Chicago · open to senior AI platform / agent-infrastructure roles.
+      TypeScript · Java/Spring · Python · multi-agent orchestration. Measured cost and reliability in production autonomous systems. Chicago.
     </p>
 
-    <p class="hero-narrative">
-      I spent 3.5 years at AT&T building HR platforms at enterprise scale, promoted to Senior in year one, growing the team from 5 to 12 engineers. In June 2025, I stepped back to spend a deliberate year on independent R&D — building Aesop, measuring what actually works in autonomous-agent orchestration, shipping verified results. Now I'm looking for a senior AI platform or agent-infrastructure role where autonomous-system principles can become team leverage.
-    </p>
-
-    <div class="numbers-section">
-      <h3>By the numbers</h3>
-      <table class="numbers-table">
-        <thead>
-          <tr>
-            <th scope="col">Metric</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Commits</td>
-            <td>{stats.commits}</td>
-          </tr>
-          <tr>
-            <td>PRs merged</td>
-            <td>{stats.merged_prs}</td>
-          </tr>
-          <tr>
-            <td>Domains</td>
-            <td>{stats.domains}</td>
-          </tr>
-          <tr>
-            <td>Test files</td>
-            <td>{stats.test_files}</td>
-          </tr>
-          <tr>
-            <td>LOC</td>
-            <td>{(stats.loc / 1000).toFixed(1)}K</td>
-          </tr>
-          <tr>
-            <td>Version</td>
-            <td>{stats.version}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="numbers-note">
-        <em>Every number computed from git at {stats.generated_at} (auto-refreshed nightly).</em>
-      </p>
-    </div>
-
-    <div class="fleet-sim-container">
-      <div class="fleet-session" role="img" aria-label="Interactive fleet simulation: user typing natural language prompts while agents spawn and return results concurrently">
-        <div class="session-header">
-          <div class="session-dot session-dot-red"></div>
-          <div class="session-dot session-dot-yellow"></div>
-          <div class="session-dot session-dot-green"></div>
-          <span class="session-title">orchestrator session</span>
-        </div>
-        <div class="session-messages" id="session-messages">
-          <div class="message-group">
-            <div class="message user-message">
-              <span class="message-marker">you:</span>
-              <span class="message-text" id="user-prompt"></span><span class="message-cursor" id="cursor">▋</span>
-            </div>
-          </div>
-        </div>
-        <div class="fleet-agents" id="fleet-agents"></div>
+    <div class="proof-tiles">
+      <div class="proof-tile">
+        <div class="proof-value">{stats.commits}</div>
+        <div class="proof-label">Commits</div>
       </div>
-      <p class="fleet-caption">Numbers computed from git at the date above — verify source at <a href="https://github.com/matt82198/aesop" target="_blank" rel="noopener noreferrer">github.com/matt82198/aesop</a></p>
-    </div>
-    <p class="sync-status" id="sync-status"></p>
-
-    <p class="hero-kicker"><em><a href="https://github.com/matt82198/matt82198.github.io" target="_blank" rel="noopener noreferrer" class="hero-kicker-link">Built by Matt Culliton, using the fleet it describes.</a></em></p>
-
-    <div class="hero-links">
-      <a href="https://github.com/matt82198" target="_blank" rel="noopener noreferrer" class="hero-link">GitHub</a>
-      <span class="link-divider">·</span>
-      <a href="https://medium.com/@matt82198" target="_blank" rel="noopener noreferrer" class="hero-link">Medium</a>
-      <span class="link-divider">·</span>
-      <a href="https://linkedin.com/in/matt-culliton-a8327676" target="_blank" rel="noopener noreferrer" class="hero-link">LinkedIn</a>
-      <span class="link-divider">·</span>
-      <a href="/resume.pdf" class="hero-link">Resume (PDF · updated August 2026)</a>
-      <span class="link-divider">·</span>
-      <a href="mailto:matt82198@gmail.com" class="hero-link">Email</a>
+      <div class="proof-tile">
+        <div class="proof-value">{stats.merged_prs}</div>
+        <div class="proof-label">PRs merged</div>
+      </div>
+      <div class="proof-tile">
+        <div class="proof-value">{stats.domains}</div>
+        <div class="proof-label">Domains</div>
+      </div>
+      <div class="proof-tile">
+        <div class="proof-value">{stats.test_files}</div>
+        <div class="proof-label">Test files</div>
+      </div>
     </div>
 
-    <p class="hero-moral"><em>Slow and steady wins; parallel and verified wins sooner.</em></p>
+    <div class="cta-links">
+      <a href="/resume.pdf" class="cta-button cta-primary">Resume</a>
+      <a href="https://github.com/matt82198" class="cta-button" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:matt82198@gmail.com" class="cta-button">Email</a>
+      <a href="https://linkedin.com/in/matt-culliton-a8327676" class="cta-button" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+
   </div>
 </section>
 
@@ -119,20 +61,8 @@ import measured from '../../data/measured.json';
   }
 
   .hero-content {
-    max-width: var(--width-prose);
+    max-width: 600px;
     text-align: center;
-  }
-
-  .section-moral {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin: 0 0 var(--space-8) 0;
-    font-family: var(--font-sans);
-    letter-spacing: var(--tracking-normal);
-  }
-
-  .section-moral em {
-    font-style: italic;
   }
 
   .hero-title {
@@ -141,17 +71,17 @@ import measured from '../../data/measured.json';
     font-weight: 700;
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
-    margin: var(--space-8) 0 var(--space-6) 0;
+    margin: 0 0 var(--space-3) 0;
     line-height: var(--leading-tight);
   }
 
   .hero-tagline {
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     font-family: var(--font-sans);
     color: var(--color-text);
     margin: 0 0 var(--space-4) 0;
     line-height: var(--leading-normal);
-    font-weight: 400;
+    font-weight: 600;
   }
 
   .hero-subhead {
@@ -162,718 +92,109 @@ import measured from '../../data/measured.json';
     line-height: var(--leading-normal);
   }
 
-  .hero-narrative {
-    font-size: var(--text-base);
-    font-family: var(--font-sans);
-    color: var(--color-text);
-    margin: 0 auto var(--space-12) auto;
-    line-height: var(--leading-relaxed);
-    max-width: var(--width-prose);
-  }
-
-  .fleet-sim-container {
-    margin: 0 0 var(--space-12) 0;
-    max-width: 100%;
-    overflow: hidden;
-  }
-
-  .fleet-session {
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--color-bg-secondary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    max-height: 420px;
-  }
-
-  .session-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    background: rgba(255, 255, 255, 0.02);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .session-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex: none;
-  }
-
-  .session-dot-red { background: #ff5f56; }
-  .session-dot-yellow { background: #ffbd2e; }
-  .session-dot-green { background: #27c93f; }
-
-  .session-title {
-    margin-left: var(--space-2);
-    font-family: var(--font-sans);
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.02em;
-    font-weight: 500;
-  }
-
-  .session-messages {
-    padding: var(--space-4);
-    overflow: hidden;
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    min-height: 50px;
-  }
-
-  .message-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .message {
-    display: flex;
-    gap: var(--space-2);
-    align-items: flex-start;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .user-message {
-    color: var(--color-text);
-  }
-
-  .orchestrator-message {
-    color: var(--color-text-secondary);
-  }
-
-  .message-marker {
-    flex: none;
-    font-weight: 600;
-    color: var(--accent);
-    min-width: 30px;
-  }
-
-  .message-text {
-    flex: 1;
-    min-width: 0;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .message-cursor {
-    color: var(--accent);
-    animation: cursor-blink 1.05s steps(1) infinite;
-  }
-
-  @keyframes cursor-blink { 50% { opacity: 0; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .message-cursor { animation: none; opacity: 1; }
-  }
-
-  .fleet-agents {
-    padding: var(--space-4);
+  .proof-tiles {
     display: grid;
-    gap: var(--space-3);
-    max-height: 200px;
-    overflow: hidden;
-    text-align: left;
-  }
-
-  .agent-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-3);
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    min-height: 28px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-align: left;
-    flex-shrink: 0;
-  }
-
-  .agent-id {
-    flex: none;
-    color: var(--accent);
-    font-weight: 600;
-    min-width: 4ch;
-  }
-
-  .agent-task {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 0.8rem;
-  }
-
-  .agent-status {
-    flex: none;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .status-spinner {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-top-color: var(--accent);
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .status-spinner { animation: none; }
-  }
-
-  .status-check {
-    color: #4ade80;
-    font-weight: 600;
-  }
-
-  .status-result {
-    flex: none;
-    color: var(--color-text-tertiary);
-    font-size: 0.75rem;
-    min-width: 80px;
-    text-align: right;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .fleet-caption {
-    font-size: var(--text-xs);
-    color: var(--color-text-tertiary);
-    font-style: italic;
-    margin: var(--space-3) 0 0 0;
-    text-align: center;
-  }
-
-  .fleet-caption a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .fleet-caption a:hover {
-    text-decoration: underline;
-  }
-
-  .sync-status {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    color: var(--color-text-tertiary);
-    text-align: center;
-    margin: 0;
-    min-height: 1.2em;
-    display: none;
-  }
-
-  /* Mobile responsive: narrow viewports */
-  @media (max-width: 640px) {
-    .fleet-session {
-      max-height: 380px;
-    }
-
-    .session-header {
-      padding: var(--space-2) var(--space-3);
-    }
-
-    .session-title {
-      font-size: 0.75rem;
-    }
-
-    .session-messages {
-      padding: var(--space-3);
-      gap: var(--space-2);
-    }
-
-    .message {
-      font-size: 0.85rem;
-    }
-
-    .message-marker {
-      min-width: 28px;
-      font-size: 0.85rem;
-    }
-
-    .agent-row {
-      padding: var(--space-1) var(--space-2);
-      font-size: 0.75rem;
-      min-height: 24px;
-      gap: var(--space-2);
-    }
-
-    .agent-id {
-      min-width: 3ch;
-      font-size: 0.75rem;
-    }
-
-    .agent-task {
-      font-size: 0.7rem;
-      max-width: 100px;
-    }
-
-    .status-result {
-      font-size: 0.7rem;
-      min-width: 70px;
-    }
-
-    .fleet-caption {
-      font-size: 0.7rem;
-      padding: 0 var(--space-3);
-    }
-  }
-
-  @media (max-width: 414px) {
-    .fleet-session {
-      max-height: 360px;
-      border-radius: 6px;
-    }
-
-    .session-header {
-      padding: var(--space-1) var(--space-2);
-      gap: var(--space-1);
-    }
-
-    .session-dot {
-      width: 9px;
-      height: 9px;
-    }
-
-    .session-title {
-      font-size: 0.7rem;
-      margin-left: var(--space-1);
-    }
-
-    .session-messages {
-      padding: var(--space-2);
-      gap: var(--space-1);
-    }
-
-    .message {
-      font-size: 0.8rem;
-      gap: var(--space-1);
-    }
-
-    .message-marker {
-      min-width: 24px;
-      font-size: 0.75rem;
-    }
-
-    .agent-row {
-      padding: var(--space-1) var(--space-2);
-      font-size: 0.7rem;
-      min-height: 22px;
-      gap: var(--space-1);
-      border-radius: 3px;
-    }
-
-    .agent-id {
-      min-width: 2.5ch;
-      font-size: 0.7rem;
-    }
-
-    .agent-task {
-      font-size: 0.65rem;
-      max-width: 80px;
-    }
-
-    .status-spinner {
-      width: 10px;
-      height: 10px;
-      border-width: 1.5px;
-    }
-
-    .status-result {
-      font-size: 0.65rem;
-      min-width: 60px;
-    }
-
-    .fleet-caption {
-      font-size: 0.65rem;
-      padding: 0 var(--space-2);
-    }
-  }
-
-  .hero-kicker {
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
-    font-style: italic;
-    margin: 0 0 var(--space-8) 0;
-    line-height: var(--leading-normal);
-    font-family: var(--font-sans);
-  }
-
-  .hero-kicker-link {
-    color: var(--color-text-secondary);
-    text-decoration: underline;
-    text-decoration-color: var(--accent);
-    cursor: pointer;
-    transition: color var(--duration-base) var(--ease-out);
-  }
-
-  .hero-kicker-link:hover {
-    color: var(--accent);
-  }
-
-  .hero-kicker-link:focus {
-    outline: var(--focus-ring);
-    outline-offset: var(--focus-ring-offset);
-  }
-
-  .hero-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--space-4);
-    margin: 0 0 var(--space-12) 0;
+    margin: 0 0 var(--space-8) 0;
+  }
+
+  .proof-tile {
+    padding: var(--space-4);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .proof-value {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .proof-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .cta-links {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
     flex-wrap: wrap;
   }
 
-  .hero-link {
+  .cta-button {
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg);
     color: var(--accent);
     text-decoration: none;
-    font-family: var(--font-sans);
     font-size: var(--text-sm);
-    padding: var(--space-2) var(--space-3);
-    transition: color var(--duration-base) var(--ease-out);
+    font-weight: 600;
+    font-family: var(--font-sans);
+    transition: all var(--duration-fast) var(--ease-out);
+    cursor: pointer;
   }
 
-  .hero-link:hover {
-    color: var(--accent-light);
+  .cta-button:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--accent);
   }
 
-  .hero-link:focus {
+  .cta-button:focus-visible {
     outline: var(--focus-ring);
     outline-offset: var(--focus-ring-offset);
   }
 
-  .link-divider {
-    color: var(--color-text-tertiary);
-    font-family: var(--font-mono);
+  .cta-primary {
+    background: var(--accent);
+    color: var(--color-bg);
+    border-color: var(--accent);
   }
 
-  .hero-moral {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    margin: 0;
-    font-family: var(--font-sans);
+  .cta-primary:hover {
+    background: var(--accent-light);
+    border-color: var(--accent-light);
   }
 
-  .hero-moral em {
-    font-style: italic;
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: var(--text-3xl);
+    }
+
+    .hero-tagline {
+      font-size: var(--text-base);
+    }
+
+    .proof-tiles {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+
+    .proof-value {
+      font-size: var(--text-xl);
+    }
+
+    .cta-links {
+      gap: var(--space-2);
+    }
+
+    .cta-button {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-xs);
+    }
   }
 
-  .numbers-section {
-    margin-top: var(--space-16);
-  }
-
-  .numbers-table {
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    background-color: var(--color-code-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: var(--space-6);
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .numbers-table thead {
-    background-color: transparent;
-  }
-
-  .numbers-table th {
-    background-color: transparent;
-    color: var(--color-text-secondary);
-    font-weight: 600;
-    text-align: left;
-    padding: var(--space-4) var(--space-6);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .numbers-table th:last-child {
-    text-align: right;
-  }
-
-  .numbers-table tbody tr {
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .numbers-table tbody tr:last-child {
-    border-bottom: none;
-  }
-
-  .numbers-table td {
-    padding: var(--space-4) var(--space-6);
-    color: var(--color-text-secondary);
-  }
-
-  .numbers-table td:last-child {
-    color: var(--accent);
-    font-weight: 600;
-    text-align: right;
-  }
-
-  .numbers-note {
-    font-size: var(--text-sm);
-    color: var(--color-text-tertiary);
-    line-height: var(--leading-normal);
-    margin: 0;
-  }
-
-  .numbers-note em {
-    font-style: italic;
-    color: var(--color-text-tertiary);
-  }
-
-    @media (prefers-reduced-motion: reduce) {
-    .hero-link {
+  @media (prefers-reduced-motion: reduce) {
+    .cta-button {
       transition: none;
     }
   }
 </style>
-
-<script is:inline>
-(function() {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const promptEl = document.getElementById('user-prompt');
-  const cursorEl = document.getElementById('cursor');
-  const agentsEl = document.getElementById('fleet-agents');
-  const messagesEl = document.getElementById('session-messages');
-
-  const prompts = [
-    'clear the backlog while we apply',
-    'run the audit loop until zero issues',
-    'ship it',
-    'keep the velo',
-    'is the backlog empty?',
-    'reconcile tracker state',
-    'what are the open P1s?',
-  ];
-
-  const taskSlugs = [
-    'audit·drift',
-    'review·core',
-    'test·state',
-    'compile·check',
-    'ui·render',
-    'verify·cli',
-    'merge·pr',
-    'scan·secret',
-    'check·linter',
-    'build·dist',
-    'run·tests',
-    'deploy·docs',
-    'sync·fork',
-    'trace·perf',
-    'validate·schema',
-    'push·main',
-    'tag·release',
-    'notify·slack',
-  ];
-
-  const results = [
-    '✓ green 46/46',
-    '✓ merged #481',
-    '✓ pushed',
-    '✓ 0 findings',
-    '✓ passed in 2.3s',
-    '✓ verified',
-    '✓ no diffs',
-    '✓ clean',
-  ];
-
-  let currentPromptIdx = 0;
-  let currentPromptCharIdx = 0;
-  let agentsMap = new Map();
-  let nextAgentId = 1;
-
-  function getRandomItem(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function renderAgents() {
-    agentsEl.innerHTML = '';
-    agentsMap.forEach((agent) => {
-      const row = document.createElement('div');
-      row.className = 'agent-row';
-      row.setAttribute('data-astro-cid-yodha2z4', '');
-
-      const idEl = document.createElement('div');
-      idEl.className = 'agent-id';
-      idEl.textContent = agent.id;
-
-      const taskEl = document.createElement('div');
-      taskEl.className = 'agent-task';
-      taskEl.textContent = agent.task;
-
-      const statusEl = document.createElement('div');
-      statusEl.className = 'agent-status';
-
-      if (agent.done) {
-        const checkEl = document.createElement('div');
-        checkEl.className = 'status-check';
-        checkEl.textContent = '✓';
-        statusEl.appendChild(checkEl);
-
-        const resultEl = document.createElement('div');
-        resultEl.className = 'status-result';
-        resultEl.textContent = agent.result;
-        statusEl.appendChild(resultEl);
-      } else {
-        const spinEl = document.createElement('div');
-        spinEl.className = 'status-spinner';
-        statusEl.appendChild(spinEl);
-      }
-
-      row.appendChild(idEl);
-      row.appendChild(taskEl);
-      row.appendChild(statusEl);
-      agentsEl.appendChild(row);
-    });
-  }
-
-  function spawnAgent() {
-    // Recycle oldest agent if we have too many
-    if (agentsMap.size >= 16) {
-      const firstKey = agentsMap.keys().next().value;
-      agentsMap.delete(firstKey);
-    }
-
-    const id = `H${String(nextAgentId).padStart(2, '0')}`;
-    nextAgentId++;
-
-    const workDuration = 1500 + Math.random() * 3000;
-    const agent = {
-      id,
-      task: getRandomItem(taskSlugs),
-      done: false,
-      result: getRandomItem(results),
-      spawnTime: Date.now(),
-      doneTime: Date.now() + workDuration,
-    };
-
-    agentsMap.set(id, agent);
-    renderAgents();
-
-    setTimeout(() => {
-      if (agentsMap.has(id)) {
-        agent.done = true;
-        renderAgents();
-      }
-    }, workDuration);
-  }
-
-  function typePrompt() {
-    if (prefersReducedMotion) {
-      promptEl.textContent = prompts[currentPromptIdx];
-      return;
-    }
-
-    if (currentPromptCharIdx < prompts[currentPromptIdx].length) {
-      promptEl.textContent += prompts[currentPromptIdx][currentPromptCharIdx];
-      currentPromptCharIdx++;
-      setTimeout(typePrompt, 45);
-    }
-  }
-
-  function cyclePrompt() {
-    currentPromptIdx = (currentPromptIdx + 1) % prompts.length;
-    currentPromptCharIdx = 0;
-    promptEl.textContent = '';
-    typePrompt();
-  }
-
-  function mainLoop() {
-    // Maintain 12-16 concurrent agents with varied states
-    const agentCount = agentsMap.size;
-    const workingCount = Array.from(agentsMap.values()).filter(a => !a.done).length;
-
-    // Spawn new agents to maintain fleet size and working load
-    if (agentCount < 15 || (workingCount < 4 && agentCount < 16)) {
-      spawnAgent();
-    }
-
-    // If we have too many done agents, recycle them
-    if (agentCount > 16) {
-      const doneAgents = Array.from(agentsMap.entries())
-        .filter(([_, agent]) => agent.done)
-        .sort((a, b) => a[1].doneTime - b[1].doneTime);
-
-      if (doneAgents.length > 0) {
-        agentsMap.delete(doneAgents[0][0]);
-      }
-    }
-
-    // Update agent completion status
-    agentsMap.forEach((agent) => {
-      if (!agent.done && Date.now() >= agent.doneTime) {
-        agent.done = true;
-      }
-    });
-
-    renderAgents();
-  }
-
-  // Start simulation
-  if (promptEl && agentsEl && messagesEl) {
-    if (!prefersReducedMotion) {
-      typePrompt();
-
-      // Spawn initial batch of agents
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => spawnAgent(), i * 200);
-      }
-
-      // Main loop: maintain fleet lifecycle every 300ms
-      const mainInterval = setInterval(mainLoop, 300);
-
-      // Cycle prompts every 5 seconds
-      const promptInterval = setInterval(cyclePrompt, 5000);
-
-      // Cleanup on unmount
-      const observer = new MutationObserver(() => {
-        if (!document.contains(promptEl)) {
-          clearInterval(mainInterval);
-          clearInterval(promptInterval);
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-    } else {
-      // Reduced motion: show static fleet with varied states
-      promptEl.textContent = 'keep the velo';
-
-      // Create a mix of working and completed agents
-      const initialAgents = 16;
-      for (let i = 0; i < initialAgents; i++) {
-        const agent = {
-          id: `H${String(i + 1).padStart(2, '0')}`,
-          task: getRandomItem(taskSlugs),
-          done: i < 10, // First 10 are done, rest are working
-          result: i < 10 ? getRandomItem(results) : '',
-          spawnTime: Date.now(),
-          doneTime: Date.now(),
-        };
-        agentsMap.set(agent.id, agent);
-        nextAgentId = i + 2;
-      }
-      renderAgents();
-    }
-  }
-})();
-</script>
