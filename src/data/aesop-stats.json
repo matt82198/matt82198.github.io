@@ -1,21 +1,21 @@
 {
-  "merged_prs": 538,
-  "commits": 2070,
-  "coauthors": 17,
+  "merged_prs": 551,
+  "commits": 2095,
+  "coauthors": 18,
   "waves": 31,
   "authors_human": 0,
-  "model_tiers": 5,
+  "model_tiers": 6,
   "model_tier_names": [
     "Fable 5",
+    "Fable 5.1",
     "Haiku 4.5",
     "Opus 4.6",
     "Opus 4.8",
     "Opus 5"
   ],
-  "loc": 340429,
+  "loc": 343009,
   "domains": 14,
-  "test_files": 254,
-  "version": "0.7.2",
-  "shipped_increments": 538,
-  "generated_at": "2026-08-05"
+  "test_files": 272,
+  "version": "v0.7.2",
+  "shipped_increments": 551
 }
