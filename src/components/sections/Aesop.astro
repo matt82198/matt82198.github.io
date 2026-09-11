@@ -10,17 +10,22 @@ import DemoClip from '../DemoClip.astro';
     <em>The fox measured twice and paid for one architecture.</em>
   </p>
 
-  <h2 id="aesop">Aesop — crash-only multi-agent orchestration</h2>
+  <h2 id="aesop">Aesop — crash-only filesystem-as-memory</h2>
 
   <div class="aesop-pitch">
     <p>
-      Source-available research platform for autonomous software development. Built on Unix principles: small decoupled components, plain durable files, crash-only recovery. Crash-only worker execution (request-scoped agents over persistent filesystem state) over git-backed state; flat O(1)-depth orchestration where productivity scales with parallel subagent count, no coordination bottleneck.
+      Production orchestration platform for autonomous software development. Built on crash-only filesystem-as-memory: small decoupled components, durable plain-text state (SQLite WAL + git-backed snapshots), request-scoped workers with no long-lived agents. Flat O(1)-depth dispatch where productivity scales with parallel subagent count, zero coordination bottleneck.
     </p>
     <p>
-      Removing the hierarchical supervisor layer cut dispatch cost 4× at identical graded quality — A/B tested, architecture cancelled, data kept. On seam-level engineering tasks (review, triage, local orchestration), Haiku and Sonnet both maxed the 39-task held-out judgment set — a sufficiency floor, not tier equivalence. <strong>{stats.merged_prs} PRs built by the system itself</strong> (as of {stats.generated_at}), end-to-end from backlog through CI-verified merge.
+      Measured 4× cost reduction from removing hierarchical specialist dispatch at identical quality (A/B tested, cancelled, data kept). Haiku and Sonnet both maxed the 39-task held-out judgment set on engineering tasks — a sufficiency floor, not tier equivalence. Multi-model driver seam: swap orchestrator and worker model per seat (Claude, Codex, any OpenAI-compatible) from configuration. Multi-instance coordination via SQLite lease-based file claims (single-box, scales to one write per coordinated mutation). <strong>{stats.merged_prs} PRs built by the system itself</strong> (as of {stats.generated_at}), end-to-end from backlog through CI-verified merge.
+    </p>
+    <p>
+      Current: v0.7.2 stable release (2026-07-31 tagged, npm latest). <strong>License: MIT</strong> (relicense to PolyForm Noncommercial in review); versions ≤0.7.0 remain MIT forever.
     </p>
     <p>
       <a href="https://github.com/matt82198/aesop" target="_blank" rel="noopener noreferrer" class="cta-link">github.com/matt82198/aesop</a>
+      · <a href="https://www.npmjs.com/package/@matt82198/aesop" target="_blank" rel="noopener noreferrer" class="cta-link">@matt82198/aesop on npm</a>
+      · <a href="https://github.com/matt82198/aesop/blob/main/docs/README.md" target="_blank" rel="noopener noreferrer" class="cta-link">documentation</a>
     </p>
   </div>
 
@@ -38,6 +43,9 @@ import DemoClip from '../DemoClip.astro';
       </li>
       <li>
         <strong>Event-sourced SQLite</strong> (WAL) state store with git demoted to rendered export
+      </li>
+      <li>
+        <strong>Guardrail layer</strong> — 14 prose rules compiled to fail-closed gates (dispatch lint, fixture validation, import-cycle checks, encoding, TODO/FIXME audits, file-size enforcement, bash-exec isolation); rules engine that learns from violations
       </li>
       <li>
         <strong>Watchdog daemon</strong> — secret-scan pre-push gate + heartbeat liveness
@@ -100,6 +108,22 @@ import DemoClip from '../DemoClip.astro';
       </div>
       <div class="gate-item">
         <p>Nine CI runs reported green against their base while main was broken — re-running the exact CI gate revealed the union-drift bug and led to branch-protection hardening.</p>
+      </div>
+    </div>
+
+    <h3>What is not finished</h3>
+    <div class="gates-list">
+      <div class="gate-item">
+        <p><strong>Multi-instance coordination.</strong> SQLite lease-based claims require single-box orchestration. Distributed state layer is Phase 4 (unscheduled); Postgres multi-instance stays unbuilt.</p>
+      </div>
+      <div class="gate-item">
+        <p><strong>Cost ceiling and kill-switch are production-proven internally</strong> but not yet customer-facing: API-callable halt and budget gates exist in the dispatcher, not exposed to remote configurations.</p>
+      </div>
+      <div class="gate-item">
+        <p><strong>Portability.</strong> Aesop itself runs on aesop (dogfooding proven). Porting to other codebases (outlaw-assist integration test is live) works but still needs fidelity validation—source markers and independent cross-artifact test verification required on every port.</p>
+      </div>
+      <div class="gate-item">
+        <p><strong>CI edge-case coverage is 87%.</strong> Suites pass on Windows (4-shard parallel, 3min gate) and Linux; full coverage of interaction edge cases between state updates and agent timeouts is not exhaustive.</p>
       </div>
     </div>
   </div>

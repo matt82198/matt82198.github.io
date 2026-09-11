@@ -59,5 +59,29 @@
     "label": "Jul 29 2026",
     "title": "Aesop relicensed MIT — open source, again",
     "description": "the research project that grew into a self-building system returns to open source; MIT as of today"
+  },
+  {
+    "date": "2026-07-31",
+    "label": "Jul 31 2026",
+    "title": "v0.7.1 and v0.7.2 released",
+    "description": "hardening fixes: fake-green gates (state verifier, test-count reporter), encoding issues, test pollution resolved; multi-instance coordination, remote command inbox, and 14 new guardrails shipped"
+  },
+  {
+    "date": "2026-08-01",
+    "label": "Aug 1 2026",
+    "title": "83 PRs merged since 2026-07-29",
+    "description": "post-0.7.0 development: guardrail layer (dispatch lint, fixture validation, import checks, encoding enforcement, file-size limits, bash-exec isolation), CLI dispatch table (10 namespaces, 53 verbs), remote inbox, ports and verification hardening"
+  },
+  {
+    "date": "2026-09-09",
+    "label": "Sep 9 2026",
+    "title": "Bears 2026 Forecast published",
+    "description": "50,000-season Monte Carlo, SRS from live 2025 data, turnover-luck regression, game-by-game probabilities, not calibrated to Vegas (market 9.5, model 7.33)"
+  },
+  {
+    "date": "2026-09-09",
+    "label": "Sep 9 2026",
+    "title": "Psinasty Power Rankings published",
+    "description": "12-team superflex dynasty league: Sleeper API rosters, optimal-lineup solver, composite scoring (60% starters + 12% depth + 28% asset value), injury-aware rankings"
   }
 ]
