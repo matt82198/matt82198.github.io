@@ -88,7 +88,7 @@ import measured from '../../data/measured.json';
     font-size: var(--text-base);
     font-family: var(--font-sans);
     color: var(--color-text-secondary);
-    margin: 0 0 var(--space-8) 0;
+    margin: 0 0 var(--space-6) 0;
     line-height: var(--leading-normal);
   }
 
@@ -96,7 +96,7 @@ import measured from '../../data/measured.json';
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-4);
-    margin: 0 0 var(--space-8) 0;
+    margin: 0 0 var(--space-6) 0;
   }
 
   .proof-tile {
@@ -165,30 +165,53 @@ import measured from '../../data/measured.json';
   }
 
   @media (max-width: 640px) {
+    .hero {
+      min-height: auto;
+      padding: var(--space-6);
+    }
+
     .hero-title {
-      font-size: var(--text-3xl);
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-2);
     }
 
     .hero-tagline {
-      font-size: var(--text-base);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-2);
+    }
+
+    .hero-subhead {
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-4);
+      line-height: var(--leading-tight);
     }
 
     .proof-tiles {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-3);
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .proof-tile {
+      padding: var(--space-2);
     }
 
     .proof-value {
-      font-size: var(--text-xl);
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-1);
+    }
+
+    .proof-label {
+      font-size: var(--text-2xs);
     }
 
     .cta-links {
-      gap: var(--space-2);
+      gap: var(--space-1);
     }
 
     .cta-button {
-      padding: var(--space-2) var(--space-4);
-      font-size: var(--text-xs);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--text-2xs);
     }
   }
 

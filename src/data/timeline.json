@@ -83,5 +83,11 @@
     "label": "Sep 9 2026",
     "title": "Psinasty Power Rankings published",
     "description": "12-team superflex dynasty league: Sleeper API rosters, optimal-lineup solver, composite scoring (60% starters + 12% depth + 28% asset value), injury-aware rankings"
+  },
+  {
+    "date": "2026-09-11",
+    "label": "Sep 11 2026",
+    "title": "Aesop relicensed to PolyForm Noncommercial 1.0.0",
+    "description": "versions ≤0.7.0 remain MIT; production use requires research or indie license"
   }
 ]

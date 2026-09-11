@@ -19,6 +19,10 @@
           <span class="metric-value">39/39</span>
         </div>
         <div class="metric">
+          <span class="metric-label">Sonnet</span>
+          <span class="metric-value">39/39</span>
+        </div>
+        <div class="metric">
           <span class="metric-label">Opus</span>
           <span class="metric-value">38/39</span>
         </div>
@@ -119,8 +123,8 @@
   }
 
   .metric-pair {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: var(--space-4);
     margin-bottom: var(--space-6);
   }
