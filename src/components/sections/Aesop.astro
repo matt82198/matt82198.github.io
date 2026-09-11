@@ -48,7 +48,10 @@ import DemoClip from '../DemoClip.astro';
         <strong>Guardrail layer</strong> — 14 prose rules compiled to fail-closed gates (dispatch lint, fixture validation, import-cycle checks, encoding, TODO/FIXME audits, file-size enforcement, bash-exec isolation); rules engine that learns from violations
       </li>
       <li>
-        <strong>Watchdog daemon</strong> — secret-scan pre-push gate + heartbeat liveness
+        <strong>Git pre-push policy hooks</strong> — runtime gates on branch protection, secrets, and dispatch policy that intercept commits before pushing (shipped 2026-07-12, <a href="https://github.com/matt82198/aesop/commit/ff692a18" target="_blank" rel="noopener noreferrer" class="inline-link">commit ff692a18</a>); analogous to Claude Code's <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" target="_blank" rel="noopener noreferrer" class="inline-link">PreToolUse/PostToolUse hooks</a> but at the git level
+      </li>
+      <li>
+        <strong>Watchdog daemon</strong> — heartbeat liveness and agent lifecycle management
       </li>
       <li>
         <strong>React 18 + Vite dashboard</strong> — real-time SSE updates, no frame rate lock
@@ -179,19 +182,28 @@ import DemoClip from '../DemoClip.astro';
     font-weight: 600;
   }
 
-  .cta-link {
-    display: inline-block;
+  .cta-link,
+  .inline-link {
     color: var(--accent);
     text-decoration: none;
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
     border-bottom: 1px solid var(--accent);
     transition: color var(--duration-fast) var(--ease-out),
                 border-color var(--duration-fast) var(--ease-out),
                 background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .cta-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
     padding: var(--space-1) var(--space-2);
     margin: calc(var(--space-1) * -1) calc(var(--space-2) * -1);
     border-radius: 2px;
+  }
+
+  .inline-link {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
   }
 
   .cta-link:hover {
