@@ -33,14 +33,36 @@ const allowlist = [
   /^[a-f0-9]{7,}$/,
   // Memory/storage units (1KB, 2GB, etc.) - these will be in the text
   /^\d+(KB|MB|GB|TB|B|kB|mB)$/i,
+  // Time units (500ms, 3s, 10m, etc.)
+  /^\d+(ms|s|m|min|mins|h|hr|hrs)$/i,
   // Line numbers in specific contexts
   /^line\s+\d+$/i,
+  // Duration units (8 mos, 4 yrs, etc.)
+  /^\d+\s+(mos?|years?|yrs?|hrs?|mins?|secs?|days?)$/i,
 ];
 
 // Determine if a number is in the allowlist
-function isAllowlisted(numberStr) {
+function isAllowlisted(numberStr, context = '') {
   const clean = numberStr.trim();
-  return allowlist.some(pattern => pattern.test(clean));
+
+  // Check standard allowlist patterns
+  if (allowlist.some(pattern => pattern.test(clean))) {
+    return true;
+  }
+
+  // Check if this number is followed by a unit in the context (e.g., "500ms", "20px")
+  const numberWithUnits = clean.replace(/[+-]/, ''); // Remove +/- for matching
+  if (new RegExp(`\\b${numberWithUnits}\\s*(ms|s|px|%|pp|points?|years?|yrs?|mos?|team|teams|agents?|runs?|seasons?|games?)`).test(context)) {
+    return true;
+  }
+
+  // Check if this is a framework version (e.g., "React 18", "Node 20", "Vite 5")
+  // by checking if it appears after common framework names
+  if (/(?:React|Vue|Angular|Next|Nuxt|Node|Deno|Bun|Astro|Vite|Jest|Webpack|TypeScript|Python|Java|Go|Rust|Ruby|C#)\s+\d+/.test(context)) {
+    return true;
+  }
+
+  return false;
 }
 
 // Determine if a number is part of a larger interpolated expression
@@ -159,7 +181,8 @@ function findNumericClaims(content, filePath) {
 
     // Find ALL numeric patterns in the text
     // Match: numbers with commas (1,000), decimals (2.18), percentages (60%), +/- signs
-    const numericPattern = /([+-]?)([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)(?:\.[0-9]+)?/g;
+    // IMPORTANT: Greedy digit matching to capture full sequences like "2021", not "202"
+    const numericPattern = /([+-]?)(\d+(?:,\d{3})*(?:\.\d+)?)(?![0-9])/g;
 
     let match;
     while ((match = numericPattern.exec(textContent)) !== null) {
@@ -179,7 +202,7 @@ function findNumericClaims(content, filePath) {
       }
 
       // Skip if allowlisted
-      if (isAllowlisted(fullNumber)) {
+      if (isAllowlisted(fullNumber, line)) {
         continue;
       }
 
@@ -237,6 +260,11 @@ function extractTextContent(line) {
   // Remove URLs (they often contain numbers)
   text = text.replace(/https?:\/\/[^\s)]+/g, ' ');
   text = text.replace(/www\.[^\s)]+/g, ' ');
+  text = text.replace(/mailto:[^\s)]+/g, ' ');
+  // Remove domain names and paths (e.g., github.com/username or medium.com/@handle)
+  text = text.replace(/[a-zA-Z0-9.-]+\.(com|io|org|net|dev|co|uk|me)(?:\/[^\s)]*)?/gi, ' ');
+  // Remove @handle patterns (e.g., @matt82198)
+  text = text.replace(/@[a-zA-Z0-9_-]+/g, ' ');
 
   // Remove email addresses
   text = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, ' ');
@@ -244,6 +272,21 @@ function extractTextContent(line) {
   // Remove dates in common formats like "2026-07-31"
   text = text.replace(/\d{4}-\d{2}-\d{2}/g, ' ');
   text = text.replace(/\d{1,2}\/\d{1,2}\/\d{2,4}/g, ' ');
+  // Remove month-day-year patterns (e.g., "July 29, 2026")
+  text = text.replace(/(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2},?\s*\d{4}/gi, ' ');
+  // Remove month-year patterns (e.g., "Nov 2021", "Dec 2025")
+  text = text.replace(/(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}/gi, ' ');
+  // Remove month-day patterns (e.g., "July 29", "Dec 25")
+  text = text.replace(/(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}/gi, ' ');
+
+  // Remove coordinate range patterns first (e.g., "x=70..330")
+  text = text.replace(/[a-z]+\s*=\s*\d+\.\.\d+/gi, ' ');
+  // Remove single coordinate patterns (e.g., "x=70", "y=20", "cx=200")
+  text = text.replace(/[a-z]+\s*=\s*\d+(?![.\d])/gi, ' ');
+  // Remove bare coordinate ranges (e.g., "70..330")
+  text = text.replace(/\d+\.\.\d+/g, ' ');
+  // Remove numbers that are part of email addresses (e.g., "matt82198" in "matt82198@gmail.com")
+  text = text.replace(/\b\d+(?=@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' ');
 
   // Remove hex color codes and hash references
   text = text.replace(/#[0-9a-fA-F]{6}/g, ' ');
