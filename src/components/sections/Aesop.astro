@@ -60,7 +60,7 @@ import DemoClip from '../DemoClip.astro';
         <strong>Read-only MCP server</strong> for fleet status querying
       </li>
       <li>
-        <strong>Resilience by design</strong> — kill-switch proven live; cost ceiling at dispatch; recovery by re-reading git-committed state
+        <strong>Resilience by design</strong> — kill-switch and cost ceiling enforced by fail-closed behavioral tests (PR #770); recovery by re-reading git-committed state
       </li>
       <li>
         <strong>Cross-OS CI rigor</strong> — 8-shard parallel suites (Windows 3min via 4-way sharding); post-merge drift guard
@@ -120,7 +120,7 @@ import DemoClip from '../DemoClip.astro';
         <p><strong>Multi-instance coordination.</strong> SQLite lease-based claims require single-box orchestration. Distributed state layer is Phase 4 (unscheduled); Postgres multi-instance stays unbuilt.</p>
       </div>
       <div class="gate-item">
-        <p><strong>Cost ceiling and kill-switch are production-proven internally</strong> but not yet customer-facing: API-callable halt and budget gates exist in the dispatcher, not exposed to remote configurations.</p>
+        <p><strong>Cost ceiling and kill-switch are enforced by fail-closed behavioral tests</strong> (test_halt.py, test_cost_ceiling.py, test-daemon-halt-sentinel.sh, PR #770) but not yet customer-facing: API-callable halt and budget gates exist in the dispatcher, not exposed to remote configurations.</p>
       </div>
       <div class="gate-item">
         <p><strong>Portability.</strong> Aesop itself runs on aesop (dogfooding proven). Porting to other codebases (outlaw-assist integration test is live) works but still needs fidelity validation—source markers and independent cross-artifact test verification required on every port.</p>
