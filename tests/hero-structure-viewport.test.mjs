@@ -134,6 +134,26 @@ async function testViewport(viewport) {
     }
   }
 
+  // Measure CTA container position
+  const ctaContainer = page.locator('.cta-links');
+  const ctaBox = await ctaContainer.boundingBox();
+
+  if (ctaBox) {
+    const ctaBottomEdge = ctaBox.y + ctaBox.height;
+    console.log(`  CTA container: top=${ctaBox.y.toFixed(1)}px, height=${ctaBox.height.toFixed(1)}px, bottom=${ctaBottomEdge.toFixed(1)}px`);
+    console.log(`  Viewport height: ${viewport.height}px`);
+
+    if (ctaBottomEdge <= viewport.height) {
+      console.log(`  ✓ CTA bottom edge (${ctaBottomEdge.toFixed(1)}px) is within viewport (${viewport.height}px)`);
+    } else {
+      const overflow = ctaBottomEdge - viewport.height;
+      console.log(`  ⚠ CTA bottom edge (${ctaBottomEdge.toFixed(1)}px) overflows viewport by ${overflow.toFixed(1)}px`);
+      if (viewport.name === 'Mobile') {
+        throw new Error(`CTA overflow on mobile: ${overflow.toFixed(1)}px below viewport`);
+      }
+    }
+  }
+
   // Check page height
   const pageHeight = await page.evaluate(() => {
     return Math.max(
