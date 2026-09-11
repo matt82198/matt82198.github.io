@@ -15,7 +15,7 @@
   ],
   "loc": 343009,
   "domains": 14,
-  "test_files": 273,
-  "version": "v0.7.2",
+  "test_files": 272,
+  "version": "v0.8.0",
   "shipped_increments": 551
 }

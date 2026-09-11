@@ -73,6 +73,12 @@
     "description": "post-0.7.0 development: guardrail layer (dispatch lint, fixture validation, import checks, encoding enforcement, file-size limits, bash-exec isolation), CLI dispatch table (10 namespaces, 53 verbs), remote inbox, ports and verification hardening"
   },
   {
+    "date": "2026-09-11",
+    "label": "Sep 11 2026",
+    "title": "Aesop v0.8.0 released",
+    "description": "stable release under PolyForm Noncommercial 1.0.0 license; versions ≤0.7.0 remain MIT forever"
+  },
+  {
     "date": "2026-09-09",
     "label": "Sep 9 2026",
     "title": "Bears 2026 Forecast published",
