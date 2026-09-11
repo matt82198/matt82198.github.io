@@ -19,25 +19,49 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
 const srcDir = path.join(projectRoot, 'src');
 
-// Allowlist patterns
+// Allowlist patterns - these match ONLY the number part, not surrounding context
 const allowlist = [
-  // Years and dates
-  /\b(19|20)\d{2}\b/,
-  // Version strings (e.g., 0.8.0, v1.2.3)
-  /\bv?\d+\.\d+(\.\d+)?\b/,
-  // Times (e.g., 3:45pm, 10:30)
-  /\d{1,2}:\d{2}\s*(am|pm|AM|PM)?/,
-  // Commit hashes and PR numbers (already have # prefix or are alphanumeric)
-  /#\d+/,
-  // Line numbers in docs
-  /line\s+\d+/i,
-  // Memory/storage units (1KB, 2GB, etc.)
-  /\d+\s*(KB|MB|GB|TB|B)\b/i,
+  // Years only (19xx, 20xx) - but must be 4 digits
+  /^(19|20)\d{2}$/,
+  // Version strings (e.g., 0.8.0, v1.2.3) - must have at least one dot
+  /^v?\d+\.\d+(\.\d+)?$/,
+  // Times (e.g., 3:45, 10:30) - must have colon
+  /^\d{1,2}:\d{2}(:\d{2})?(am|pm|AM|PM)?$/,
+  // Commit hashes and PR numbers (e.g., #123, #ff692a18)
+  /^#\d+$/,
+  // Hash-like strings (lowercase hex, at least 7 chars)
+  /^[a-f0-9]{7,}$/,
+  // Memory/storage units (1KB, 2GB, etc.) - these will be in the text
+  /^\d+(KB|MB|GB|TB|B|kB|mB)$/i,
+  // Line numbers in specific contexts
+  /^line\s+\d+$/i,
 ];
 
 // Determine if a number is in the allowlist
 function isAllowlisted(numberStr) {
-  return allowlist.some(pattern => pattern.test(numberStr));
+  const clean = numberStr.trim();
+  return allowlist.some(pattern => pattern.test(clean));
+}
+
+// Determine if a number is part of a larger interpolated expression
+function isPartOfInterpolation(line, numberStr, startPos) {
+  // Check if this number appears inside {...}
+  const beforeText = line.substring(0, startPos);
+  const lastOpenBrace = beforeText.lastIndexOf('{');
+
+  if (lastOpenBrace >= 0) {
+    const afterOpenBrace = line.substring(lastOpenBrace);
+    const closeBracePos = afterOpenBrace.indexOf('}');
+    if (closeBracePos > 0) {
+      const braceContent = afterOpenBrace.substring(1, closeBracePos);
+      // If the number is in interpolation context, it's likely sourced
+      if (braceContent.includes(numberStr) || /[a-zA-Z_$]/.test(braceContent)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 // Check if a line has a source marker on it or the previous line
@@ -87,78 +111,154 @@ function findNumericClaims(content, filePath) {
   const lines = content.split('\n');
   const violations = [];
   const imports = extractImports(content);
-  
-  // Extract visible text only (exclude style tags and specific data attributes)
+
+  // Extract visible text only (exclude style/script tags and data attributes)
   let inStyleTag = false;
-  
+  let inScriptTag = false;
+  let inFrontmatter = false;
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    
+
+    // Track frontmatter
+    if (/^---/.test(line.trim())) {
+      inFrontmatter = !inFrontmatter;
+      continue;
+    }
+
+    if (inFrontmatter) continue;
+
     // Track style tags
-    if (/^<style/i.test(line.trim())) {
+    if (/<style/i.test(line)) {
       inStyleTag = true;
     }
-    if (/<\/style>/i.test(line.trim())) {
+    if (/<\/style>/i.test(line)) {
       inStyleTag = false;
       continue;
     }
-    
-    if (inStyleTag) continue;
-    
-    // Skip script tags and frontmatter
-    if (/^---/.test(line.trim()) || /^<script/i.test(line.trim()) || /^import\s/.test(line.trim())) {
+
+    // Track script tags
+    if (/<script/i.test(line)) {
+      inScriptTag = true;
+    }
+    if (/<\/script>/i.test(line)) {
+      inScriptTag = false;
       continue;
     }
-    
-    // Skip lines that are clearly CSS or config
-    if (/:\s*\d+|padding|margin|width|height|font-size|gap|space-/.test(line)) {
+
+    if (inStyleTag || inScriptTag) continue;
+
+    // Skip lines that are clearly CSS or pure config
+    if (/^[^<]*:\s*\d+\s*[px;%]|padding|margin|width|height|font-size|gap|space-/.test(line)) {
       continue;
     }
-    
-    // Find numeric patterns in visible text
-    // Look for: integers >= 10, percentages, "N tests/PRs/commits" patterns
-    const numericPatterns = [
-      /\b([1-9]\d+(?:\.\d+)?)\s*(%|tests|PRs?|commits?|tasks?|cases?|domains?|files?)\b/gi,
-      /\b([1-9]\d+(?:\.\d+)?)%\b/g,
-      /\b([1-9]\d+(?:\.\d+)?)\s*x\b/gi, // For "4x", "2.5x" etc
-      /\b~\s*([1-9]\d+(?:\/\d+)?)\b/g, // For "~1/3" type claims
-    ];
-    
-    for (const pattern of numericPatterns) {
-      let match;
-      pattern.lastIndex = 0; // Reset regex state
-      
-      while ((match = pattern.exec(line)) !== null) {
-        const numberStr = match[1] || match[0];
-        
-        // Skip if in an interpolation context (handled separately)
-        if (line.includes('{') && line.includes('}')) {
-          if (isInterpolatedFromImport(line, imports)) {
-            continue;
-          }
-        }
-        
-        // Skip if allowlisted
-        if (isAllowlisted(numberStr)) {
-          continue;
-        }
-        
-        // Skip if line contains a source marker
-        if (hasSourceMarker(lines, i)) {
-          continue;
-        }
-        
-        violations.push({
-          file: filePath,
-          line: i + 1,
-          number: numberStr,
-          fullLine: line.trim(),
-        });
+
+    // Extract text content, removing HTML tags and attributes
+    const textContent = extractTextContent(line);
+    if (!textContent.trim()) continue;
+
+    // Find ALL numeric patterns in the text
+    // Match: numbers with commas (1,000), decimals (2.18), percentages (60%), +/- signs
+    const numericPattern = /([+-]?)([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)(?:\.[0-9]+)?/g;
+
+    let match;
+    while ((match = numericPattern.exec(textContent)) !== null) {
+      const fullNumber = match[0];
+      const numberOnly = match[2].replace(/,/g, ''); // Remove commas for comparison
+
+      // Skip single-digit numbers and zero
+      if (parseInt(numberOnly) < 10) {
+        continue;
       }
+
+      // Skip if part of interpolation or has interpolation on line
+      if (line.includes('{') && line.includes('}')) {
+        if (isInterpolatedFromImport(line, imports) || isPartOfInterpolation(line, fullNumber, match.index)) {
+          continue;
+        }
+      }
+
+      // Skip if allowlisted
+      if (isAllowlisted(fullNumber)) {
+        continue;
+      }
+
+      // Skip if line contains a source marker
+      if (hasSourceMarker(lines, i)) {
+        continue;
+      }
+
+      violations.push({
+        file: filePath,
+        line: i + 1,
+        number: fullNumber,
+        fullLine: line.trim(),
+      });
     }
   }
-  
+
   return violations;
+}
+
+// Extract visible text content from a line, removing HTML tags and non-content
+function extractTextContent(line) {
+  let text = line;
+
+  // FIRST: Extract only the text parts between > and < (visible text content)
+  const textParts = [];
+  let inTag = false;
+  let currentText = '';
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+
+    if (char === '<') {
+      if (currentText) {
+        textParts.push(currentText);
+        currentText = '';
+      }
+      inTag = true;
+    } else if (char === '>') {
+      inTag = false;
+    } else if (!inTag) {
+      currentText += char;
+    }
+  }
+
+  if (currentText) {
+    textParts.push(currentText);
+  }
+
+  text = textParts.join(' ');
+
+  // Remove HTML entities
+  text = text.replace(/&[#a-zA-Z0-9]+;/g, ' ');
+
+  // Remove URLs (they often contain numbers)
+  text = text.replace(/https?:\/\/[^\s)]+/g, ' ');
+  text = text.replace(/www\.[^\s)]+/g, ' ');
+
+  // Remove email addresses
+  text = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, ' ');
+
+  // Remove dates in common formats like "2026-07-31"
+  text = text.replace(/\d{4}-\d{2}-\d{2}/g, ' ');
+  text = text.replace(/\d{1,2}\/\d{1,2}\/\d{2,4}/g, ' ');
+
+  // Remove hex color codes and hash references
+  text = text.replace(/#[0-9a-fA-F]{6}/g, ' ');
+
+  // Remove commit-like hashes (long alphanumeric strings)
+  text = text.replace(/\b[a-f0-9]{7,}\b/g, ' ');
+
+  // Remove paths and identifiers that look like they're in code/hashes
+  text = text.replace(/\/[a-zA-Z0-9_-]+\//g, ' ');
+  text = text.replace(/\.[a-zA-Z0-9_]+\(/g, '( ');
+
+  // Remove fractions like ~1/3 or 1/3
+  text = text.replace(/~?\d+\/\d+/g, ' ');
+
+  return text;
 }
 
 // Recursively find all .astro files

@@ -34,9 +34,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check numeric sources (warn-only)
+      - name: Check numeric sources (strict)
         run: npm run lint:sources
-        continue-on-error: true
 
   deploy:
     needs: build
