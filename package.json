@@ -7,7 +7,9 @@
     "prebuild": "python scripts/sync-aesop-stats.py && node scripts/fetch-medium.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "sync:stats": "python scripts/sync-aesop-stats.py"
+    "sync:stats": "python scripts/sync-aesop-stats.py",
+    "lint:sources": "node scripts/check-numeric-sources.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "astro": "^7.2.0"
