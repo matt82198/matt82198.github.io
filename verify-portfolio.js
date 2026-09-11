@@ -29,10 +29,6 @@ async function runTests() {
     // Verify content on desktop
     const desktopText = await desktopPage.textContent('body');
 
-    // Check for "iterations" (should be present)
-    const hasIterations = desktopText.includes('iterations');
-    console.log(`${hasIterations ? '✓' : '✗'} Contains "iterations": ${hasIterations}`);
-
     // Check for old "waves" terminology (should NOT be in visible text)
     const hasWavesInText = /\bwaves\b/.test(desktopText);
     console.log(`${!hasWavesInText ? '✓' : '✗'} No "waves" in body text: ${!hasWavesInText}`);
@@ -43,21 +39,19 @@ async function runTests() {
 
     // Verify section order via heading checks
     const aesopHeading = await desktopPage.$eval('#aesop', el => el.textContent);
-    const archHeading = await desktopPage.$eval('#architecture', el => el.textContent);
     const experienceHeading = await desktopPage.$eval('#experience', el => el.textContent);
 
     console.log(`\nSection headings found:`);
     console.log(`  - Aesop: "${aesopHeading.substring(0, 50)}..."`);
-    console.log(`  - Architecture: "${archHeading.substring(0, 50)}..."`);
     console.log(`  - Experience: "${experienceHeading.substring(0, 50)}..."`);
 
-    // Check fleet simulation is present
-    const fleetSession = await desktopPage.locator('.fleet-session').count();
-    console.log(`\n${fleetSession > 0 ? '✓' : '✗'} Fleet session visible: ${fleetSession > 0}`);
+    // Check hero proof tiles are present
+    const proofTiles = await desktopPage.locator('.proof-tile').count();
+    console.log(`\n${proofTiles >= 4 ? '✓' : '✗'} Proof tiles visible: ${proofTiles}`);
 
-    // Verify agents row exists
-    const agentsContainer = await desktopPage.locator('#fleet-agents').count();
-    console.log(`${agentsContainer > 0 ? '✓' : '✗'} Agents container present: ${agentsContainer > 0}`);
+    // Verify CTA buttons exist
+    const ctaButtons = await desktopPage.locator('.cta-button').count();
+    console.log(`${ctaButtons >= 4 ? '✓' : '✗'} CTA buttons present: ${ctaButtons}`);
 
     // Verify "hub" and "spoke" appear in ArchViz section
     const archVizText = await desktopPage.textContent('.arch-viz-section');
