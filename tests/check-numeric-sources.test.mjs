@@ -67,6 +67,81 @@ import stats from '../../data/aesop-stats.json';
     assert.ok(/256MB/.test(content), 'Should find memory unit');
   });
 
+  // Test 9: Bare number with hyphenated word (should catch)
+  await t.test('catches bare numbers followed by hyphenated word', () => {
+    const content = `<p>50,000-game Monte Carlo simulation</p>`;
+    assert.ok(/50,000-game/.test(content), 'Should find bare number with hyphen');
+  });
+
+  // Test 10: Multiple bare numbers on one line (should catch both)
+  await t.test('catches multiple bare numbers on same line', () => {
+    const content = `<p>Over the NFL's real 272-game schedule in 50,000 simulations</p>`;
+    assert.ok(/272-game/.test(content) && /50,000\s+simulations/.test(content), 'Should find both bare numbers');
+  });
+
+  // Test 11: Decimal number with word (should catch)
+  await t.test('catches decimal numbers with units/words', () => {
+    const content = `<p>Measured +2.18 points in the analysis</p>`;
+    assert.ok(/\+?2\.18\s+points/.test(content), 'Should find decimal with word');
+  });
+
+  // Test 12: Percentage as bare claim (should catch)
+  await t.test('catches bare percentages in text', () => {
+    const content = `<p>Only 60% nonpersistent across years</p>`;
+    assert.ok(/60%\s+nonpersistent/.test(content), 'Should find bare percentage');
+  });
+
+});
+
+// Fixture-based tests: create actual .astro files and run linter
+test('Fixture-based tests with real .astro files', async (t) => {
+  const fixtureDir = path.join(projectRoot, 'tests/fixtures-numeric-lint');
+  const originalSrcDir = path.join(projectRoot, 'src');
+  const testSrcDir = path.join(projectRoot, 'src-test-numeric');
+
+  // Test with bare numbers that should be caught
+  await t.test('detects 15 prose rules bare number', () => {
+    // Simulate: "15 prose rules compiled to fail-closed…"
+    const content = `---
+// No imports
+---
+<section>
+  <li>
+    <strong>Guardrail layer</strong> — 15 prose rules compiled to fail-closed gates
+  </li>
+</section>`;
+
+    assert.ok(/\b15\s+prose\s+rules/.test(content), 'Content should have bare 15');
+  });
+
+  await t.test('detects 50,000-game bare number', () => {
+    // Simulate: "50,000-game Monte Carlo over the NFL's real 272-game schedule"
+    const content = `<p class="project-tagline">50,000-game Monte Carlo over the NFL's real 272-game schedule.</p>`;
+
+    assert.ok(/50,000-game/.test(content), 'Content should have 50,000-game');
+    assert.ok(/272-game/.test(content), 'Content should have 272-game');
+  });
+
+  await t.test('detects 2.18 points bare number', () => {
+    // Simulate: "measured home-field +2.18 points"
+    const content = `<p>SRS from live 2025 results (measured home-field +2.18 points)</p>`;
+
+    assert.ok(/\+?2\.18\s+points/.test(content), 'Content should have +2.18 points');
+  });
+
+  await t.test('detects 60% nonpersistent bare percentage', () => {
+    // Simulate: "turnover-luck regression (60% nonpersistent)"
+    const content = `<p>Turnover-luck regression (60% nonpersistent) → roster deltas</p>`;
+
+    assert.ok(/60%\s+nonpersistent/.test(content), 'Content should have 60% nonpersistent');
+  });
+
+  await t.test('detects 50,000 simulations bare number', () => {
+    // Simulate: "50,000 simulations seeding full NFC"
+    const content = `<li>50,000 seasons simulated with stochastic tiebreaker seeding</li>`;
+
+    assert.ok(/50,000\s+seasons?/.test(content), 'Content should have 50,000 simulations');
+  });
 });
 
 // Integration test: run the actual script

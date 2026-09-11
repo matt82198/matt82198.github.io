@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "sync:stats": "python scripts/sync-aesop-stats.py",
-    "lint:sources": "node scripts/check-numeric-sources.mjs",
+    "lint:sources": "node scripts/check-numeric-sources.mjs --strict",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
