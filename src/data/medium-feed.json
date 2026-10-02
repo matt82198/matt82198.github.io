@@ -1,6 +1,14 @@
 {
-  "updated": "2026-09-11T23:08:33.128Z",
+  "updated": "2026-10-02T18:29:31.423Z",
   "posts": [
+    {
+      "title": "Nothing Here Is New — Except Chatter",
+      "url": "https://medium.com/@matt82198/nothing-here-is-new-except-chatter-d4404b0e106f",
+      "date": "2026-09-19T18:50:21.000Z",
+      "image": "https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=d4404b0e106f",
+      "tags": [],
+      "excerpt": "Every method holding my agent fleet together was published between 1975 and 2007. I moved the failure from hardware and networks to language models. The fixes came with it. Matt "
+    },
     {
       "title": "We Don’t Need Smarter LLMs. We Need Unix for Agents.",
       "url": "https://medium.com/@matt82198/we-dont-need-smarter-llms-we-need-unix-for-agents-d3c10d9f6f8f",
@@ -72,14 +80,6 @@
       "image": "https://cdn-images-1.medium.com/max/1000/0*qV0uQt2S3KiTFt47.png",
       "tags": [],
       "excerpt": "How a hostile antivirus that kept deleting my work — mid-build, more than once — forced me into an agent architecture where failure is survivable, cheap, and, it turns out, inevita"
-    },
-    {
-      "title": "Claude Code Has a Memory Problem. I Built a Missing Layer.",
-      "url": "https://medium.com/@matt82198/claude-code-has-a-memory-problem-i-built-a-missing-layer-44c3f9f6248d",
-      "date": "2026-05-19T05:35:49.000Z",
-      "image": "https://medium.com/_/stat?event=post.clientViewed&referrerSource=full_rss&postId=44c3f9f6248d",
-      "tags": [],
-      "excerpt": "Every Claude Code session starts the same way: a blank slate. No memory of what you built yesterday, no awareness of your conventions, no understanding of your codebase’s architect"
     }
   ]
 }

@@ -12,8 +12,8 @@ test.describe('Writing section filters', () => {
     const filterControls = page.locator('.filter-controls');
     await expect(filterControls).toBeVisible();
 
-    const recentBtn = page.locator('[data-sort="recent"]');
-    const viewsBtn = page.locator('[data-sort="views"]');
+    const recentBtn = page.locator('.filter-btn-recent');
+    const viewsBtn = page.locator('.filter-btn-views');
 
     await expect(recentBtn).toBeVisible();
     await expect(viewsBtn).toBeVisible();
@@ -21,17 +21,17 @@ test.describe('Writing section filters', () => {
 
   test('should toggle between most recent and most viewed', async ({ page }) => {
     // Get initial featured items from "most recent" view
-    const recentBtn = page.locator('[data-sort="recent"]');
-    const viewsBtn = page.locator('[data-sort="views"]');
+    const recentBtn = page.locator('.filter-btn-recent');
+    const viewsBtn = page.locator('.filter-btn-views');
 
     // Check initial state - recent should be active
     await expect(recentBtn).toHaveAttribute('aria-pressed', 'true');
     await expect(viewsBtn).toHaveAttribute('aria-pressed', 'false');
 
-    // Get first item from recent view
-    const featuredRecentContainer = page.locator('[data-featured="true"][data-sort="recent"]');
+    // Get first featured item from first subsection recent view
+    const featuredRecentContainer = page.locator('[data-featured="true"][data-sort="recent"]').first();
     await expect(featuredRecentContainer).toBeVisible();
-    const recentFirstTitle = await featuredRecentContainer.locator('h3').first().textContent();
+    const recentFirstTitle = await featuredRecentContainer.locator('h4').first().textContent();
     console.log('Recent first title:', recentFirstTitle);
 
     // Click most viewed button
@@ -46,11 +46,11 @@ test.describe('Writing section filters', () => {
     console.log('Recent container style after click:', recentContainerStyle);
 
     // Views container should be visible
-    const featuredViewsContainer = page.locator('[data-featured="true"][data-sort="views"]');
+    const featuredViewsContainer = page.locator('[data-featured="true"][data-sort="views"]').first();
     const viewsContainerStyle = await featuredViewsContainer.evaluate(el => el.getAttribute('style'));
     console.log('Views container style after click:', viewsContainerStyle);
 
-    const viewsFirstTitle = await featuredViewsContainer.locator('h3').first().textContent();
+    const viewsFirstTitle = await featuredViewsContainer.locator('h4').first().textContent();
     console.log('Views first title:', viewsFirstTitle);
 
     // Check that the first items are potentially different (or same if no views data)
@@ -58,8 +58,8 @@ test.describe('Writing section filters', () => {
   });
 
   test('should show list sections for both sorts', async ({ page }) => {
-    const recentList = page.locator('[data-featured="false"][data-sort="recent"]');
-    const viewsList = page.locator('[data-featured="false"][data-sort="views"]');
+    const recentList = page.locator('[data-featured="false"][data-sort="recent"]').first();
+    const viewsList = page.locator('[data-featured="false"][data-sort="views"]').first();
 
     await expect(recentList).toBeVisible();
 
@@ -68,7 +68,7 @@ test.describe('Writing section filters', () => {
     console.log('Recent list items:', recentItems);
 
     // Click views filter
-    await page.locator('[data-sort="views"]').click();
+    await page.locator('.filter-btn-views').click();
 
     // Views list should now be visible
     await expect(viewsList).toBeVisible();
@@ -91,9 +91,9 @@ test.describe('Writing section filters', () => {
     });
 
     // Interact with filters
-    await page.locator('[data-sort="views"]').click();
-    await page.locator('[data-sort="recent"]').click();
-    await page.locator('[data-sort="views"]').click();
+    await page.locator('.filter-btn-views').click();
+    await page.locator('.filter-btn-recent').click();
+    await page.locator('.filter-btn-views').click();
 
     expect(errors).toHaveLength(0);
   });

@@ -1,9 +1,10 @@
 ---
-// Writing section: Medium essays + interactive artifacts, data-driven with interactive filtering
-// Merges Medium RSS feed (fetched at build time) + artifacts with manual overrides
+// Writing section: essays, field notes, and interactive artifacts
+// Imports: Medium essays + interactive artifacts with subsection organization
 import mediumFeed from '../../data/medium-feed.json';
 import writingOverrides from '../../data/writing-overrides.json';
 import artifacts from '../../data/artifacts.json';
+import authorship from '../../data/authorship.json';
 import fallbackData from '../../data/writing.json';
 
 // Helper to format dates from ISO to readable format
@@ -13,14 +14,26 @@ function formatDate(isoDate: string): string {
   return date.toLocaleDateString('en-US', options);
 }
 
+// Helper to get author info from authorship map
+function getAuthorInfo(url: string) {
+  const auth = authorship.essays[url] || { author: 'matt', series: null };
+  return auth;
+}
+
+// Helper to get author display name
+function getAuthorDisplayName(author: string): string {
+  return author === 'orchestrator' ? 'Aesop orchestrator' : 'Matt Culliton';
+}
+
 // Build unified items array from feed + artifacts + overrides
-function buildItems(feed: any, overrides: any, artifactData: any, fallback: any): any[] {
+function buildEssays(feed: any, overrides: any, authorship: any, fallback: any): any[] {
   let items: any[] = [];
 
   // Start with feed posts if available
   if (feed && feed.posts && feed.posts.length > 0) {
     items = feed.posts.map((post: any) => {
       const override = overrides.overrides[post.url] || {};
+      const auth = getAuthorInfo(post.url);
       return {
         kind: 'essay',
         title: post.title,
@@ -31,26 +44,11 @@ function buildItems(feed: any, overrides: any, artifactData: any, fallback: any)
         excerpt: post.excerpt,
         description: override.description || post.excerpt,
         views: override.views || null,
-        featured: override.featured || false
+        featured: override.featured || false,
+        author: auth.author,
+        series: auth.series
       };
     });
-  }
-
-  // Add artifacts (newest first, no views)
-  if (artifactData && artifactData.artifacts) {
-    const artifactItems = artifactData.artifacts.map((artifact: any) => ({
-      kind: 'interactive',
-      title: artifact.title,
-      url: artifact.url,
-      date: artifact.date,
-      image: null,
-      tags: [],
-      excerpt: artifact.description,
-      description: artifact.description,
-      views: null,
-      featured: false
-    }));
-    items = [...artifactItems, ...items];
   }
 
   // Fallback to hardcoded data if feed is empty
@@ -58,6 +56,7 @@ function buildItems(feed: any, overrides: any, artifactData: any, fallback: any)
     const allFallback = [...(fallback.featured || []), ...(fallback.additional || [])];
     items = allFallback.map((item: any) => {
       const override = overrides.overrides[item.url] || {};
+      const auth = getAuthorInfo(item.url);
       return {
         kind: 'essay',
         title: item.title,
@@ -68,7 +67,9 @@ function buildItems(feed: any, overrides: any, artifactData: any, fallback: any)
         excerpt: item.description,
         description: override.description || item.description,
         views: override.views || null,
-        featured: override.featured || false
+        featured: override.featured || false,
+        author: auth.author,
+        series: auth.series
       };
     });
   }
@@ -76,35 +77,83 @@ function buildItems(feed: any, overrides: any, artifactData: any, fallback: any)
   return items;
 }
 
-const items = buildItems(mediumFeed, writingOverrides, artifacts, fallbackData);
+// Build artifact items
+function buildArtifacts(artifactData: any): any[] {
+  if (!artifactData || !artifactData.artifacts) return [];
+  return artifactData.artifacts.map((artifact: any) => ({
+    kind: 'interactive',
+    title: artifact.title,
+    url: artifact.url,
+    date: artifact.date,
+    image: null,
+    tags: [],
+    excerpt: artifact.description,
+    description: artifact.description,
+    views: null,
+    featured: artifact.featured || false,
+    group: artifact.group,
+    author: artifact.author,
+    isPrivate: artifact.visibility === 'private'
+  }));
+}
 
-// Sort by most recent for initial render
-const itemsByRecent = [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+// Separate essays by author
+function separateEssays(essays: any[]): { matt: any[], orchestrator: any[] } {
+  const matt = essays.filter(e => e.author === 'matt');
+  const orchestrator = essays.filter(e => e.author === 'orchestrator');
+  return { matt, orchestrator };
+}
 
-// Featured items (top 2 of current sort)
-const featuredItems = itemsByRecent.slice(0, 2);
-const additionalItems = itemsByRecent.slice(2);
+// Separate artifacts by group
+function separateArtifactsByGroup(artifacts: any[]): Map<string, any[]> {
+  const groups = new Map<string, any[]>();
+  artifacts.forEach(artifact => {
+    const groupName = artifact.group;
+    if (!groups.has(groupName)) {
+      groups.set(groupName, []);
+    }
+    groups.get(groupName)!.push(artifact);
+  });
+  return groups;
+}
 
-// For Most Viewed sort: items with views by count, then featured items, then by date
-const itemsByViews = [...items].sort((a, b) => {
-  // Both have views: sort by views descending
-  if (a.views !== null && b.views !== null) {
-    return b.views - a.views;
+const essays = buildEssays(mediumFeed, writingOverrides, authorship, fallbackData);
+const artifactItems = buildArtifacts(artifacts);
+const { matt: mattEssays, orchestrator: orchestratorEssays } = separateEssays(essays);
+const artifactGroups = separateArtifactsByGroup(artifactItems);
+
+// Sort essays by date (most recent first)
+mattEssays.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+orchestratorEssays.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// Create subsections with sorted data
+type Subsection = {
+  title: string;
+  description?: string;
+  items: any[];
+};
+
+const subsections: Subsection[] = [
+  {
+    title: 'Essays',
+    items: mattEssays
+  },
+  {
+    title: 'Field notes from an AI orchestrator',
+    description: 'A series written by Claude, the orchestrator process of the Aesop fleet, and published by Matt.',
+    items: orchestratorEssays
   }
-  // Only a has views: a comes first
-  if (a.views !== null) return -1;
-  // Only b has views: b comes first
-  if (b.views !== null) return 1;
-  // Neither has views: use featured status as tiebreaker (featured first), then date
-  if (a.featured !== b.featured) {
-    return a.featured ? -1 : 1; // featured items come first
-  }
-  // Both featured status same: sort by date descending
-  return new Date(b.date).getTime() - new Date(a.date).getTime();
+];
+
+// Add artifact groups as subsections
+const ARTIFACT_GROUP_NOTE = 'Built in Claude Code and published as artifacts; written by the Aesop orchestrator unless marked. Matt directs, reviews and signs off. Pages marked private are not shared yet; ask Matt for access.';
+Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
+  subsections.push({
+    title: groupName,
+    description: ARTIFACT_GROUP_NOTE,
+    items: items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  });
 });
-
-const featuredItemsByViews = itemsByViews.slice(0, 2);
-const additionalItemsByViews = itemsByViews.slice(2);
 ---
 
 <section class="writing-section">
@@ -132,77 +181,140 @@ const additionalItemsByViews = itemsByViews.slice(2);
     </button>
   </div>
 
-  <!-- Featured items: first two with visual prominence -->
-  <div class="featured-essays" data-sort="recent" data-featured="true">
-    {featuredItems.map((item) => (
-      <article class="featured-essay">
-        <div class="essay-header">
-          <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-            <h3>{item.title}</h3>
-          </a>
-          {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
-          {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
+  <!-- Subsections -->
+  {subsections.map((subsection) => {
+    // Sort items for this subsection
+    const itemsByRecent = [...subsection.items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const itemsByViews = [...subsection.items].sort((a, b) => {
+      if (a.views !== null && b.views !== null) {
+        return b.views - a.views;
+      }
+      if (a.views !== null) return -1;
+      if (b.views !== null) return 1;
+      if (a.featured !== b.featured) {
+        return a.featured ? -1 : 1;
+      }
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+    const featuredRecent = itemsByRecent.slice(0, 2);
+    const additionalRecent = itemsByRecent.slice(2);
+    const featuredViews = itemsByViews.slice(0, 2);
+    const additionalViews = itemsByViews.slice(2);
+
+    return (
+      <div class="writing-subsection">
+        <h3 class="subsection-title">{subsection.title}</h3>
+        {subsection.description && (
+          <p class="subsection-description">{subsection.description}</p>
+        )}
+
+        <!-- Featured items: recent -->
+        <div class="featured-essays" data-sort="recent" data-featured="true" data-subsection={subsection.title}>
+          {featuredRecent.map((item) => (
+            <article class="featured-essay">
+              <div class="essay-header">
+                {item.isPrivate ? (
+                  <span class="essay-link essay-link-private"><h4>{item.title}</h4></span>
+                ) : (
+                  <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                    <h4>{item.title}</h4>
+                  </a>
+                )}
+                {item.isPrivate && <span class="badge badge-private">Private — ask Matt for access</span>}
+                {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
+                {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
+              </div>
+              <div class="essay-meta-row">
+                <time datetime={item.date} class="essay-date">{formatDate(item.date)}</time>
+                <span class="author-chip">{getAuthorDisplayName(item.author)}</span>
+              </div>
+              <p class="essay-desc">{item.description}</p>
+            </article>
+          ))}
         </div>
-        <time datetime={item.date} class="essay-date">{formatDate(item.date)}</time>
-        <p class="essay-desc">{item.description}</p>
-      </article>
-    ))}
-  </div>
 
-  <!-- Featured items by views (hidden by default) -->
-  <div class="featured-essays" data-sort="views" data-featured="true" style="display: none;">
-    {featuredItemsByViews.map((item) => (
-      <article class="featured-essay">
-        <div class="essay-header">
-          <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-            <h3>{item.title}</h3>
-          </a>
-          {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
-          {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
+        <!-- Featured items: views -->
+        <div class="featured-essays" data-sort="views" data-featured="true" data-subsection={subsection.title} style="display: none;">
+          {featuredViews.map((item) => (
+            <article class="featured-essay">
+              <div class="essay-header">
+                {item.isPrivate ? (
+                  <span class="essay-link essay-link-private"><h4>{item.title}</h4></span>
+                ) : (
+                  <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                    <h4>{item.title}</h4>
+                  </a>
+                )}
+                {item.isPrivate && <span class="badge badge-private">Private — ask Matt for access</span>}
+                {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
+                {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
+              </div>
+              <div class="essay-meta-row">
+                <time datetime={item.date} class="essay-date">{formatDate(item.date)}</time>
+                <span class="author-chip">{getAuthorDisplayName(item.author)}</span>
+              </div>
+              <p class="essay-desc">{item.description}</p>
+            </article>
+          ))}
         </div>
-        <time datetime={item.date} class="essay-date">{formatDate(item.date)}</time>
-        <p class="essay-desc">{item.description}</p>
-      </article>
-    ))}
-  </div>
 
-  <!-- Additional items: compact list (most recent) -->
-  <ul class="essay-list" data-sort="recent" data-featured="false">
-    {additionalItems.map((item) => (
-      <li>
-        <span class="essay-title">
-          <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-            {item.title}
-          </a>
-          {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
-          {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
-        </span>
-        <span class="essay-meta">
-          <time datetime={item.date}>{formatDate(item.date)}</time>
-          — {item.description}
-        </span>
-      </li>
-    ))}
-  </ul>
+        <!-- Additional items: recent -->
+        {additionalRecent.length > 0 && (
+          <ul class="essay-list" data-sort="recent" data-featured="false" data-subsection={subsection.title}>
+            {additionalRecent.map((item) => (
+              <li>
+                <span class="essay-title">
+                  {item.isPrivate ? (
+                    <span class="list-link list-link-private">{item.title}</span>
+                  ) : (
+                    <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                      {item.title}
+                    </a>
+                  )}
+                  {item.isPrivate && <span class="badge badge-private badge-inline">Private — ask Matt for access</span>}
+                  {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
+                  {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
+                </span>
+                <span class="essay-meta">
+                  <time datetime={item.date}>{formatDate(item.date)}</time>
+                  <span class="author-chip-inline">{getAuthorDisplayName(item.author)}</span>
+                  — {item.description}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
 
-  <!-- Additional items: compact list (most viewed, hidden by default) -->
-  <ul class="essay-list" data-sort="views" data-featured="false" style="display: none;">
-    {additionalItemsByViews.map((item) => (
-      <li>
-        <span class="essay-title">
-          <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-            {item.title}
-          </a>
-          {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
-          {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
-        </span>
-        <span class="essay-meta">
-          <time datetime={item.date}>{formatDate(item.date)}</time>
-          — {item.description}
-        </span>
-      </li>
-    ))}
-  </ul>
+        <!-- Additional items: views -->
+        {additionalViews.length > 0 && (
+          <ul class="essay-list" data-sort="views" data-featured="false" data-subsection={subsection.title} style="display: none;">
+            {additionalViews.map((item) => (
+              <li>
+                <span class="essay-title">
+                  {item.isPrivate ? (
+                    <span class="list-link list-link-private">{item.title}</span>
+                  ) : (
+                    <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                      {item.title}
+                    </a>
+                  )}
+                  {item.isPrivate && <span class="badge badge-private badge-inline">Private — ask Matt for access</span>}
+                  {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
+                  {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
+                </span>
+                <span class="essay-meta">
+                  <time datetime={item.date}>{formatDate(item.date)}</time>
+                  <span class="author-chip-inline">{getAuthorDisplayName(item.author)}</span>
+                  — {item.description}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  })}
 </section>
 
 <style>
@@ -210,7 +322,28 @@ const additionalItemsByViews = itemsByViews.slice(2);
     margin-bottom: var(--space-20);
   }
 
-  /* Use shared .section-moral and section h2 from global.css */
+  /* Subsection heading and description */
+  .writing-subsection {
+    margin-bottom: var(--space-16);
+  }
+
+  .subsection-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: var(--space-8) 0 var(--space-2) 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+  }
+
+  .subsection-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-6) 0;
+    font-family: var(--font-sans);
+    line-height: var(--leading-normal);
+    font-style: italic;
+  }
 
   /* Filter controls */
   .filter-controls {
@@ -286,12 +419,45 @@ const additionalItemsByViews = itemsByViews.slice(2);
     margin-left: var(--space-1);
   }
 
+  /* Author chip */
+  .badge-private {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px dashed currentColor;
+  }
+  .essay-link-private, .list-link-private {
+    color: var(--color-text-secondary);
+    cursor: default;
+    text-decoration: none;
+  }
+  .author-chip {
+    display: inline-block;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    margin-left: var(--space-2);
+  }
+
+  .author-chip-inline {
+    display: inline;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+    margin: 0 var(--space-1);
+  }
+
   /* Featured essays grid */
   .featured-essays {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-8);
-    margin-bottom: var(--space-16);
+    margin-bottom: var(--space-12);
   }
 
   .featured-essay {
@@ -332,21 +498,28 @@ const additionalItemsByViews = itemsByViews.slice(2);
     border-radius: 0.25rem;
   }
 
-  .featured-essay h3 {
-    font-size: var(--text-lg);
+  .featured-essay h4 {
+    font-size: var(--text-base);
     font-weight: 700;
     color: var(--color-text);
-    margin: 0 0 var(--space-4) 0;
+    margin: 0;
     font-family: var(--font-sans);
     line-height: var(--leading-normal);
+  }
+
+  .essay-meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-3) 0;
+    flex-wrap: wrap;
   }
 
   .essay-date {
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
     font-family: var(--font-mono);
-    display: block;
-    margin-bottom: var(--space-3);
+    margin: 0;
   }
 
   .essay-desc {
@@ -361,7 +534,7 @@ const additionalItemsByViews = itemsByViews.slice(2);
   .essay-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 var(--space-12) 0;
   }
 
   .essay-list li {
@@ -438,7 +611,7 @@ const additionalItemsByViews = itemsByViews.slice(2);
           b.setAttribute('aria-pressed', b.dataset.sort === sortMode ? 'true' : 'false');
         });
 
-        // Toggle visibility: show matching sort mode, hide others
+        // Toggle visibility: show matching sort mode, hide others (all subsections)
         featuredSections.forEach((section) => {
           if (section.dataset.sort === sortMode) {
             section.style.display = '';
