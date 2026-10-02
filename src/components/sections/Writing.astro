@@ -92,7 +92,8 @@ function buildArtifacts(artifactData: any): any[] {
     views: null,
     featured: artifact.featured || false,
     group: artifact.group,
-    author: artifact.author
+    author: artifact.author,
+    isPrivate: artifact.visibility === 'private'
   }));
 }
 
@@ -145,12 +146,11 @@ const subsections: Subsection[] = [
 ];
 
 // Add artifact groups as subsections
+const ARTIFACT_GROUP_NOTE = 'Built in Claude Code and published as artifacts; written by the Aesop orchestrator unless marked. Matt directs, reviews and signs off. Pages marked private are not shared yet; ask Matt for access.';
 Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
   subsections.push({
     title: groupName,
-    description: groupName === 'Aesop — architecture, field notes and results' || groupName === 'World of Warcraft addon engineering (CMC / SimpleUI)' || groupName === 'Sports analytics'
-      ? (groupName === 'Sports analytics' ? 'Built in Claude Code and published as artifacts; written by the Aesop orchestrator unless marked, Matt directs, reviews and signs off.' : 'Built in Claude Code and published as artifacts; written by the Aesop orchestrator unless marked, Matt directs, reviews and signs off.')
-      : 'Built in Claude Code and published as artifacts; written by the Aesop orchestrator unless marked, Matt directs, reviews and signs off.',
+    description: ARTIFACT_GROUP_NOTE,
     items: items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   });
 });
@@ -214,9 +214,14 @@ Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
           {featuredRecent.map((item) => (
             <article class="featured-essay">
               <div class="essay-header">
-                <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-                  <h4>{item.title}</h4>
-                </a>
+                {item.isPrivate ? (
+                  <span class="essay-link essay-link-private"><h4>{item.title}</h4></span>
+                ) : (
+                  <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                    <h4>{item.title}</h4>
+                  </a>
+                )}
+                {item.isPrivate && <span class="badge badge-private">Private — ask Matt for access</span>}
                 {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
                 {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
               </div>
@@ -234,9 +239,14 @@ Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
           {featuredViews.map((item) => (
             <article class="featured-essay">
               <div class="essay-header">
-                <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-                  <h4>{item.title}</h4>
-                </a>
+                {item.isPrivate ? (
+                  <span class="essay-link essay-link-private"><h4>{item.title}</h4></span>
+                ) : (
+                  <a href={item.url} class="essay-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                    <h4>{item.title}</h4>
+                  </a>
+                )}
+                {item.isPrivate && <span class="badge badge-private">Private — ask Matt for access</span>}
                 {item.kind === 'interactive' && <span class="badge badge-interactive">Interactive</span>}
                 {item.kind === 'essay' && <span class="badge badge-essay">Essay</span>}
               </div>
@@ -255,9 +265,14 @@ Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
             {additionalRecent.map((item) => (
               <li>
                 <span class="essay-title">
-                  <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-                    {item.title}
-                  </a>
+                  {item.isPrivate ? (
+                    <span class="list-link list-link-private">{item.title}</span>
+                  ) : (
+                    <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                      {item.title}
+                    </a>
+                  )}
+                  {item.isPrivate && <span class="badge badge-private badge-inline">Private — ask Matt for access</span>}
                   {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
                   {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
                 </span>
@@ -277,9 +292,14 @@ Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
             {additionalViews.map((item) => (
               <li>
                 <span class="essay-title">
-                  <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
-                    {item.title}
-                  </a>
+                  {item.isPrivate ? (
+                    <span class="list-link list-link-private">{item.title}</span>
+                  ) : (
+                    <a href={item.url} class="list-link" target={item.kind === 'interactive' ? '_blank' : undefined} rel={item.kind === 'interactive' ? 'noopener' : undefined}>
+                      {item.title}
+                    </a>
+                  )}
+                  {item.isPrivate && <span class="badge badge-private badge-inline">Private — ask Matt for access</span>}
                   {item.kind === 'interactive' && <span class="badge badge-interactive badge-inline">Interactive</span>}
                   {item.kind === 'essay' && <span class="badge badge-essay badge-inline">Essay</span>}
                 </span>
@@ -400,6 +420,16 @@ Array.from(artifactGroups.entries()).forEach(([groupName, items]) => {
   }
 
   /* Author chip */
+  .badge-private {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px dashed currentColor;
+  }
+  .essay-link-private, .list-link-private {
+    color: var(--color-text-secondary);
+    cursor: default;
+    text-decoration: none;
+  }
   .author-chip {
     display: inline-block;
     font-size: var(--text-xs);
