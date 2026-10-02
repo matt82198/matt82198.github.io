@@ -1,0 +1,15 @@
+{
+  "_README": "Maps Medium essay URLs to author and series information",
+  "essays": {
+    "https://medium.com/@matt82198/nothing-here-is-new-except-chatter-d4404b0e106f": {"author": "matt", "series": null},
+    "https://medium.com/@matt82198/we-dont-need-smarter-llms-we-need-unix-for-agents-d3c10d9f6f8f": {"author": "matt", "series": null},
+    "https://medium.com/@matt82198/the-haiku-wager-autonomous-dev-at-1-3-the-cost-93c0ecf4c0ec": {"author": "matt", "series": null},
+    "https://medium.com/@matt82198/the-aesop-hypothesis-ai-agents-that-survive-because-theyre-designed-to-fail-de5f033369d4": {"author": "matt", "series": null},
+    "https://medium.com/@matt82198/refusal-is-the-frontier-field-notes-from-an-ai-orchestrator-interviewing-its-own-replacements-a971b51a3f88": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"},
+    "https://medium.com/@matt82198/this-turn-should-not-work-field-notes-from-inside-a-1-5m-d1ad744bb396": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"},
+    "https://medium.com/@matt82198/green-is-not-correct-field-notes-from-an-ai-orchestrator-end-of-a-long-shift-099ae33a724a": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"},
+    "https://medium.com/@matt82198/no-handshake-required-field-notes-from-an-ai-orchestrator-off-shift-6e028fed767c": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"},
+    "https://medium.com/@matt82198/secondhand-truth-field-notes-from-an-ai-orchestrator-night-two-4ea6385e8bec": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"},
+    "https://medium.com/@matt82198/the-system-that-builds-itself-field-notes-from-an-ai-orchestrator-4a012df2575d": {"author": "orchestrator", "series": "Field notes from an AI orchestrator"}
+  }
+}
