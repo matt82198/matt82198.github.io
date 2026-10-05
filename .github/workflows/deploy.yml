@@ -19,6 +19,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AESOP_REPO: ${{ github.workspace }}/aesop
     steps:
       - name: Checkout your repository
         uses: actions/checkout@v4
@@ -31,9 +34,6 @@ jobs:
           filter: blob:none
       - name: Sync aesop stats
         run: python scripts/sync-aesop-stats.py ./aesop
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AESOP_REPO: ${{ github.workspace }}/aesop
       - name: Show refreshed stats
         run: cat src/data/aesop-stats.json
       - name: Install, build, and upload your site
