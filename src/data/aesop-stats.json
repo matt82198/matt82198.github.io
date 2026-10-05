@@ -1,6 +1,6 @@
 {
   "merged_prs": 551,
-  "commits": 2095,
+  "commits": 2164,
   "coauthors": 18,
   "waves": 31,
   "authors_human": 0,
@@ -17,5 +17,11 @@
   "domains": 14,
   "test_files": 272,
   "version": "v0.8.0",
-  "shipped_increments": 551
+  "shipped_increments": 551,
+  "merged_prs_source": "git-log",
+  "releases": 19,
+  "incidents": 47,
+  "first_commit_date": "2026-07-11",
+  "days_active": 85,
+  "refreshed_at": "2026-10-05T17:09:55Z"
 }

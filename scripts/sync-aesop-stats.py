@@ -12,6 +12,16 @@ computed in a single snapshot. Fields self_stats doesn't emit are derived here f
 aesop working tree: domains (subdirectories carrying a CLAUDE.md), test_files (test file
 count), and version (aesop package.json), matching the schema in src/data/aesop-stats.json.
 
+New fields (computed at refresh time):
+  - merged_prs: GitHub Search API count if GITHUB_TOKEN is set, else git-log merge count
+  - commits: Total commits on main (git rev-list --count)
+  - releases: Count of tags matching v*
+  - incidents: Number of entries in docs/INCIDENTS.md
+  - first_commit_date: ISO date of first commit
+  - days_active: Days from first commit to today
+  - refreshed_at: ISO-8601 UTC timestamp of this run
+  - merged_prs_source: Either "github-api" or "git-log"
+
 Usage:
     python scripts/sync-aesop-stats.py [AESOP_REPO_PATH]
 
@@ -31,6 +41,9 @@ import os
 import re
 import subprocess
 import sys
+import urllib.request
+import urllib.error
+from datetime import datetime, timezone
 from pathlib import Path
 
 # --- locate the portfolio's data file relative to this script ---------------
@@ -53,8 +66,12 @@ def resolve_aesop_repo() -> Path:
         if (cand / "tools" / "self_stats.py").is_file():
             return cand.resolve()
 
-    # Not found (e.g. the Pages CI runner, which has no aesop checkout): return None so
-    # main() skips the refresh and keeps the committed src/data/aesop-stats.json.
+    # Not found (e.g. the Pages CI runner, which has no aesop checkout)
+    if os.environ.get("CI"):
+        print("sync-aesop-stats: aesop repo not found in CI environment - FAILING", file=sys.stderr)
+        sys.exit(1)
+
+    # Not CI: return None so main() skips the refresh and keeps the committed src/data/aesop-stats.json
     return None
 
 
@@ -128,6 +145,145 @@ def read_version(aesop_repo: Path) -> str:
     if version and not version.startswith("v"):
         version = "v" + version
     return version
+
+
+def count_releases(aesop_repo: Path) -> int:
+    """Count tags matching v* (releases)."""
+    result = subprocess.run(
+        ["git", "tag", "-l", "v*"],
+        cwd=str(aesop_repo),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+    )
+    tags = [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
+    return len(tags)
+
+
+def count_incidents(aesop_repo: Path) -> int:
+    """Count incident entries in docs/INCIDENTS.md.
+
+    Counts table rows (excluding header and separator rows).
+    Scans for lines starting with pipe that are not the header or separator.
+    """
+    incidents_file = aesop_repo / "docs" / "INCIDENTS.md"
+    if not incidents_file.exists():
+        return 0
+
+    try:
+        content = incidents_file.read_text(encoding="utf-8")
+
+        # Find all lines starting with pipe
+        all_pipe_lines = re.findall(r"^\|", content, re.MULTILINE)
+
+        # Count them and subtract 2 for header and separator rows
+        # Header: | Class | What Happened | Resolution | Source |
+        # Separator: | --- | --- | --- | --- |
+        total_pipe_lines = len(all_pipe_lines)
+        if total_pipe_lines >= 2:
+            return total_pipe_lines - 2
+        return 0
+    except Exception:
+        return 0
+
+
+def get_first_commit_date(aesop_repo: Path) -> tuple[str, int]:
+    """Get the ISO date of the first commit and days active.
+
+    Returns (iso_date, days_active).
+    """
+    try:
+        result = subprocess.run(
+            ["git", "log", "--format=%aI", "--reverse"],
+            cwd=str(aesop_repo),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        lines = [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
+        if not lines:
+            return "", 0
+
+        first_commit_iso = lines[0]
+        # Parse ISO date to get just the date part (YYYY-MM-DD)
+        first_commit_date = first_commit_iso.split("T")[0]
+
+        # Calculate days active
+        first_dt = datetime.fromisoformat(first_commit_iso)
+        now_utc = datetime.now(timezone.utc)
+        days_active = (now_utc - first_dt).days
+
+        return first_commit_date, days_active
+    except Exception:
+        return "", 0
+
+
+def count_total_commits(aesop_repo: Path) -> int:
+    """Count total commits on main.
+
+    Uses origin/main if it exists, otherwise HEAD.
+    """
+    try:
+        # Try origin/main first
+        result = subprocess.run(
+            ["git", "rev-list", "--count", "origin/main"],
+            cwd=str(aesop_repo),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        if result.returncode == 0:
+            count_str = (result.stdout or "").strip()
+            if count_str.isdigit():
+                return int(count_str)
+
+        # Fall back to HEAD
+        result = subprocess.run(
+            ["git", "rev-list", "--count", "HEAD"],
+            cwd=str(aesop_repo),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        if result.returncode == 0:
+            count_str = (result.stdout or "").strip()
+            if count_str.isdigit():
+                return int(count_str)
+
+        return 0
+    except Exception:
+        return 0
+
+
+def count_merged_prs_via_api(timeout_sec: int = 10) -> tuple[int, str]:
+    """Count merged PRs via GitHub Search API if GITHUB_TOKEN is set.
+
+    Returns (count, "github-api") on success, or (None, "git-log") on failure/no token.
+    """
+    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    if not token:
+        return None, "git-log"
+
+    try:
+        query = "repo:matt82198/aesop is:pr is:merged"
+        url = f"https://api.github.com/search/issues?q={urllib.parse.quote(query)}&per_page=1"
+
+        req = urllib.request.Request(url)
+        req.add_header("Authorization", f"token {token}")
+        req.add_header("Accept", "application/vnd.github.v3+json")
+
+        with urllib.request.urlopen(req, timeout=timeout_sec) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            if "total_count" in data:
+                return data["total_count"], "github-api"
+    except (urllib.error.URLError, urllib.error.HTTPError, json.JSONDecodeError, Exception) as e:
+        print(f"GitHub API call failed: {e} - falling back to git-log", file=sys.stderr)
+
+    return None, "git-log"
 
 
 def main() -> None:
@@ -212,6 +368,49 @@ def main() -> None:
         if "merged_prs" in stats:
             stats["shipped_increments"] = stats["merged_prs"]
 
+    # Compute new fields (always, from the aesop checkout)
+    try:
+        import urllib.parse
+    except ImportError:
+        from urllib import parse as urllib_parse
+        urllib.parse = urllib_parse
+
+    # GitHub API for merged PRs (if token available)
+    merged_prs_api, merged_prs_source = count_merged_prs_via_api()
+    if merged_prs_api is not None:
+        stats["merged_prs"] = merged_prs_api
+        stats["merged_prs_source"] = "github-api"
+    else:
+        # Keep existing merged_prs from snapshot or fallback
+        if "merged_prs" not in stats:
+            # Compute from git log merge commits
+            git = load_git_stats(aesop_repo) if not fallback_to_git else git
+            stats["merged_prs"] = git.merged_prs
+        stats["merged_prs_source"] = "git-log"
+
+    # Total commits on main
+    total_commits = count_total_commits(aesop_repo)
+    if total_commits > 0:
+        stats["commits"] = total_commits
+
+    # Releases
+    releases = count_releases(aesop_repo)
+    stats["releases"] = releases
+
+    # Incidents
+    incidents = count_incidents(aesop_repo)
+    stats["incidents"] = incidents
+
+    # First commit date and days active
+    first_commit_date, days_active = get_first_commit_date(aesop_repo)
+    if first_commit_date:
+        stats["first_commit_date"] = first_commit_date
+        stats["days_active"] = days_active
+
+    # Refreshed timestamp (ISO-8601 UTC)
+    now_utc = datetime.now(timezone.utc)
+    stats["refreshed_at"] = now_utc.isoformat(timespec="seconds").replace("+00:00", "Z")
+
     # Show a before -> after diff so the refresh is auditable.
     old = {}
     if DATA_FILE.exists():
@@ -228,7 +427,7 @@ def main() -> None:
     for key, new_val in stats.items():
         old_val = old.get(key, "-")
         arrow = "" if str(old_val) == str(new_val) else f"  (was {old_val})"
-        print(f"  {key:12} {new_val}{arrow}")
+        print(f"  {key:20} {new_val}{arrow}")
 
 
 if __name__ == "__main__":
