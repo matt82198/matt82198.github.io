@@ -13,7 +13,7 @@
     "test": "node tests/stats-freshness.test.mjs && node tests/numeric-sources.test.mjs && node --test tests/check-numeric-sources.test.mjs"
   },
   "dependencies": {
-    "astro": "^7.2.0"
+    "astro": "^7.2.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
