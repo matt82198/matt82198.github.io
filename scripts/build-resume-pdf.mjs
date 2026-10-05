@@ -124,13 +124,46 @@ async function main() {
       format: 'Letter',
       printBackground: false,
       // Keep in sync with the `@page { margin }` rule in src/pages/resume.astro.
-      margin: { top: '0.3in', bottom: '0.3in', left: '0.3in', right: '0.3in' },
+      margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' },
     });
     console.log(`[build-resume-pdf] wrote ${path.relative(projectRoot, outputPath)}`);
   } finally {
     await browser?.close();
     server.close();
   }
+
+  assertSinglePagePdf(outputPath);
+}
+
+/**
+ * Fail the build loudly if the PDF wasn't produced or isn't exactly one
+ * page. No PDF-parsing dependency is in package.json, so this counts page
+ * objects the cheap way: every page dictionary in a PDF's object list is
+ * tagged "/Type /Page", and the document catalog has exactly one "/Type
+ * /Pages" container node, whose tag contains "/Type /Page" as a literal
+ * substring too -- so (matches of "/Type /Page" or "/Type /Pages")  minus
+ * (matches of "/Type /Pages" alone) gives the true leaf-page count.
+ */
+function assertSinglePagePdf(pdfPath) {
+  if (!fs.existsSync(pdfPath)) {
+    console.error(`[build-resume-pdf] FAILED: ${pdfPath} was not produced.`);
+    process.exit(1);
+  }
+
+  const bytes = fs.readFileSync(pdfPath, 'latin1');
+  const pageOrPagesMatches = bytes.match(/\/Type\s*\/Pages?\b/g) || [];
+  const pagesOnlyMatches = bytes.match(/\/Type\s*\/Pages\b/g) || [];
+  const pageCount = pageOrPagesMatches.length - pagesOnlyMatches.length;
+
+  if (pageCount !== 1) {
+    console.error(
+      `[build-resume-pdf] FAILED: expected exactly 1 page in the resume PDF, counted ${pageCount}. ` +
+        'Tighten the print CSS in src/pages/resume.astro (line-height, margins, font size) until it fits one Letter page.',
+    );
+    process.exit(1);
+  }
+
+  console.log(`[build-resume-pdf] verified ${pdfPath.split(path.sep).pop()} is exactly 1 page.`);
 }
 
 main().catch((err) => {

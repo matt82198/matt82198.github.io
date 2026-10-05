@@ -285,16 +285,30 @@ import resume from '../data/resume.json';
 
   /* Print stylesheet — tuned so the resume fits one Letter page via
      browser Print (and the Playwright-driven build-time PDF, which emulates
-     the same 'print' media and prints this page in isolation). */
+     the same 'print' media and prints this page in isolation).
+
+     Font stack matches the original Word resume (Calibri). Calibri itself
+     isn't installed on Linux CI runners or most Chromium installs, so the
+     stack falls through to Carlito -- Google's metric-compatible
+     substitute (identical glyph widths/line-wrapping), installed in CI via
+     the fonts-crosextra-carlito package -- then Segoe UI / Arial.
+
+     Sizing: 10pt body / 1.1 line-height / 0.4in margins uniform. The
+     original target (1.15 line-height, 0.45in top+bottom / 0.5in
+     left+right margins) still overflowed by a few lines once the real
+     bug below was fixed, so line-height and margins were stepped down to
+     their documented fallback values -- 10pt stays the body floor
+     headroom above the hard 9.5pt floor. */
   @page {
     size: letter;
-    margin: 0.3in;
+    margin: 0.4in;
   }
 
   @media print {
     :global(body) {
       background: #fff !important;
       color: #000 !important;
+      font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif !important;
     }
 
     :global(.site-header),
@@ -317,42 +331,62 @@ import resume from '../data/resume.json';
       max-width: 100%;
       margin: 0;
       padding: 0;
-      font-size: 8.5pt;
-      line-height: 1.05;
+      font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.1;
+      border: none;
+      box-shadow: none;
+      background: none;
     }
 
     .resume-header {
-      margin-bottom: 2pt;
+      margin-bottom: 3pt;
     }
 
     .resume-header h1 {
-      font-size: 12.5pt;
+      font-size: 16pt;
+      font-weight: 700;
       color: #000;
-      margin-bottom: 1pt;
+      margin-bottom: 1.5pt;
     }
 
     .resume-contact,
     .resume-contact a {
       color: #000;
-      font-size: 7.5pt;
+      font-size: 9.5pt;
     }
 
     .resume-section {
-      margin-bottom: 3pt;
+      /* Overrides global.css's generic `section { padding; max-width;
+         margin }` rule (meant for the homepage's full-bleed sections) --
+         left unset here it silently added ~0.5in of top+bottom padding
+         to every resume section, which is what was actually blowing the
+         resume past one page. */
+      max-width: 100%;
+      margin: 0 0 3pt;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      background: none;
     }
 
     .resume-section h2 {
-      font-size: 8.5pt;
+      font-size: 11pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2pt;
       color: #000;
-      border-bottom-color: #999;
-      padding-bottom: 0.5pt;
+      border-bottom: 0.5pt solid #000;
+      box-shadow: none;
+      background: none;
+      padding-bottom: 1pt;
       margin-bottom: 1.5pt;
       break-after: avoid;
       page-break-after: avoid;
     }
 
     .resume-education-item {
-      margin-bottom: 2pt;
+      margin-bottom: 3pt;
       break-inside: avoid;
       page-break-inside: avoid;
     }
@@ -363,7 +397,10 @@ import resume from '../data/resume.json';
        whole (unbreakable) block, and everything after it, onto a second
        page while leaving the first page's tail blank. */
     .resume-job {
-      margin-bottom: 2pt;
+      margin-bottom: 3pt;
+      border: none;
+      box-shadow: none;
+      background: none;
     }
 
     .resume-job .resume-bullets li {
@@ -379,27 +416,32 @@ import resume from '../data/resume.json';
     }
 
     .resume-line {
-      font-size: 8.25pt;
+      font-size: 10pt;
     }
 
     .resume-meta,
     .resume-sub {
-      font-size: 7.75pt;
+      font-size: 9.5pt;
+    }
+
+    .resume-sub {
+      margin-top: 1pt;
     }
 
     .resume-skills {
-      font-size: 8.25pt;
+      font-size: 10pt;
     }
 
     .resume-bullets {
-      margin-top: 0.5pt;
-      padding-left: 9pt;
+      margin-top: 1pt;
+      padding-left: 11pt;
     }
 
     .resume-bullets li {
-      font-size: 7.75pt;
-      line-height: 1.02;
-      margin-bottom: 0.25pt;
+      font-size: 10pt;
+      line-height: 1.1;
+      margin-bottom: 0;
+      padding: 0;
     }
   }
 </style>
