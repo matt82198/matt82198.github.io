@@ -19,22 +19,52 @@ import measured from '../../data/measured.json';
       TypeScript · Java/Spring · Python · multi-agent orchestration. Measured cost and reliability in production autonomous systems. Chicago.
     </p>
 
-    <div class="proof-tiles">
-      <div class="proof-tile">
-        <div class="proof-value">{stats.commits}</div>
-        <div class="proof-label">Commits</div>
+    <div class="aesop-volume">
+      <div class="volume-eyebrow">
+        What <a href="#aesop">Aesop</a> has shipped
       </div>
-      <div class="proof-tile">
-        <div class="proof-value">{stats.merged_prs}</div>
-        <div class="proof-label">PRs merged</div>
+
+      <div class="proof-tiles">
+        {stats.merged_prs != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.merged_prs}</div>
+            <div class="proof-label">PRs merged</div>
+          </div>
+        )}
+        {stats.commits != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.commits}</div>
+            <div class="proof-label">Commits</div>
+          </div>
+        )}
+        {(stats.releases ?? null) != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.releases}</div>
+            <div class="proof-label">Releases</div>
+          </div>
+        )}
+        {(stats.incidents ?? null) != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.incidents}</div>
+            <div class="proof-label">Incidents turned into traps</div>
+          </div>
+        )}
+        {(stats.days_active ?? null) != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.days_active}</div>
+            <div class="proof-label">Days running</div>
+          </div>
+        )}
+        {stats.test_files != null && (
+          <div class="proof-tile">
+            <div class="proof-value" style="font-variant-numeric: tabular-nums;">{stats.test_files}</div>
+            <div class="proof-label">Test files</div>
+          </div>
+        )}
       </div>
-      <div class="proof-tile">
-        <div class="proof-value">{stats.domains}</div>
-        <div class="proof-label">Domains</div>
-      </div>
-      <div class="proof-tile">
-        <div class="proof-value">{stats.test_files}</div>
-        <div class="proof-label">Test files</div>
+
+      <div class="volume-footnote">
+        Computed from the aesop repo at build time · updated {stats.refreshed_at ? stats.refreshed_at.split('T')[0] : 'build time'}
       </div>
     </div>
 
@@ -92,11 +122,49 @@ import measured from '../../data/measured.json';
     line-height: var(--leading-normal);
   }
 
+  .aesop-volume {
+    margin: 0 0 var(--space-6) 0;
+  }
+
+  .volume-eyebrow {
+    font-size: var(--text-sm);
+    font-family: var(--font-sans);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .volume-eyebrow a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .volume-eyebrow a:hover {
+    color: var(--accent-light);
+  }
+
+  .volume-eyebrow a:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
   .proof-tiles {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: var(--space-4);
-    margin: 0 0 var(--space-6) 0;
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .volume-footnote {
+    font-size: var(--text-2xs);
+    font-family: var(--font-sans);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+    margin: 0;
   }
 
   .proof-tile {
@@ -186,10 +254,19 @@ import measured from '../../data/measured.json';
       line-height: var(--leading-tight);
     }
 
+    .aesop-volume {
+      margin-bottom: var(--space-4);
+    }
+
+    .volume-eyebrow {
+      font-size: var(--text-2xs);
+      margin-bottom: var(--space-2);
+    }
+
     .proof-tiles {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-2);
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-2);
     }
 
     .proof-tile {
@@ -203,6 +280,10 @@ import measured from '../../data/measured.json';
 
     .proof-label {
       font-size: var(--text-2xs);
+    }
+
+    .volume-footnote {
+      font-size: var(--text-3xs);
     }
 
     .cta-links {
