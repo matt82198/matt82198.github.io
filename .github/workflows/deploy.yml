@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 permissions:
   contents: read
@@ -20,6 +22,20 @@ jobs:
     steps:
       - name: Checkout your repository
         uses: actions/checkout@v4
+      - name: Checkout aesop repository
+        uses: actions/checkout@v4
+        with:
+          repository: matt82198/aesop
+          path: aesop
+          fetch-depth: 0
+          filter: blob:none
+      - name: Sync aesop stats
+        run: python scripts/sync-aesop-stats.py ./aesop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AESOP_REPO: ${{ github.workspace }}/aesop
+      - name: Show refreshed stats
+        run: cat src/data/aesop-stats.json
       - name: Install, build, and upload your site
         uses: withastro/action@v3
         with:
