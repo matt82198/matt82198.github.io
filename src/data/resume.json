@@ -1,0 +1,91 @@
+{
+  "name": "MATTHEW J. CULLITON",
+  "contact": {
+    "phone": "(847) 804-3089",
+    "email": "matt82198@gmail.com"
+  },
+  "education": [
+    {
+      "school": "Pennsylvania State University College of Engineering",
+      "location": "University Park, PA",
+      "degree": "Computer Science",
+      "graduated": "December 2020",
+      "minor": "Applied Mathematics and Engineering Leadership Development"
+    }
+  ],
+  "skills": [
+    "Python",
+    "Java",
+    "Spring Boot",
+    "TypeScript",
+    "Node.js",
+    "React",
+    "Angular",
+    "LLM APIs (Anthropic Claude, OpenAI)",
+    "multi-agent orchestration",
+    "agentic systems",
+    "Kubernetes (AKS)",
+    "Terraform",
+    "Azure Cloud Services",
+    "Azure DevOps pipelines",
+    "GitHub Actions CI/CD",
+    "SQL (Postgres, Vertica)",
+    "MongoDB",
+    "Redis",
+    "SQLite / event sourcing",
+    "Maven",
+    "NPM",
+    "Leading SAFe Certified",
+    "SAFe 5.0 Advanced Scrum Master Certified"
+  ],
+  "experience": [
+    {
+      "org": "Aesop — Autonomous Software-Development Harness (Independent)",
+      "location": "Chicago, IL",
+      "title": "Creator & Lead Engineer",
+      "dates": "July 2025 – Present",
+      "bullets": [
+        "Researched autonomous agent fleets since mid-2025, starting with FSCPay (technical cofounder, LLM-powered payment processing), the first codebase run under my own orchestration. Built four generations of the controller: a Java daemon driving 50+ Claude Code agents, then a portable substrate with three-tier model routing, cross-machine memory in git, and rules moved out of prompts into config and gates.",
+        "After endpoint security kept wiping the machine mid-session, built the layer that tied it together: every rule, memory and checkpoint pushed continuously, heartbeat watchdogs, an IOC/secret-scan daemon, crash-only recovery from the remotes alone. That substrate became Aesop.",
+        "Architected Aesop (npm-published) with flat O(1)-depth dispatch: each worker in its own git worktree, bounded repair loops fed by real test failures, adversarial verification, single-writer state; 720+ PRs and 19 releases from ranked backlog to CI-verified merge with no human in the loop.",
+        "Evaluation and governance: pre-registered 5-tier benchmarks with hidden-oracle grading (+17pp one-shot solve from repro-in-context, ~4x cost cut at equal graded quality); kill switch, cost ceilings, fail-closed secret-scan and drift gates, event-sourced SQLite state, multi-model driver seam, MCP server and SSE dashboard."
+      ]
+    },
+    {
+      "org": "AT&T",
+      "location": "Chicago, IL",
+      "title": "Software Engineer → Senior Software Engineer, People Analytics",
+      "dates": "November 2021 – June 2025",
+      "bullets": [
+        "Hired through AT&T's Technology Development Program onto People Analytics, a startup-style HR team building full-stack reporting products on the HR DataHub (Java/Spring Boot, Angular, Azure — millions of rows of SPI); operated as a lead developer from the start and promoted to Senior within the first year.",
+        "Designed HRMAN, a company-wide RBAC service grown from the team's user/role logic, serving tool-access control and real-time reporting-data authorization to teams across AT&T.",
+        "Initiated and led “Canned Reporting”: a config-driven reporting platform — report definitions live in the database over one generic frontend and backend; built the POC APIs and ran live demos of report creation, RBAC integration, and compound reports on a Java task-executor pool.",
+        "Shipped the PLE reporting tool for enterprise learning data — 1M+ reports delivered per year — and built stochastic workforce-modeling tools for HR planning.",
+        "Rearchitected backend cross-cutting concerns with Spring AOP — argument resolvers and exception handlers reduced authn/authz to a single annotation; rebuilt low-level result-set processing (HashMap-based) for a 40% memory reduction; introduced Redis caching to the team.",
+        "Grew the team from 5 to 12 developers as its first TDP — recruited through the program, mentored new hires, and wrote the onboarding guide that cut developer ramp-up from 3 days to 1.",
+        "Owned production releases and observability: Azure Application Insights monitoring and tracing saved ~20 developer-hours a month; served 8 months as Senior Scrum Master, lifting team velocity 27%."
+      ]
+    },
+    {
+      "org": "The Tannery Row",
+      "location": "Chicago, IL",
+      "title": "Technology & Operations Lead",
+      "dates": "December 2018 – Present",
+      "bullets": [
+        "Proposed and launched the company's leather sample-book product line, then scaled it into the full-time program I run today — engineering the swatch-book and leather-panel manufacturing processes and managing staff.",
+        "Engineered a Google Tag Manager “backend” for a backend-less Squarespace store: dynamic ads, organic listings, and a product-feed API built by treating page visits as tag-firing events through Google's own infrastructure; maintained to this day — online sales +10% YoY.",
+        "Own SEO end to end: grew organic Google traffic to rival direct traffic for the first time in company history; online sales rose 24% in my first three months back.",
+        "Built ECM-ai, an accounting tool that gamifies repairing bad order data so invoices import cleanly (a daily manual job became a monthly automated one), and TRTools, an internal RBAC-gated automation toolbox for all employees."
+      ]
+    },
+    {
+      "org": "Glimpse (Mobile App)",
+      "location": "",
+      "title": "UI/UX Developer / Co-Founder",
+      "dates": "2014 – 2018",
+      "bullets": [
+        "Built and released the social media app “Glimpse” (Swift); won best in Illinois in the Verizon Innovative App Challenge and pitched the app to live audiences and investors — later rebranded and sold after my departure."
+      ]
+    }
+  ]
+}

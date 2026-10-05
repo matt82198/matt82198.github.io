@@ -1,0 +1,447 @@
+---
+import Base from '../layouts/Base.astro';
+import resume from '../data/resume.json';
+---
+
+<Base
+  title="Matt Culliton — Resume"
+  description="Resume for Matthew Culliton — Aesop creator, AI platform engineer."
+  isArticle={true}
+>
+  <article class="resume-page">
+    <div class="resume-actions no-print">
+      <a href="/" class="resume-back">← Back to home</a>
+      <div class="resume-action-buttons">
+        <a href="/Matt_Culliton_Resume.pdf" class="resume-btn resume-btn-primary" download>Download PDF</a>
+        <button type="button" id="resume-print-btn" class="resume-btn resume-btn-secondary">Print</button>
+      </div>
+    </div>
+
+    <header class="resume-header">
+      <h1>{resume.name}</h1>
+      <p class="resume-contact">
+        <span>{resume.contact.phone}</span>
+        <span aria-hidden="true">|</span>
+        <a href={`mailto:${resume.contact.email}`}>{resume.contact.email}</a>
+      </p>
+    </header>
+
+    <section class="resume-section" aria-labelledby="resume-education">
+      <h2 id="resume-education">Education</h2>
+      {resume.education.map((entry) => (
+        <div class="resume-education-item">
+          <div class="resume-line">
+            <span class="resume-strong">{entry.school}</span>
+            <span class="resume-meta">{entry.location}</span>
+          </div>
+          <div class="resume-line">
+            <span>Major: {entry.degree}</span>
+            <span class="resume-meta">Graduated: {entry.graduated}</span>
+          </div>
+          {entry.minor && <div class="resume-sub">Minor: {entry.minor}</div>}
+        </div>
+      ))}
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-skills">
+      <h2 id="resume-skills">Skills</h2>
+      <p class="resume-skills">{resume.skills.join(', ')}</p>
+    </section>
+
+    <section class="resume-section" aria-labelledby="resume-experience">
+      <h2 id="resume-experience">Relevant Work Experience</h2>
+      {resume.experience.map((job) => (
+        <div class="resume-job">
+          <div class="resume-line">
+            <span class="resume-strong">{job.org}</span>
+            {job.location && <span class="resume-meta">{job.location}</span>}
+          </div>
+          <div class="resume-line resume-sub">
+            <span>{job.title}</span>
+            <span class="resume-meta">{job.dates}</span>
+          </div>
+          <ul class="resume-bullets">
+            {job.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  </article>
+</Base>
+
+<script>
+  const printBtn = document.getElementById('resume-print-btn');
+  printBtn?.addEventListener('click', () => {
+    window.print();
+  });
+</script>
+
+<style>
+  .resume-page {
+    max-width: var(--width-prose);
+    margin: 0 auto;
+    padding: 0 var(--space-4) var(--space-16);
+  }
+
+  .resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+  }
+
+  .resume-back {
+    font-size: var(--text-sm);
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+
+  .resume-back:hover {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent-light);
+  }
+
+  .resume-back:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 2px;
+  }
+
+  .resume-action-buttons {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .resume-btn {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-in-out),
+                color var(--duration-fast) var(--ease-in-out);
+  }
+
+  .resume-btn-primary {
+    background-color: var(--accent);
+    color: var(--color-bg);
+    border: 1px solid var(--accent);
+  }
+
+  .resume-btn-primary:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent-light);
+  }
+
+  .resume-btn-secondary {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border-strong, var(--color-border));
+  }
+
+  .resume-btn-secondary:hover {
+    background-color: var(--color-bg-secondary);
+  }
+
+  .resume-btn:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .resume-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+  }
+
+  .resume-header h1 {
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+
+  .resume-contact {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .resume-contact a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .resume-contact a:hover {
+    color: var(--accent);
+  }
+
+  .resume-contact a:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 2px;
+  }
+
+  .resume-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .resume-section h2 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border-strong, var(--color-border));
+    padding-bottom: var(--space-2);
+    margin: 0 0 var(--space-4);
+  }
+
+  .resume-education-item,
+  .resume-job {
+    margin-bottom: var(--space-5);
+  }
+
+  .resume-job:last-child,
+  .resume-education-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .resume-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-4);
+    font-size: var(--text-base);
+    color: var(--color-text);
+  }
+
+  .resume-strong {
+    font-weight: 600;
+  }
+
+  .resume-meta {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .resume-sub {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-top: var(--space-1);
+  }
+
+  .resume-skills {
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .resume-bullets {
+    margin: var(--space-2) 0 0;
+    padding-left: var(--space-5);
+  }
+
+  .resume-bullets li {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .resume-bullets li:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 640px) {
+    .resume-actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .resume-line {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-1);
+    }
+
+    .resume-meta {
+      white-space: normal;
+    }
+  }
+
+  /* Print stylesheet — tuned so the resume fits one Letter page via
+     browser Print (and the Playwright-driven build-time PDF, which emulates
+     the same 'print' media and prints this page in isolation).
+
+     Font stack matches the original Word resume (Calibri). Calibri itself
+     isn't installed on Linux CI runners or most Chromium installs, so the
+     stack falls through to Carlito -- Google's metric-compatible
+     substitute (identical glyph widths/line-wrapping), installed in CI via
+     the fonts-crosextra-carlito package -- then Segoe UI / Arial.
+
+     Sizing: 10pt body / 1.1 line-height / 0.4in margins uniform. The
+     original target (1.15 line-height, 0.45in top+bottom / 0.5in
+     left+right margins) still overflowed by a few lines once the real
+     bug below was fixed, so line-height and margins were stepped down to
+     their documented fallback values -- 10pt stays the body floor
+     headroom above the hard 9.5pt floor. */
+  @page {
+    size: letter;
+    margin: 0.4in;
+  }
+
+  @media print {
+    :global(body) {
+      background: #fff !important;
+      color: #000 !important;
+      font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif !important;
+    }
+
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.skip-to-content) {
+      display: none !important;
+    }
+
+    :global(main) {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+
+    .resume-page {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.1;
+      border: none;
+      box-shadow: none;
+      background: none;
+    }
+
+    .resume-header {
+      margin-bottom: 3pt;
+    }
+
+    .resume-header h1 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 1.5pt;
+    }
+
+    .resume-contact,
+    .resume-contact a {
+      color: #000;
+      font-size: 9.5pt;
+    }
+
+    .resume-section {
+      /* Overrides global.css's generic `section { padding; max-width;
+         margin }` rule (meant for the homepage's full-bleed sections) --
+         left unset here it silently added ~0.5in of top+bottom padding
+         to every resume section, which is what was actually blowing the
+         resume past one page. */
+      max-width: 100%;
+      margin: 0 0 3pt;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+      background: none;
+    }
+
+    .resume-section h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2pt;
+      color: #000;
+      border-bottom: 0.5pt solid #000;
+      box-shadow: none;
+      background: none;
+      padding-bottom: 1pt;
+      margin-bottom: 1.5pt;
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .resume-education-item {
+      margin-bottom: 3pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    /* Job entries intentionally do NOT get break-inside: avoid — on a
+       one-page resume there is no page boundary for this to matter against,
+       and keeping it off means a long entry's bullets can't force the
+       whole (unbreakable) block, and everything after it, onto a second
+       page while leaving the first page's tail blank. */
+    .resume-job {
+      margin-bottom: 3pt;
+      border: none;
+      box-shadow: none;
+      background: none;
+    }
+
+    .resume-job .resume-bullets li {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .resume-line,
+    .resume-sub,
+    .resume-skills,
+    .resume-bullets li {
+      color: #000;
+    }
+
+    .resume-line {
+      font-size: 10pt;
+    }
+
+    .resume-meta,
+    .resume-sub {
+      font-size: 9.5pt;
+    }
+
+    .resume-sub {
+      margin-top: 1pt;
+    }
+
+    .resume-skills {
+      font-size: 10pt;
+    }
+
+    .resume-bullets {
+      margin-top: 1pt;
+      padding-left: 11pt;
+    }
+
+    .resume-bullets li {
+      font-size: 10pt;
+      line-height: 1.1;
+      margin-bottom: 0;
+      padding: 0;
+    }
+  }
+</style>
