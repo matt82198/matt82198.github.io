@@ -91,10 +91,22 @@ async function testViewport(viewport) {
     console.log(`  ✓ No console errors`);
   }
 
-  // Check proof tiles
+  // Check for Aesop volume label
+  const volumeEyebrow = page.locator('.volume-eyebrow');
+  const eyebrowText = await volumeEyebrow.textContent();
+  assert(eyebrowText && eyebrowText.includes('Aesop'), 'Expected volume eyebrow with "Aesop"');
+  console.log(`  ✓ Volume eyebrow: "${eyebrowText.trim()}"`);
+
+  // Check for volume footnote
+  const volumeFootnote = page.locator('.volume-footnote');
+  const footnoteText = await volumeFootnote.textContent();
+  assert(footnoteText && footnoteText.includes('Computed from the aesop repo'), 'Expected volume footnote');
+  console.log(`  ✓ Volume footnote present`);
+
+  // Check proof tiles (dynamic count based on available stats)
   const tiles = await page.locator('.proof-tile').all();
   console.log(`  Found ${tiles.length} proof tiles`);
-  assert(tiles.length === 4, `Expected 4 proof tiles, found ${tiles.length}`);
+  assert(tiles.length >= 3, `Expected at least 3 proof tiles (merged_prs, commits, test_files), found ${tiles.length}`);
 
   // Verify proof tiles have content
   for (let i = 0; i < tiles.length; i++) {
