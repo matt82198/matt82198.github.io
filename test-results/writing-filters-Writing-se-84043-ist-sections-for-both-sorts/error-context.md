@@ -80,7 +80,7 @@ Call log:
           - /url: https://medium.com/@matt82198
         - generic [ref=e44]: ·
         - link "LinkedIn" [ref=e45] [cursor=pointer]:
-          - /url: https://linkedin.com/in/matt-culliton-a8327676
+          - /url: https://www.linkedin.com/in/matthew-culliton
         - generic [ref=e46]: ·
         - link "Resume (PDF)" [ref=e47] [cursor=pointer]:
           - /url: /Matt_Culliton_Resume.pdf
@@ -798,8 +798,8 @@ Call log:
               - /url: https://medium.com/@matt82198
           - listitem [ref=e695]:
             - generic [ref=e696]: LinkedIn
-            - link "linkedin.com/in/matt-culliton-a8327676" [ref=e697] [cursor=pointer]:
-              - /url: https://linkedin.com/in/matt-culliton-a8327676
+            - link "linkedin.com/in/matthew-culliton" [ref=e697] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/matthew-culliton
           - listitem [ref=e698]:
             - generic [ref=e699]: X
             - link "x.com/mculliton82198" [ref=e700] [cursor=pointer]:
